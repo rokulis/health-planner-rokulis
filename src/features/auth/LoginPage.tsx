@@ -54,7 +54,7 @@ export const LoginPage = () => {
           {error ? (
             <div className="text-danger text-sm mb-4">{error}</div>
           ) : null}
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <FieldWrapper control={form.control} label="Email" name="email">
               <Input placeholder="Email" />
             </FieldWrapper>
