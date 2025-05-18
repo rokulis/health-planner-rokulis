@@ -1,0 +1,40 @@
+@use 'tailwindcss';
+
+@theme {
+  --color-primary: #5326E7;
+  --color-danger: #EE7767;
+  --color-primary-foreground: #ffffff;
+  --color-background-primary: #f5f5f5;
+  --color-background-secondary: #f2f2f2;
+  --color-muted-foreground: #666666;
+  --color-gray: #E4E7EC;
+  --color-dark-gray: #333333;
+}
+
+body {
+  @apply bg-background-primary;
+}
+
+svg {
+  @apply w-auto h-auto;
+}
+
+.progress {
+  animation: progress 1s infinite linear;
+}
+
+.left-right {
+  transform-origin: 0 50%;
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(0) scaleX(0);
+  }
+  40% {
+    transform: translateX(0) scaleX(0.4);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.5);
+  }
+}

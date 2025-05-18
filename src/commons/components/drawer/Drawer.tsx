@@ -1,0 +1,33 @@
+import React from 'react';
+
+import {
+  Drawer as BaseDrawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/commons/components/ui/drawer';
+
+interface Props {
+  title: string;
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}
+
+export const Drawer: React.FC<Props> = ({
+  title,
+  isOpen,
+  onClose,
+  children,
+}) => {
+  return (
+    <BaseDrawer direction="right" open={isOpen} onClose={onClose}>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>{title}</DrawerTitle>
+        </DrawerHeader>
+        {children}
+      </DrawerContent>
+    </BaseDrawer>
+  );
+};
