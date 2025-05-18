@@ -18,7 +18,7 @@ const TABS = [
   {
     label: 'Timeline',
     icon: <Timeline />,
-    href: '/',
+    href: '/schedule',
   },
   {
     label: 'List',

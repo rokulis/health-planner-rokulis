@@ -17,7 +17,7 @@ import Settings from '@/commons/icons/svg/settings.svg';
 const SIDEBAR_LINKS = [
   {
     name: 'Schedule',
-    url: '/',
+    url: '/schedule',
     icon: <Hospital />,
   },
   {
@@ -68,7 +68,7 @@ export const Sidebar = () => {
             className={cx(
               'flex items-center py-2 hover:bg-primary/10 transition-all duration-200 rounded-md px-2',
               {
-                'bg-primary/10': pathname === link.url,
+                'bg-primary/10': pathname.includes(link.url),
               }
             )}
           >
