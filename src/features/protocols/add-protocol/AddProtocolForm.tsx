@@ -10,15 +10,9 @@ import { z } from 'zod';
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
+import { FloatingLabelSelect, FloatingLabelSelectItem } from '@/commons/components/form/FloatingLabelSelect';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/commons/components/ui/select';
 import { ProtocolCancerTypeEnum } from '@/types/swagger/data-contracts';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
@@ -73,25 +67,20 @@ export const AddProtocolForm: React.FC<Props> = ({ isOpen, onClose }) => {
             </div>
             <div className="col-span-4">
               <FieldWrapper control={form.control} name="cancer_type">
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Cancer type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.keys(ProtocolCancerTypeEnum).map(key => (
-                      <SelectItem
-                        key={key}
-                        value={
-                          ProtocolCancerTypeEnum[
-                            key as keyof typeof ProtocolCancerTypeEnum
-                          ]
-                        }
-                      >
-                        {key}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <FloatingLabelSelect label="Drop selection">
+                  {Object.keys(ProtocolCancerTypeEnum).map(key => (
+                    <FloatingLabelSelectItem
+                      key={key}
+                      value={
+                        ProtocolCancerTypeEnum[
+                          key as keyof typeof ProtocolCancerTypeEnum
+                        ]
+                      }
+                    >
+                      {key}
+                    </FloatingLabelSelectItem>
+                  ))}
+                </FloatingLabelSelect>
               </FieldWrapper>
             </div>
             <div className="col-span-2">
@@ -105,7 +94,11 @@ export const AddProtocolForm: React.FC<Props> = ({ isOpen, onClose }) => {
             </div>
           </div>
           <div className="col-span-6 mt-12 flex justify-end">
-            <Button type="submit" className="w-1/2" disabled={!form.formState.isValid}>
+            <Button
+              type="submit"
+              className="w-1/2"
+              disabled={!form.formState.isValid}
+            >
               Add protocol
             </Button>
           </div>

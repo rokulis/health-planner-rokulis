@@ -1,28 +1,71 @@
-import React, { DetailedHTMLProps, InputHTMLAttributes } from 'react';
+'use client';
 
-interface Props
-  extends DetailedHTMLProps<
-    InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {
+import * as React from 'react';
+
+import { cn } from '@/lib/utils';
+
+export interface FloatingLabelInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-export const FloatingLabelInput: React.FC<Props> = ({ label, id, ...rest }) => {
+const FloatingLabelInput = React.forwardRef<
+  HTMLInputElement,
+  FloatingLabelInputProps
+>(({ className, type, label, ...props }, ref) => {
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [isFilled, setIsFilled] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsFilled(!!props.value);
+  }, [props.value]);
+
   return (
     <div className="relative w-full">
       <input
-        {...rest}
-        id={id}
-        className="block rounded-md border border-transparent focus:border-primary px-2.5 h-14 pb-2.5 pt-5 w-full text-sm bg-gray/50 text-black appearance-none focus:outline-none focus:ring-0 peer"
-        placeholder=" "
+        tabIndex={0}
+        type={type}
+        className={cn(
+          'flex w-full h-14 w-full rounded-md border border-gray bg-background-secondary px-3 pt-4 pb-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-transparent focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+          {
+            'border-primary': isFocused,
+            'border-gray': !isFocused,
+          },
+          {
+            'placeholder:text-sm': isFilled,
+            'placeholder:text-xs': !isFilled,
+          },
+          className
+        )}
+        ref={ref}
+        onChange={e => {
+          props.onChange?.(e);
+        }}
+        {...props}
+        onFocus={e => {
+          setIsFocused(true);
+          props.onFocus?.(e);
+        }}
+        onBlur={e => {
+          setIsFocused(false);
+          props.onBlur?.(e);
+        }}
       />
       <label
-        htmlFor={id}
-        className="absolute text-sm text-gray-500 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 rtl:peer-focus:translate-x-1/3 rtl:peer-focus:left-auto"
+        className={cn(
+          'absolute text-black transition-all duration-200 pointer-events-none',
+          {
+            'text-xs left-3 top-2': isFilled || isFocused,
+            'text-base text-black/60 left-3 top-1/2 -translate-y-1/2':
+              !isFilled && !isFocused,
+          }
+        )}
       >
         {label}
       </label>
     </div>
   );
-};
+});
+FloatingLabelInput.displayName = 'FloatingLabelInput';
+
+export { FloatingLabelInput };
