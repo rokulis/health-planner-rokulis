@@ -9,19 +9,26 @@ import { z } from 'zod';
 import { useSearchParams } from 'next/navigation';
 
 import { planVisits } from '@/app/treatment-plans/actions';
+import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
 import { Form } from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
+import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 const FormSchema = z.object({
   start_date: z.string(),
   start_time: z.string(),
 });
 
-export const ScheduleTreatment = () => {
+interface Props {
+  onStepSubmit: (visits: TreatmentPlans.PlanVisits.ResponseBody) => void;
+}
+
+export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
+  const [isPending, startTransition] = React.useTransition();
   const searchParams = useSearchParams();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
@@ -40,24 +47,28 @@ export const ScheduleTreatment = () => {
   const uniqueTimeSlots = getUniqueTimeSlots(data ?? []);
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
-    const treatmentPlanId = searchParams.get('treatment');
+    return startTransition(async () => {
+      const treatmentPlanId = searchParams.get('treatment');
 
-    if (!treatmentPlanId) {
-      return;
-    }
+      if (!treatmentPlanId) {
+        return;
+      }
 
-    await planVisits({
-      id: parseInt(treatmentPlanId, 10),
-      start_date: values.start_date,
-      start_time: values.start_time,
-    }).then(res => {
-      // eslint-disable-next-line no-console
-      console.log(res);
+      await planVisits({
+        id: parseInt(treatmentPlanId, 10),
+        start_date: values.start_date,
+        start_time: values.start_time,
+      }).then(res => {
+        if (res.success) {
+          onStepSubmit(res);
+        }
+      });
     });
   };
 
   return (
     <div className="flex flex-col gap-8 h-full">
+      {isPending ? <PageTopLoader /> : null}
       <Calendar
         mode="single"
         selected={date}
@@ -91,7 +102,12 @@ export const ScheduleTreatment = () => {
               </button>
             ))}
           </div>
-          <Button disabled={!form.formState.isValid}>Schedule all</Button>
+
+          <div className="flex justify-end gap-2">
+            <Button disabled={!!form.formState.errors.start_time}>
+              Schedule all
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

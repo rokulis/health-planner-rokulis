@@ -11,14 +11,20 @@ export interface Step {
 interface StepperProps {
   steps: Step[];
   currentStep: number;
+  onStepChange?: (step: number) => void;
 }
 
-export function Stepper({ steps, currentStep }: StepperProps) {
+export function Stepper({ steps, currentStep, onStepChange }: StepperProps) {
   return (
-    <div className="w-full flex flex-col h-full">
-      <div className="flex items-center justify-center my-4">
+    <div className="w-full flex flex-col h-full mb-4">
+      <div className="flex items-center justify-center">
         {steps.map((step, index) => (
-          <div key={step.id} className="flex items-center">
+          <button
+            type="button"
+            onClick={() => onStepChange?.(step.id)}
+            key={step.id}
+            className="flex items-center cursor-pointer"
+          >
             <div
               className={`flex text-sm items-center justify-center w-[24px] h-[24px] rounded-full border-2 ${
                 step.id === currentStep
@@ -28,10 +34,10 @@ export function Stepper({ steps, currentStep }: StepperProps) {
             >
               {step.id}
             </div>
-            <span className="ml-3 text-sm font-medium">{step.label}</span>
+            <span className="ml-1 text-sm font-medium">{step.label}</span>
 
             {index < steps.length - 1 && (
-              <div className="mx-4 text-gray-300">
+              <div className="mx-1 text-gray-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -47,7 +53,7 @@ export function Stepper({ steps, currentStep }: StepperProps) {
                 </svg>
               </div>
             )}
-          </div>
+          </button>
         ))}
       </div>
 

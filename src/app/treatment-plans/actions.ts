@@ -30,11 +30,14 @@ export const planVisits = async ({
   start_date: string;
   start_time: string;
 }) => {
-  return await apiClient(`/treatment-plans/${id}/plan-visits`, {
-    method: 'POST',
-    body: {
-      start_date,
-      start_time,
-    },
-  });
+  return await apiClient<TreatmentPlans.PlanVisits.ResponseBody>(
+    `/treatment-plans/${id}/plan-visits`,
+    {
+      method: 'POST',
+      body: {
+        start_date,
+        start_time,
+      },
+    }
+  );
 };
