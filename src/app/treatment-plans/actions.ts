@@ -8,3 +8,33 @@ export const getTreatmentPlans = async () => {
     '/treatment-plans'
   );
 };
+
+export const createTreatmentPlan = async (
+  data: TreatmentPlans.CreateTreatmentPlan.RequestBody
+) => {
+  return await apiClient<TreatmentPlans.CreateTreatmentPlan.ResponseBody>(
+    '/treatment-plans',
+    {
+      method: 'POST',
+      body: data,
+    }
+  );
+};
+
+export const planVisits = async ({
+  id,
+  start_date,
+  start_time,
+}: {
+  id: number;
+  start_date: string;
+  start_time: string;
+}) => {
+  return await apiClient(`/treatment-plans/${id}/plan-visits`, {
+    method: 'POST',
+    body: {
+      start_date,
+      start_time,
+    },
+  });
+};

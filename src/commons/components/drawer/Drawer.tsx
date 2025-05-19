@@ -22,7 +22,7 @@ export const Drawer: React.FC<Props> = ({
 }) => {
   return (
     <BaseDrawer direction="right" open={isOpen} onClose={onClose}>
-      <DrawerContent>
+      <DrawerContent className="h-full overflow-y-auto">
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>

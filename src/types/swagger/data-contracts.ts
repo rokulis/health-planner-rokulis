@@ -130,7 +130,7 @@ export interface StoreTreatmentPlanRequest {
       treatment_days?: number[];
       medicines?: {
         medicine_id?: number;
-        dose?: number;
+        dose?: string;
         comment?: string;
       }[];
     }[];
@@ -181,6 +181,21 @@ export interface PatientResource {
   weight?: number;
   height?: number;
   address?: string;
+}
+
+export type ProtocolResource = Protocol & {
+  protocol_medicine_groups?: ProtocolMedicineGroup[];
+};
+
+export type RoomResource = Room & {
+  beds?: Bed[];
+};
+
+export interface SectorResource {
+  /** @example "1" */
+  id?: number;
+  /** @example "Oncology" */
+  name?: string;
 }
 
 export interface TreatmentCycleResource {
@@ -241,6 +256,16 @@ export interface VisitResource {
   date_time?: string;
   duration?: number;
   notes?: string;
+  patient?: PatientResource;
+  visit_treatments?: VisitTreatmentResource[];
+}
+
+export interface VisitTreatmentResource {
+  /** @example 1 */
+  id?: number;
+  status?: VisitTreatmentResourceStatusEnum;
+  notes?: string;
+  treatment_medicine_groups?: TreatmentMedicineGroupResource[];
 }
 
 /**
@@ -672,6 +697,8 @@ export interface ProtocolMedicine {
    * @example "Administer slowly"
    */
   comments?: string;
+  /** Medicine used in treatment protocols */
+  medicine?: Medicine;
   /**
    * Creation date
    * @format date-time
@@ -721,6 +748,7 @@ export interface ProtocolMedicineGroup {
    * @format date-time
    */
   updated_at?: string;
+  protocol_medicines?: ProtocolMedicine[];
 }
 
 /**
@@ -1327,6 +1355,12 @@ export enum VisitResourceStatusEnum {
   Paused = "paused",
 }
 
+export enum VisitTreatmentResourceStatusEnum {
+  Administering = "administering",
+  Pending = "pending",
+  Done = "done",
+}
+
 /**
  * Bed category: short_term (1-2h), mid_term (3-4h), long-term (5-7h)
  * @example "short_term"
@@ -1367,6 +1401,17 @@ export enum ProtocolCancerTypeEnum {
   BreastCancer = "breast_cancer",
   ProstateCancer = "prostate_cancer",
   SkinCancer = "skin_cancer",
+}
+
+/** 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday */
+export enum RoomWorkingDaysEnum {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
+  Value4 = 4,
+  Value5 = 5,
+  Value6 = 6,
 }
 
 /**
@@ -1607,20 +1652,38 @@ export interface DeleteMedicineData {
   message?: string;
 }
 
-export type GetPatientsData = PatientResource[];
+export interface GetPatientsData {
+  /** @example true */
+  success?: boolean;
+  data?: PatientResource[];
+}
 
-export type CreatePatientData = PatientResource;
+export interface CreatePatientData {
+  /** @example true */
+  success?: boolean;
+  data?: PatientResource;
+}
 
-export type GetPatientData = PatientResource;
+export interface GetPatientData {
+  /** @example true */
+  success?: boolean;
+  data?: PatientResource;
+}
 
-export type UpdatePatientData = PatientResource;
+export interface UpdatePatientData {
+  /** @example true */
+  success?: boolean;
+}
 
-export type DeletePatientData = any;
+export interface DeletePatientData {
+  /** @example true */
+  success?: boolean;
+}
 
 export interface GetProtocolsData {
   /** @example true */
   success?: boolean;
-  data?: Protocol[];
+  data?: ProtocolResource[];
 }
 
 export interface CreateProtocolData {
@@ -1633,15 +1696,13 @@ export interface CreateProtocolData {
 export interface GetProtocolData {
   /** @example true */
   success?: boolean;
-  /** Treatment protocol template */
-  data?: Protocol;
+  data?: ProtocolResource;
 }
 
 export interface UpdateProtocolData {
   /** @example true */
   success?: boolean;
-  /** Treatment protocol template */
-  data?: Protocol;
+  data?: ProtocolResource;
 }
 
 export interface DeleteProtocolData {
@@ -1658,7 +1719,11 @@ export interface GetAllRoomsParams {
   sector_id?: number;
 }
 
-export type GetAllRoomsData = Room[];
+export interface GetAllRoomsData {
+  /** @example true */
+  success?: boolean;
+  data?: RoomResource[];
+}
 
 export type CreateRoomData = Room;
 
@@ -1667,6 +1732,48 @@ export type GetRoomData = Room;
 export type UpdateRoomData = Room;
 
 export type Cf9104Dbefd91A81Bebb07Cafe7E70CfData = any;
+
+export interface GetScheduleParams {
+  /** @format date */
+  date: string;
+  sector_id?: number;
+}
+
+export interface GetScheduleData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource[];
+}
+
+export interface GetOpenSlotsParams {
+  /** @format date */
+  date: string;
+  sector_id?: number;
+}
+
+export interface GetOpenSlotsData {
+  /** @example true */
+  success?: boolean;
+  data?: {
+    /** @example 1 */
+    id?: number;
+    /** @example "Room 1" */
+    name?: string;
+    beds?: {
+      /** @example 1 */
+      id?: number;
+      /** @example "Bed 1" */
+      name?: string;
+      times?: string[];
+    }[];
+  }[];
+}
+
+export interface GetSectorsData {
+  /** @example true */
+  success?: boolean;
+  data?: SectorResource[];
+}
 
 export interface GetTreatmentPlansData {
   /** @example true */
@@ -1684,6 +1791,25 @@ export interface GetPatientTreatmentPlansData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource[];
+}
+
+export interface PlanVisitsPayload {
+  /** @example "2022-01-01" */
+  start_date?: string;
+  /** @example "11:00" */
+  start_time?: string;
+}
+
+export interface PlanVisitsData {
+  /** @example true */
+  success?: boolean;
+  data?: TreatmentPlanResource;
+}
+
+export interface ConfirmTreatmentPlanData {
+  /** @example true */
+  success?: boolean;
+  data?: TreatmentPlanResource;
 }
 
 export interface GetTreatmentPlanData {

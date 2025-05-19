@@ -53,10 +53,10 @@ const FloatingLabelInput = React.forwardRef<
       />
       <label
         className={cn(
-          'absolute text-black transition-all duration-200 pointer-events-none',
+          'absolute text-muted-foreground transition-all duration-200 pointer-events-none',
           {
             'text-xs left-3 top-2': isFilled || isFocused,
-            'text-base text-black/60 left-3 top-1/2 -translate-y-1/2':
+            'text-base text-black/50 left-3 top-1/2 -translate-y-1/2':
               !isFilled && !isFocused,
           }
         )}

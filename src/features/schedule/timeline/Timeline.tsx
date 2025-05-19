@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import cx from 'classnames';
 import { Plus } from 'lucide-react';
@@ -15,39 +15,36 @@ import {
   TableRow,
 } from '@/commons/components/ui/table';
 import { RoomRow } from '@/features/schedule/timeline/RoomRow';
-
-// Types for our data structure
-type BedType = 'Bed' | 'Chair';
-
-interface Bed {
-  id: string;
-  name: string;
-  type: BedType;
-}
-
-interface Room {
-  id: string;
-  name: string;
-  beds: Bed[];
-}
-
-interface Appointment {
-  id: string;
-  roomId: string;
-  bedId: string;
-  startTime: string;
-  endTime: string;
-  patientName: string;
-  type?: 'regular' | 'emergency' | 'followup';
-}
+import {
+  ParsedVisitTime,
+  processVisitTime,
+} from '@/features/schedule/utils/date-utils';
+import { cn } from '@/lib/utils';
+import {
+  RoomResource,
+  VisitResource,
+  VisitResourceStatusEnum,
+} from '@/types/swagger/data-contracts';
 
 // Fixed cell width for time slots
 const TIME_CELL_WIDTH = 80;
 
-export default function HospitalTimeline() {
+interface Props {
+  rooms?: Array<RoomResource>;
+  schedule?: Array<VisitResource>;
+}
+
+type Appointment = VisitResource & ParsedVisitTime;
+
+export default function HospitalTimeline({ rooms, schedule }: Props) {
   // Ref for the scrollable container
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
+
+  const appointments = schedule?.map(s => ({
+    ...s,
+    ...processVisitTime(s.date_time, s.duration),
+  }));
 
   // State for current time
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
@@ -64,7 +61,7 @@ export default function HospitalTimeline() {
   // Generate time slots from 9:00 to 17:30 in 30-minute intervals
   const generateTimeSlots = () => {
     const slots = [];
-    for (let hour = 9; hour <= 17; hour++) {
+    for (let hour = 8; hour <= 17; hour++) {
       slots.push(`${hour.toString().padStart(2, '0')}:00`);
       if (hour < 17) {
         slots.push(`${hour.toString().padStart(2, '0')}:30`);
@@ -98,266 +95,29 @@ export default function HospitalTimeline() {
     return false;
   };
 
-  // State for rooms and beds
-  const [rooms, setRooms] = useState<Room[]>([
-    {
-      id: 'room-a',
-      name: 'Room A',
-      beds: [{ id: 'bed-a-1', name: 'Bed A-1', type: 'Bed' }],
-    },
-    {
-      id: 'room-b',
-      name: 'Room B',
-      beds: [{ id: 'bed-b-1', name: 'Bed B-1', type: 'Bed' }],
-    },
-    {
-      id: 'room-c',
-      name: 'Room C',
-      beds: [{ id: 'bed-c-1', name: 'Bed C-1', type: 'Bed' }],
-    },
-    {
-      id: 'room-d',
-      name: 'Room D',
-      beds: [
-        { id: 'bed-d-1', name: 'Bed D-1', type: 'Bed' },
-        { id: 'bed-d-2', name: 'Bed D-2', type: 'Bed' },
-        { id: 'chair-d-3', name: 'Chair D-3', type: 'Chair' },
-        { id: 'bed-d-4', name: 'Bed D-4', type: 'Bed' },
-        { id: 'chair-d-5', name: 'Chair D-5', type: 'Chair' },
-      ],
-    },
-    {
-      id: 'room-e',
-      name: 'Room E',
-      beds: [],
-    },
-  ]);
-
-  // Sample appointments with more visits, including multi-slot appointments
-  const [appointments] = useState<Appointment[]>([
-    // Original appointments
-    {
-      id: 'appt-1',
-      roomId: 'unassigned',
-      bedId: 'unassigned-1',
-      startTime: '09:23',
-      endTime: '10:00',
-      patientName: 'Name Surname',
-      type: 'regular',
-    },
-    {
-      id: 'appt-2',
-      roomId: 'room-c',
-      bedId: 'bed-c-1',
-      startTime: '09:00',
-      endTime: '11:30', // 2.5 hours
-      patientName: 'Name Surname',
-      type: 'regular',
-    },
-    {
-      id: 'appt-3',
-      roomId: 'room-d',
-      bedId: 'bed-d-1',
-      startTime: '10:30',
-      endTime: '13:00', // 2.5 hours
-      patientName: 'Name Surname',
-      type: 'emergency',
-    },
-    {
-      id: 'appt-4',
-      roomId: 'unassigned',
-      bedId: 'unassigned-2',
-      startTime: '10:00',
-      endTime: '11:30', // 1.5 hours
-      patientName: 'Name Surname',
-      type: 'regular',
-    },
-    {
-      id: 'appt-5',
-      roomId: 'room-d',
-      bedId: 'bed-d-4',
-      startTime: '09:00',
-      endTime: '10:30', // 1.5 hours
-      patientName: 'Name Surname',
-      type: 'followup',
-    },
-    {
-      id: 'appt-6',
-      roomId: 'room-d',
-      bedId: 'chair-d-5',
-      startTime: '09:00',
-      endTime: '10:30', // 1.5 hours
-      patientName: 'Name Surname',
-      type: 'regular',
-    },
-    {
-      id: 'appt-7',
-      roomId: 'room-d',
-      bedId: 'chair-d-3',
-      startTime: '16:00',
-      endTime: '17:00', // 1 hour
-      patientName: 'Name Surname',
-      type: 'followup',
-    },
-    {
-      id: 'appt-8',
-      roomId: 'room-d',
-      bedId: 'chair-d-3',
-      startTime: '13:30',
-      endTime: '15:30', // 2 hours
-      patientName: 'Name Surname',
-      type: 'emergency',
-    },
-    {
-      id: 'appt-9',
-      roomId: 'room-d',
-      bedId: 'bed-d-4',
-      startTime: '16:00',
-      endTime: '17:30', // 1.5 hours
-      patientName: 'Name Surname',
-      type: 'regular',
-    },
-
-    // New 1-hour appointments (2 slots)
-    {
-      id: 'appt-10',
-      roomId: 'room-a',
-      bedId: 'bed-a-1',
-      startTime: '09:30',
-      endTime: '10:30', // 1 hour
-      patientName: 'John Smith',
-      type: 'regular',
-    },
-    {
-      id: 'appt-11',
-      roomId: 'room-b',
-      bedId: 'bed-b-1',
-      startTime: '11:00',
-      endTime: '12:00', // 1 hour
-      patientName: 'Emma Johnson',
-      type: 'followup',
-    },
-    {
-      id: 'appt-12',
-      roomId: 'room-d',
-      bedId: 'bed-d-2',
-      startTime: '14:00',
-      endTime: '15:00', // 1 hour
-      patientName: 'Michael Brown',
-      type: 'emergency',
-    },
-
-    // New 2-hour appointments (4 slots)
-    {
-      id: 'appt-13',
-      roomId: 'room-a',
-      bedId: 'bed-a-1',
-      startTime: '11:00',
-      endTime: '13:00', // 2 hours
-      patientName: 'Sarah Wilson',
-      type: 'emergency',
-    },
-    {
-      id: 'appt-14',
-      roomId: 'room-b',
-      bedId: 'bed-b-1',
-      startTime: '13:30',
-      endTime: '15:30', // 2 hours
-      patientName: 'David Miller',
-      type: 'regular',
-    },
-    {
-      id: 'appt-15',
-      roomId: 'room-c',
-      bedId: 'bed-c-1',
-      startTime: '12:00',
-      endTime: '14:00', // 2 hours
-      patientName: 'Jennifer Davis',
-      type: 'followup',
-    },
-
-    // New 3-hour appointments (6 slots)
-    {
-      id: 'appt-16',
-      roomId: 'room-a',
-      bedId: 'bed-a-1',
-      startTime: '13:30',
-      endTime: '16:30', // 3 hours
-      patientName: 'Robert Taylor',
-      type: 'emergency',
-    },
-    {
-      id: 'appt-17',
-      roomId: 'room-b',
-      bedId: 'bed-b-1',
-      startTime: '16:00',
-      endTime: '17:30', // 1.5 hours (partial 3-hour due to end of day)
-      patientName: 'Lisa Anderson',
-      type: 'regular',
-    },
-    {
-      id: 'appt-18',
-      roomId: 'room-d',
-      bedId: 'bed-d-2',
-      startTime: '09:00',
-      endTime: '12:00', // 3 hours
-      patientName: 'Thomas White',
-      type: 'followup',
-    },
-  ]);
-
-  // Add a new bed to a room
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addBedToRoom = (roomId: string) => {
-    setRooms(
-      rooms.map(room => {
-        if (room.id === roomId) {
-          const bedCount =
-            room.beds.filter(bed => bed.type === 'Bed').length + 1;
-          const newBed: Bed = {
-            id: `bed-${room.id.split('-')[1].toLowerCase()}-${bedCount}`,
-            name: `Bed ${room.id.split('-')[1].toUpperCase()}-${bedCount}`,
-            type: 'Bed',
-          };
-          return { ...room, beds: [...room.beds, newBed] };
-        }
-        return room;
-      })
-    );
+    // do nothing for now
   };
 
   // Add a new room
   const addRoom = () => {
-    const roomLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const existingRoomIds = rooms
-      .map(r => r.id)
-      .filter(id => id.startsWith('room-'));
-
-    let nextLetter = 'A';
-    for (let i = 0; i < roomLetters.length; i++) {
-      if (!existingRoomIds.includes(`room-${roomLetters[i].toLowerCase()}`)) {
-        nextLetter = roomLetters[i];
-        break;
-      }
-    }
-
-    const newRoom: Room = {
-      id: `room-${nextLetter.toLowerCase()}`,
-      name: `Room ${nextLetter}`,
-      beds: [],
-    };
-
-    setRooms([...rooms, newRoom]);
+    // do nothing for now
   };
 
   // Get appointment background color based on type
-  const getAppointmentBgColor = (type?: string) => {
-    switch (type) {
-      case 'emergency':
-        return 'bg-indigo-100 border-indigo-300 text-indigo-900';
-      case 'followup':
-        return 'bg-sky-100 border-sky-300 text-sky-900';
+  const getAppointmentBgColor = (status?: VisitResourceStatusEnum) => {
+    switch (status) {
+      case VisitResourceStatusEnum.Completed:
+        return 'bg-green-100';
+      case VisitResourceStatusEnum.InProgress:
+        return 'bg-yellow-100';
+      case VisitResourceStatusEnum.Paused:
+        return 'bg-red-100';
+      case VisitResourceStatusEnum.Stopped:
+        return 'bg-gray-100';
       default:
-        return 'bg-sky-100 border-sky-300 text-sky-900';
+        return 'bg-blue-100';
     }
   };
 
@@ -374,22 +134,21 @@ export default function HospitalTimeline() {
   };
 
   // Find appointments for a specific bed
-  const findAppointmentsForBed = (roomId: string, bedId: string) => {
-    return appointments.filter(
-      appt => appt.roomId === roomId && appt.bedId === bedId
+  const findAppointmentsForBed = (roomId: number, bedId: number) => {
+    return appointments?.filter(
+      appt => appt?.room_id === roomId && appt?.bed_id === bedId
     );
   };
 
-  // Check if a cell should display an appointment
   const shouldDisplayAppointment = (
-    roomId: string,
-    bedId: string,
+    roomId: number,
+    bedId: number,
     timeSlot: string,
     appointment: Appointment
   ) => {
     const slotStartMinutes = timeToMinutes(timeSlot);
     const slotEndMinutes = slotStartMinutes + 30;
-    const apptStartMinutes = timeToMinutes(appointment.startTime);
+    const apptStartMinutes = timeToMinutes(appointment.start_time);
 
     return (
       apptStartMinutes >= slotStartMinutes && apptStartMinutes < slotEndMinutes
@@ -400,11 +159,11 @@ export default function HospitalTimeline() {
   const calculateAppointmentWidth = (appointment: Appointment): number => {
     const startIndex = timeSlots.findIndex(
       slot =>
-        timeToMinutes(slot) <= timeToMinutes(appointment.startTime) &&
-        timeToMinutes(appointment.startTime) < timeToMinutes(slot) + 30
+        timeToMinutes(slot) <= timeToMinutes(appointment.start_time) &&
+        timeToMinutes(appointment.start_time) < timeToMinutes(slot) + 30
     );
     let endIndex = timeSlots.findIndex(
-      slot => timeToMinutes(slot) >= timeToMinutes(appointment.endTime)
+      slot => timeToMinutes(slot) >= timeToMinutes(appointment.end_time)
     );
 
     // If the end time doesn't exactly match a time slot, we need to adjust
@@ -423,26 +182,14 @@ export default function HospitalTimeline() {
     alert(`Selected: ${locationName} at ${timeSlot}`);
   };
 
-  // Format appointment type for display
-  const formatAppointmentType = (type?: string) => {
-    switch (type) {
-      case 'emergency':
-        return 'Emergency';
-      case 'followup':
-        return 'Follow-up';
-      default:
-        return 'Regular';
-    }
-  };
-
   // Render appointment for a specific bed and time slot
   const renderAppointment = (
-    roomId: string,
-    bedId: string,
+    roomId: number,
+    bedId: number,
     timeSlot: string
   ) => {
     const bedAppointments = findAppointmentsForBed(roomId, bedId);
-    const appointmentForSlot = bedAppointments.find(appt =>
+    const appointmentForSlot = bedAppointments?.find(appt =>
       shouldDisplayAppointment(roomId, bedId, timeSlot, appt)
     );
 
@@ -450,12 +197,15 @@ export default function HospitalTimeline() {
       const span = calculateAppointmentWidth(appointmentForSlot);
       const width = span * TIME_CELL_WIDTH - 10;
 
-      const room = rooms.find(r => r.id === roomId);
-      const bed = room?.beds.find(b => b.id === bedId);
+      const room = rooms?.find(r => r.id === roomId);
+      const bed = room?.beds?.find(b => b?.id === bedId);
 
       return (
         <div
-          className={`absolute top-1 left-0 ${getAppointmentBgColor(appointmentForSlot.type)} border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40`}
+          className={cn(
+            'absolute top-1 left-0  border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40',
+            getAppointmentBgColor(appointmentForSlot.status)
+          )}
           style={{
             width: `${width}px`,
             maxWidth: 'none',
@@ -465,27 +215,30 @@ export default function HospitalTimeline() {
             e.stopPropagation();
             alert(
               `Appointment Details:\n\n` +
-                `Patient: ${appointmentForSlot.patientName}\n` +
-                `Time: ${appointmentForSlot.startTime} - ${appointmentForSlot.endTime}\n` +
-                `Location: ${room?.name || 'Unknown Room'} - ${bed?.name || 'Unknown Bed'}\n` +
-                `Type: ${formatAppointmentType(appointmentForSlot.type)}`
+                `Patient: ${appointmentForSlot?.patient?.name}\n` +
+                `Time: ${appointmentForSlot.start_time} - ${appointmentForSlot.end_time}\n` +
+                `Location: ${room?.name || 'Unknown Room'} - ${bed?.name || 'Unknown Bed'}\n`
             );
           }}
         >
-          <span className="inline-flex items-center justify-center bg-indigo-900 text-white rounded-full w-6 h-6 mr-2 flex-shrink-0">
-            NS
+          <span
+            className={cn(
+              'inline-flex items-center justify-center bg-indigo-900 text-white rounded-full w-6 h-6 mr-2 flex-shrink-0'
+            )}
+          >
+            {appointmentForSlot?.patient?.name?.[0].toUpperCase()}
           </span>
           <span className="whitespace-nowrap overflow-hidden text-ellipsis">
-            {appointmentForSlot.patientName}
+            {appointmentForSlot?.patient?.name}
           </span>
         </div>
       );
     }
 
     // Check if this cell is part of a spanning appointment
-    const isPartOfSpanningAppointment = bedAppointments.some(appt => {
-      const apptStartMinutes = timeToMinutes(appt.startTime);
-      const apptEndMinutes = timeToMinutes(appt.endTime);
+    const isPartOfSpanningAppointment = bedAppointments?.some(appt => {
+      const apptStartMinutes = timeToMinutes(appt.start_time);
+      const apptEndMinutes = timeToMinutes(appt.end_time);
       const slotStartMinutes = timeToMinutes(timeSlot);
       const slotEndMinutes = slotStartMinutes + 30;
 
@@ -568,8 +321,11 @@ export default function HospitalTimeline() {
               </TableHeader>
               <TableBody>
                 {/* Room rows */}
-                {rooms.map(room => (
+                {rooms?.map(room => (
                   <RoomRow
+                    expandedByDefault={appointments?.some(
+                      appt => appt.room_id === room.id
+                    )}
                     key={room.id}
                     room={room}
                     timeSlots={timeSlots}

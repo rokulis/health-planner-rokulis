@@ -9,9 +9,16 @@ import List from '@/commons/icons/svg/list.svg';
 import Plus from '@/commons/icons/svg/plus.svg';
 import Timeline from '@/commons/icons/svg/timeline.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
+import { AddTreatment } from '@/features/schedule/add-treatment/AddTreatment';
+import { Medicines } from '@/types/swagger/MedicinesRoute';
+import { Patients } from '@/types/swagger/PatientsRoute';
+import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
 interface Props {
   children: React.ReactNode;
+  patients: Patients.GetPatients.ResponseBody;
+  protocols: Protocols.GetProtocols.ResponseBody;
+  medicines: Medicines.GetMedicines.ResponseBody;
 }
 
 const TABS = [
@@ -27,7 +34,12 @@ const TABS = [
   },
 ];
 
-export const ScheduleLayout: React.FC<Props> = ({ children }) => {
+export const ScheduleLayout: React.FC<Props> = ({
+  children,
+  patients,
+  protocols,
+  medicines,
+}) => {
   const [addNew, setAddNew] = React.useState(false);
 
   return (
@@ -37,7 +49,11 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
         isOpen={addNew}
         onClose={() => setAddNew(false)}
       >
-        Content
+        <AddTreatment
+          medicines={medicines}
+          patients={patients}
+          protocols={protocols}
+        />
       </Drawer>
       <PageLayout
         title="Today’s schedule"

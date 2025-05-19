@@ -1,0 +1,53 @@
+'use client';
+
+import React from 'react';
+
+import { Step, Stepper } from '@/commons/components/stepper/Stepper';
+import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
+import { SelectPatient } from '@/features/schedule/add-treatment/select-patient/SelectPatient';
+import { SelectTreatment } from '@/features/schedule/add-treatment/select-treatment/SelectTreatment';
+import { Medicines } from '@/types/swagger/MedicinesRoute';
+import { Patients } from '@/types/swagger/PatientsRoute';
+import { Protocols } from '@/types/swagger/ProtocolsRoute';
+
+interface Props {
+  patients: Patients.GetPatients.ResponseBody;
+  protocols: Protocols.GetProtocols.ResponseBody;
+  medicines: Medicines.GetMedicines.ResponseBody;
+}
+
+export const AddTreatment: React.FC<Props> = ({
+  patients,
+  protocols,
+  medicines,
+}) => {
+  const [currentStep, setCurrentStep] = React.useState(1);
+
+  // Define your steps with their content
+  const steps: Step[] = [
+    {
+      id: 1,
+      label: 'Patient',
+      content: (
+        <SelectPatient
+          onStepSubmit={() => setCurrentStep(prev => prev + 1)}
+          patients={patients}
+        />
+      ),
+    },
+    {
+      id: 2,
+      label: 'Treatment',
+      content: (
+        <SelectTreatment
+          protocols={protocols}
+          medicines={medicines}
+          onStepSubmit={() => setCurrentStep(prev => prev + 1)}
+        />
+      ),
+    },
+    { id: 3, label: 'Schedule', content: <ScheduleTreatment /> },
+  ];
+
+  return <Stepper steps={steps} currentStep={currentStep} />;
+};

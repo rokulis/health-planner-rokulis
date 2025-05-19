@@ -5,4 +5,6 @@ export * from "./swagger/MedicinesRoute";
 export * from "./swagger/PatientsRoute";
 export * from "./swagger/ProtocolsRoute";
 export * from "./swagger/RoomsRoute";
+export * from "./swagger/ScheduleRoute";
+export * from "./swagger/SectorsRoute";
 export * from "./swagger/TreatmentPlansRoute";

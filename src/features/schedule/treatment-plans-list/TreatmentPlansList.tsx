@@ -5,7 +5,6 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
-import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
@@ -37,9 +36,7 @@ export const TreatmentPlansList: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <ScheduleLayout>
-        <DataTable columns={columns} data={treatmentPlans.data ?? []} />
-      </ScheduleLayout>
+      <DataTable columns={columns} data={treatmentPlans.data ?? []} />
     </>
   );
 };
