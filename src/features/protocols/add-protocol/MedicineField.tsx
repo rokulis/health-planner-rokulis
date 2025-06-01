@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { X } from 'lucide-react';
-import { UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
@@ -31,6 +31,29 @@ export function MedicineField({
   onRemove,
   medicines,
 }: MedicineFieldProps) {
+  const medicineId = useWatch({
+    name: `medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine_id`,
+    control: form.control,
+  });
+
+  React.useEffect(() => {
+    if (medicineId) {
+      const selectedMedicine = medicines.data?.find(
+        m => m.id === Number(medicineId)
+      );
+      if (selectedMedicine) {
+        form.setValue(
+          `medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine.atc_code`,
+          selectedMedicine.atc_code ?? ''
+        );
+        form.setValue(
+          `medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine.procedure`,
+          selectedMedicine.procedure ?? MedicineProcedureEnum.Iv
+        );
+      }
+    }
+  }, [medicineId, medicines.data, form, groupIndex, medicineIndex]);
+
   return (
     <div className="pt-4 mt-2">
       <div className="flex justify-between items-center">

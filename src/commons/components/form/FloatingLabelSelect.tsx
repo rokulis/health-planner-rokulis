@@ -27,7 +27,6 @@ export function FloatingLabelSelect({
   const [hasValue, setHasValue] = React.useState(
     !!props.value || !!props.defaultValue
   );
-  const id = React.useId();
   const displayValue =
     options?.find(
       o => String(o.value).toLowerCase() === String(props.value).toLowerCase()
@@ -46,7 +45,6 @@ export function FloatingLabelSelect({
   return (
     <div className={cn('relative w-full')}>
       <Label
-        htmlFor={`${id}-${props.name}`}
         className={cn(
           'absolute left-3 transition-all duration-200 pointer-events-none text-muted-foreground',
           hasValue
@@ -63,7 +61,6 @@ export function FloatingLabelSelect({
         defaultValue={props.defaultValue}
       >
         <SelectTrigger
-          id={`${id}-${props.name}`}
           className={cn(
             'pt-3 pb-1',
             hasValue ? 'text-foreground' : 'text-transparent'
