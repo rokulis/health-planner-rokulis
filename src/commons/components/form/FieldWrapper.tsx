@@ -10,19 +10,20 @@ import {
   FormMessage,
 } from '@/commons/components/ui/form';
 
-interface Props<D extends FieldValues> {
-  control: Control<D>;
+interface Props<
+  TFieldValues extends FieldValues = FieldValues,
+  TContext = any,
+> {
+  control: Control<TFieldValues, TContext, any>;
   label?: string;
-  name: FieldPath<D>;
+  name: FieldPath<TFieldValues>;
   children: React.ReactElement;
 }
 
-export function FieldWrapper<D extends FieldValues>({
-  control,
-  label,
-  name,
-  children,
-}: Props<D>) {
+export function FieldWrapper<
+  TFieldValues extends FieldValues = FieldValues,
+  TContext = any,
+>({ control, label, name, children }: Props<TFieldValues, TContext>) {
   return (
     <FormField
       control={control}

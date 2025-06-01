@@ -17,7 +17,7 @@ const FloatingLabelInput = React.forwardRef<
   const [isFilled, setIsFilled] = React.useState(false);
 
   React.useEffect(() => {
-    setIsFilled(!!props.value);
+    setIsFilled(!!props.value || props.value === 0 || props.value === '0');
   }, [props.value]);
 
   return (

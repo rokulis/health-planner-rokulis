@@ -4,21 +4,31 @@ import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 
+import { useRouter } from 'next/navigation';
+
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { Button } from '@/commons/components/ui/button';
 import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
-import { AddProtocolForm } from '@/features/protocols/add-protocol/AddProtocolForm';
+import { ProtocolForm } from '@/features/protocols/add-protocol/ProtocolForm';
+import { TableActions } from '@/features/protocols/TableActions';
 import { Protocol } from '@/types/swagger/data-contracts';
+import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
 interface Props {
-  data: Promise<Protocols.GetProtocols.ResponseBody>;
+  protocols: Protocols.GetProtocols.ResponseBody;
+  medicines: Medicines.GetMedicines.ResponseBody;
+  protocol?: Protocols.GetProtocol.ResponseBody;
 }
 
-export const ProtocolsList: React.FC<Props> = ({ data }) => {
-  const [addNew, setAddNew] = React.useState(false);
-  const protocols = React.use(data);
+export const ProtocolsList: React.FC<Props> = ({
+  protocols,
+  medicines,
+  protocol,
+}) => {
+  const router = useRouter();
+  const [addNew, setAddNew] = React.useState(!!protocol?.data?.id || false);
 
   const columns: ColumnDef<Protocol>[] = [
     {
@@ -30,10 +40,32 @@ export const ProtocolsList: React.FC<Props> = ({ data }) => {
       header: 'Cancer Type',
     },
     {
+      id: 'medicines',
+      header: 'Medicines',
+      cell: ({ row }) => {
+        // @ts-expect-error TODO: Missing in swagger
+        const list = row.original.protocol_medicine_groups.flatMap(group =>
+          // @ts-expect-error TODO: Missing in swagger
+          group.protocol_medicines.map(med => med.medicine.atc_code)
+        );
+        return list.length > 0 ? list.join(', ') : 'No medicines';
+      },
+    },
+    {
       accessorKey: 'cycle_duration',
       header: 'Cycle Duration',
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => <TableActions protocol={row.original} />,
+    },
   ];
+
+  const handleClose = () => {
+    setAddNew(false);
+    router.push('/protocols');
+  };
 
   return (
     <PageLayout
@@ -49,7 +81,12 @@ export const ProtocolsList: React.FC<Props> = ({ data }) => {
         </Button>
       }
     >
-      <AddProtocolForm isOpen={addNew} onClose={() => setAddNew(false)} />
+      <ProtocolForm
+        protocol={protocol}
+        medicines={medicines}
+        isOpen={addNew}
+        onClose={handleClose}
+      />
       <DataTable columns={columns} data={protocols.data ?? []} />
     </PageLayout>
   );

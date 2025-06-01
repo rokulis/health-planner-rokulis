@@ -44,23 +44,29 @@ export const PatientForm: React.FC<Props> = ({ isOpen, onClose, patient }) => {
   const onSubmit: SubmitHandler<Patients.CreatePatient.RequestBody> = data => {
     return startTransition(async () => {
       if (patient?.data?.id) {
-        toast.success('Patient updated successfully');
-        return updatePatient(patient.data.id, data).then(() =>
-          router.push('/patients')
-        );
+        return updatePatient(patient.data.id, data).then(res => {
+          if (res.message) {
+            toast.error(res.message);
+          } else {
+            toast.success('Patient updated successfully');
+            router.push('/patients');
+          }
+        });
       }
 
-      toast.success('Patient added successfully');
-      return addPatient(data).then(() => onClose());
+      return addPatient(data).then(res => {
+        if (res.message) {
+          toast.error(res.message);
+        } else {
+          toast.success('Patient created successfully');
+          onClose();
+        }
+      });
     });
   };
 
   return (
-    <Drawer
-      title="Patient Form"
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <Drawer title="Patient Form" isOpen={isOpen} onClose={onClose}>
       {isPending ? <PageTopLoader /> : null}
       <Form {...form}>
         <form

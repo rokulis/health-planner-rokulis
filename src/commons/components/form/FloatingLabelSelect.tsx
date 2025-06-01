@@ -28,6 +28,10 @@ export function FloatingLabelSelect({
     !!props.value || !!props.defaultValue
   );
   const id = React.useId();
+  const displayValue =
+    options?.find(
+      o => String(o.value).toLowerCase() === String(props.value).toLowerCase()
+    )?.label || '';
 
   const handleValueChange = (value: string) => {
     setHasValue(!!value);
@@ -65,7 +69,7 @@ export function FloatingLabelSelect({
             hasValue ? 'text-foreground' : 'text-transparent'
           )}
         >
-          <SelectValue defaultValue={props.defaultValue} placeholder=" " />
+          <SelectValue>{displayValue || 'Select an option'}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {options?.map(option => (
