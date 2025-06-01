@@ -2,9 +2,12 @@ import React from 'react';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { CookiesProvider } from 'next-client-cookies/server';
+
+import { Providers } from '@/commons/components/providers/Providers';
+import { Toaster } from '@/commons/components/ui/sonner';
 
 import './globals.scss';
-import { Providers } from '@/commons/components/providers/Providers';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -24,7 +27,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${inter.className} antialiased`}>
-        <Providers>{children}</Providers>
+        <CookiesProvider>
+          <Providers>{children}</Providers>
+          <Toaster richColors={true} position="top-right" />
+        </CookiesProvider>
       </body>
     </html>
   );

@@ -1,10 +1,13 @@
+import { getPatients } from '@/app/patients/actions';
 import { DashboardLayout } from '@/commons/layouts/DashboardLayout';
 import { PatientsList } from '@/features/patients/PatientsList';
 
-export default function Patients() {
+export default async function Patients() {
+  const patients = await getPatients();
+
   return (
     <DashboardLayout>
-      <PatientsList />
+      <PatientsList patients={patients} />
     </DashboardLayout>
   );
 }

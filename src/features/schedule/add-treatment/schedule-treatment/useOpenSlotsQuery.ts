@@ -1,6 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useCookies } from 'next-client-cookies';
 
 export const useOpenSlotsQuery = (date: string) => {
+  const cookies = useCookies();
+
   const fetchOpenSlots = async () => {
     return await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/schedule/open-slots?date=${date}&sector_id=1&duration=3600`,
@@ -8,8 +11,8 @@ export const useOpenSlotsQuery = (date: string) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer 2|kk6rA0SJmOIoML4zU7mdtEItDZvPXfw46q52xcmS5180cf7b`,
+          Accept: 'application/json',
+          Authorization: `Bearer ${cookies.get('token') || ''}`,
         },
       }
     ).then(res => {

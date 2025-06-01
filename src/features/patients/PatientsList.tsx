@@ -1,19 +1,30 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+'use client';
 
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 
-import { getPatients } from '@/app/patients/actions';
+import { useRouter } from 'next/navigation';
+
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { Button } from '@/commons/components/ui/button';
 import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
+import { PatientForm } from '@/features/patients/patient-form/PatientForm';
+import { TableActions } from '@/features/patients/TableActions';
 import { PatientResource } from '@/types/swagger/data-contracts';
+import { Patients } from '@/types/swagger/PatientsRoute';
 
-export const PatientsList: React.FC = () => {
-  const patients = React.use(getPatients());
+interface Props {
+  patients: Patients.GetPatients.ResponseBody;
+  patient?: Patients.GetPatient.ResponseBody;
+}
+
+export const PatientsList: React.FC<Props> = ({ patients, patient }) => {
+  const router = useRouter();
+  const [addPatientOpen, setAddPatientOpen] = React.useState(
+    !!patient?.data?.id || false
+  );
 
   const columns: ColumnDef<PatientResource>[] = [
     {
@@ -21,8 +32,20 @@ export const PatientsList: React.FC = () => {
       header: 'Full name',
     },
     {
+      accessorKey: 'email',
+      header: 'Email',
+    },
+    {
       accessorKey: 'date_of_birth',
       header: 'Birth date',
+    },
+    {
+      accessorKey: 'personal_code',
+      header: 'Personal code',
+    },
+    {
+      accessorKey: 'phone_number',
+      header: 'Phone number',
     },
     {
       accessorKey: 'weight',
@@ -32,19 +55,43 @@ export const PatientsList: React.FC = () => {
       accessorKey: 'height',
       header: 'Height',
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: info => <TableActions patient={info.row.original} />,
+    },
   ];
 
+  const onCloseForm = () => {
+    setAddPatientOpen(false);
+    router.push('/patients');
+  };
+
   return (
-    <PageLayout
-      title="Patients"
-      actions={
-        <Button size="sm" className="flex gap-2 items-center justify-center">
-          <Plus />
-          Add Patient
-        </Button>
-      }
-    >
-      <DataTable columns={columns} data={patients.data ?? []} />
-    </PageLayout>
+    <>
+      {addPatientOpen ? (
+        <PatientForm
+          patient={patient}
+          isOpen={addPatientOpen}
+          onClose={onCloseForm}
+        />
+      ) : null}
+
+      <PageLayout
+        title="Patients"
+        actions={
+          <Button
+            onClick={() => setAddPatientOpen(true)}
+            size="sm"
+            className="flex gap-2 items-center justify-center"
+          >
+            <Plus />
+            Add Patient
+          </Button>
+        }
+      >
+        <DataTable columns={columns} data={patients.data ?? []} />
+      </PageLayout>
+    </>
   );
 };
