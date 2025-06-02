@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -32,7 +33,9 @@ export const PatientForm: React.FC<Props> = ({ isOpen, onClose, patient }) => {
     defaultValues: {
       name: patient?.data?.name ?? '',
       personal_code: patient?.data?.personal_code ?? '',
-      date_of_birth: patient?.data?.date_of_birth ?? '',
+      date_of_birth: patient?.data?.date_of_birth
+        ? format(new Date(patient.data.date_of_birth), 'yyyy-MM-dd')
+        : '',
       email: patient?.data?.email ?? '',
       phone_number: patient?.data?.phone_number ?? '',
       weight: patient?.data?.weight,
@@ -90,7 +93,11 @@ export const PatientForm: React.FC<Props> = ({ isOpen, onClose, patient }) => {
                 </FieldWrapper>
               </div>
               <div className="col-span-1">
-                <FieldWrapper control={form.control} name="date_of_birth">
+                <FieldWrapper
+                  control={form.control}
+                  name="date_of_birth"
+                  description="Format: 1990-01-01"
+                >
                   <FloatingLabelInput
                     label="Date of birth"
                     id="date_of_birth"

@@ -16,6 +16,7 @@ interface Props<
 > {
   control: Control<TFieldValues, TContext, any>;
   label?: string;
+  description?: string;
   name: FieldPath<TFieldValues>;
   children: React.ReactElement;
 }
@@ -23,20 +24,26 @@ interface Props<
 export function FieldWrapper<
   TFieldValues extends FieldValues = FieldValues,
   TContext = any,
->({ control, label, name, children }: Props<TFieldValues, TContext>) {
+>({
+  control,
+  label,
+  name,
+  children,
+  description,
+}: Props<TFieldValues, TContext>) {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col w-full justify-start items-start">
+        <FormItem className="flex flex-col w-full justify-start items-start gap-0.5">
           {label ? <FormLabel className="text-sm">{label}</FormLabel> : null}
           <FormControl>
             {React.cloneElement(children, {
               ...field,
             })}
           </FormControl>
-          <FormMessage className="text-xs text-danger" />
+          <FormMessage>{description}</FormMessage>
         </FormItem>
       )}
     />

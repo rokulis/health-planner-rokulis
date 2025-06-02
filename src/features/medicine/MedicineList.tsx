@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
+import { format } from 'date-fns';
 
 import { useRouter } from 'next/navigation';
 
@@ -42,6 +43,16 @@ export const MedicineList: React.FC<Props> = ({ medicines, medicine }) => {
     {
       accessorKey: 'created_at',
       header: 'Created At',
+      cell: info => (
+        <>
+          {info.row.original.created_at
+            ? format(
+              new Date(info.row.original.created_at),
+              'yyyy-MM-dd HH:mm:ss'
+            )
+            : '-'}
+        </>
+      ),
     },
     {
       id: 'actions',

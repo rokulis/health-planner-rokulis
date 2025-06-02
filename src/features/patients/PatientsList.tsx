@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
+import { format } from 'date-fns';
 
 import { useRouter } from 'next/navigation';
 
@@ -38,6 +39,13 @@ export const PatientsList: React.FC<Props> = ({ patients, patient }) => {
     {
       accessorKey: 'date_of_birth',
       header: 'Birth date',
+      cell: info => (
+        <>
+          {info.row.original.date_of_birth
+            ? format(new Date(info.row.original.date_of_birth), 'yyyy-MM-dd')
+            : '-'}
+        </>
+      ),
     },
     {
       accessorKey: 'personal_code',
