@@ -12,7 +12,7 @@ export const useOpenSlotsQuery = (date: string) => {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: `Bearer ${cookies.get('token') || ''}`,
+          Authorization: `Bearer ${cookies.get('accessToken') || ''}`,
         },
       }
     ).then(res => {
