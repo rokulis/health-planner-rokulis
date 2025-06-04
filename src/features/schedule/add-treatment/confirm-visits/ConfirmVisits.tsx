@@ -1,5 +1,14 @@
+'use client';
+
 import React from 'react';
 
+import { toast } from 'sonner';
+
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { confirmTreatmentPlan } from '@/app/schedule/actions';
+import { Button } from '@/commons/components/ui/button';
+import Cycle from '@/features/schedule/add-treatment/confirm-visits/Cycle';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
@@ -7,5 +16,43 @@ interface Props {
 }
 
 export const ConfirmVisits: React.FC<Props> = ({ visits }) => {
-  return <pre className="text-xs">{JSON.stringify(visits, null, 2)}</pre>;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const treatmentPlanId = searchParams.get('treatment');
+  const [isOpen, setIsOpen] = React.useState<number | null>(null);
+
+  const onConfirm = async () => {
+    if (!treatmentPlanId) {
+      return;
+    }
+    return confirmTreatmentPlan(parseInt(treatmentPlanId, 10)).then(res => {
+      if (res.message) {
+        toast.error(res.message);
+      } else {
+        toast.success('Visits confirmed successfully');
+        router.push('/');
+      }
+    });
+  };
+
+  return (
+    <div className="flex flex-col h-full justify-between py-6">
+      <div className="flex flex-col h-full">
+        {visits?.data?.treatment_cycles?.map((cycle, idx) => (
+          <Cycle
+            key={idx}
+            cycle={cycle}
+            index={idx}
+            isOpen={isOpen === idx}
+            onToggle={() => setIsOpen(isOpen === idx ? null : idx)}
+          />
+        ))}
+      </div>
+      <div className="col-span-6 mt-12 flex justify-end">
+        <Button onClick={onConfirm} type="submit" className="w-1/2">
+          Confirm Visits
+        </Button>
+      </div>
+    </div>
+  );
 };

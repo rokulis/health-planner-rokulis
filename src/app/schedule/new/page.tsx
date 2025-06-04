@@ -31,6 +31,7 @@ export default async function Home({ searchParams }: NextServerComponentProps) {
   return (
     <DashboardLayout>
       <TimelinePage
+        isDrawerOpen={true}
         roomsData={rooms}
         scheduleData={schedule}
         patientsData={patients}

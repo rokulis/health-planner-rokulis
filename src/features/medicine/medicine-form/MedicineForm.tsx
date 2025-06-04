@@ -102,7 +102,7 @@ export const MedicineForm: React.FC<Props> = ({
               <div className="col-span-1">
                 <FieldWrapper control={form.control} name="procedure">
                   <FloatingLabelSelect
-                    label="Select medicine"
+                    label="Procedure"
                     options={Object.keys(CreateMedicineProcedureEnum).map(
                       key => ({
                         value:

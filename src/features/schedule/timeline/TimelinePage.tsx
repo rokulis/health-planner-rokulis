@@ -14,6 +14,7 @@ interface Props {
   patientsData: Promise<Patients.GetPatients.ResponseBody>;
   protocolsData: Promise<Protocols.GetProtocols.ResponseBody>;
   medicinesData: Promise<Medicines.GetMedicines.ResponseBody>;
+  isDrawerOpen?: boolean;
 }
 
 export const TimelinePage: React.FC<Props> = ({
@@ -22,6 +23,7 @@ export const TimelinePage: React.FC<Props> = ({
   patientsData,
   protocolsData,
   medicinesData,
+  isDrawerOpen,
 }) => {
   const rooms = React.use(roomsData);
   const schedule = React.use(scheduleData);
@@ -30,7 +32,12 @@ export const TimelinePage: React.FC<Props> = ({
   const medicines = React.use(medicinesData);
 
   return (
-    <ScheduleLayout patients={patients} protocols={protocols} medicines={medicines}>
+    <ScheduleLayout
+      isDefaultOpen={isDrawerOpen}
+      patients={patients}
+      protocols={protocols}
+      medicines={medicines}
+    >
       <HospitalTimeline rooms={rooms.data} schedule={schedule.data} />
     </ScheduleLayout>
   );

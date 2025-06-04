@@ -2,6 +2,9 @@
 
 import React from 'react';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { Tabs } from '@/commons/components/tabs/Tabs';
 import { Button } from '@/commons/components/ui/button';
@@ -19,6 +22,7 @@ interface Props {
   patients: Patients.GetPatients.ResponseBody;
   protocols: Protocols.GetProtocols.ResponseBody;
   medicines: Medicines.GetMedicines.ResponseBody;
+  isDefaultOpen?: boolean;
 }
 
 const TABS = [
@@ -39,16 +43,19 @@ export const ScheduleLayout: React.FC<Props> = ({
   patients,
   protocols,
   medicines,
+  isDefaultOpen,
 }) => {
-  const [addNew, setAddNew] = React.useState(false);
+  const router = useRouter();
+  const [addNew, setAddNew] = React.useState(isDefaultOpen ?? false);
+
+  const onClose = () => {
+    setAddNew(false);
+    router.push('/schedule');
+  };
 
   return (
     <>
-      <Drawer
-        title="Schedule treatment "
-        isOpen={addNew}
-        onClose={() => setAddNew(false)}
-      >
+      <Drawer title="Schedule treatment" isOpen={addNew} onClose={onClose}>
         <AddTreatment
           medicines={medicines}
           patients={patients}
@@ -58,13 +65,11 @@ export const ScheduleLayout: React.FC<Props> = ({
       <PageLayout
         title="Today’s schedule"
         actions={
-          <Button
-            size="sm"
-            className="flex gap-2 items-center"
-            onClick={() => setAddNew(true)}
-          >
-            <Plus />
-            Schedule Treatment
+          <Button size="sm" className="flex gap-2 items-center" asChild={true}>
+            <Link href="/schedule/new">
+              <Plus />
+              Schedule Treatment
+            </Link>
           </Button>
         }
       >
