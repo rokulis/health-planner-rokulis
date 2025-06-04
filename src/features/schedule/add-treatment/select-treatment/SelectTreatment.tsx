@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { createTreatmentPlan } from '@/app/treatment-plans/actions';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
@@ -28,23 +28,21 @@ interface Props {
   protocols: Protocols.GetProtocols.ResponseBody;
   medicines: Medicines.GetMedicines.ResponseBody;
   onStepSubmit?: () => void;
+  patientId?: number;
 }
 
 export const SelectTreatment: React.FC<Props> = ({
   protocols,
   medicines,
   onStepSubmit,
+  patientId,
 }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const patient_id = searchParams.has('patient')
-    ? parseInt(searchParams.get('patient') as string, 10)
-    : 1;
 
   const form = useForm<SelectTreatmentFormValues>({
     resolver: zodResolver(SelectTreatmentFormSchema),
     defaultValues: {
-      patient_id: patient_id,
+      patient_id: patientId,
       protocol_id: 0, // No protocol selected initially
       cycles: 10,
       days_between_cycles: 7,
@@ -104,7 +102,7 @@ export const SelectTreatment: React.FC<Props> = ({
     const request = mapTreatmentRequest(data);
     await createTreatmentPlan(request).then(res => {
       if (res.success) {
-        router.push(`?patient=${patient_id}&treatment=${res.data?.id}`);
+        router.push(`?patient=${patientId}&treatment=${res.data?.id}`);
         if (typeof onStepSubmit === 'function') {
           onStepSubmit();
         }
@@ -119,7 +117,7 @@ export const SelectTreatment: React.FC<Props> = ({
         <input
           type="hidden"
           {...form.register('patient_id')}
-          value={patient_id}
+          value={patientId}
         />
 
         <FormLabel className="mb-2">Protocol information</FormLabel>

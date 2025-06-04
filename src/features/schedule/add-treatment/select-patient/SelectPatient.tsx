@@ -16,7 +16,7 @@ import { Patients } from '@/types/swagger/PatientsRoute';
 
 interface Props {
   patients: Patients.GetPatients.ResponseBody;
-  onStepSubmit: () => void;
+  onStepSubmit: (patientId: number) => void;
 }
 
 const FormSchema = z.object({
@@ -36,7 +36,7 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
     router.push(`?patient=${data.patientId}`);
 
     if (typeof onStepSubmit === 'function') {
-      onStepSubmit();
+      onStepSubmit(data.patientId);
     }
   };
 

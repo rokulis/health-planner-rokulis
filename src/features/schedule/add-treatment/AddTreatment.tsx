@@ -26,6 +26,7 @@ export const AddTreatment: React.FC<Props> = ({
   const [proposedVisits, setProposedVisits] =
     React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const [currentStep, setCurrentStep] = React.useState(1);
+  const [patientId, setPatientId] = React.useState<number | undefined>(undefined);
 
   // Define your steps with their content
   const steps: Step[] = [
@@ -34,7 +35,10 @@ export const AddTreatment: React.FC<Props> = ({
       label: 'Patient',
       content: (
         <SelectPatient
-          onStepSubmit={() => setCurrentStep(prev => prev + 1)}
+          onStepSubmit={data => {
+            setPatientId(data);
+            setCurrentStep(prev => prev + 1);
+          }}
           patients={patients}
         />
       ),
@@ -44,6 +48,7 @@ export const AddTreatment: React.FC<Props> = ({
       label: 'Treatment',
       content: (
         <SelectTreatment
+          patientId={patientId}
           protocols={protocols}
           medicines={medicines}
           onStepSubmit={() => setCurrentStep(prev => prev + 1)}
