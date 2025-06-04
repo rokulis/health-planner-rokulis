@@ -8,6 +8,7 @@ import { Schedule } from '@/types/swagger/ScheduleRoute';
 export const getSchedule = async (date: string) => {
   const queryParams = new URLSearchParams();
   queryParams.append('date', date);
+  queryParams.append('sector_id', '1');
   const url = `/schedule?${queryParams.toString()}`;
 
   return apiClient<Schedule.GetSchedule.ResponseBody>(url, {

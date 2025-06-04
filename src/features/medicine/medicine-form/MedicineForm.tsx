@@ -40,8 +40,7 @@ export const MedicineForm: React.FC<Props> = ({
       name: medicine?.data?.name ?? '',
       atc_code: medicine?.data?.atc_code ?? '',
       procedure: CreateMedicineProcedureEnum.Iv,
-      // @ts-expect-error TODO: add to API
-      default_time: (medicine?.data?.default_time as string) ?? '',
+      default_time: medicine?.data?.default_time ?? '',
     },
   });
 
