@@ -37,10 +37,14 @@ export const SelectTreatment: React.FC<Props> = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const patient_id = searchParams.has('patient')
+    ? parseInt(searchParams.get('patient') as string, 10)
+    : 1;
+
   const form = useForm<SelectTreatmentFormValues>({
     resolver: zodResolver(SelectTreatmentFormSchema),
     defaultValues: {
-      patient_id: 1,
+      patient_id: patient_id,
       protocol_id: 0, // No protocol selected initially
       cycles: 10,
       days_between_cycles: 7,
@@ -100,7 +104,7 @@ export const SelectTreatment: React.FC<Props> = ({
     const request = mapTreatmentRequest(data);
     await createTreatmentPlan(request).then(res => {
       if (res.success) {
-        router.push(`?treatment=${res.data?.id}`);
+        router.push(`?patient=${patient_id}&treatment=${res.data?.id}`);
         if (typeof onStepSubmit === 'function') {
           onStepSubmit();
         }
@@ -115,7 +119,7 @@ export const SelectTreatment: React.FC<Props> = ({
         <input
           type="hidden"
           {...form.register('patient_id')}
-          value={String(searchParams.get('patient') ?? 1)}
+          value={patient_id}
         />
 
         <FormLabel className="mb-2">Protocol information</FormLabel>

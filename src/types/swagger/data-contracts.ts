@@ -112,6 +112,8 @@ export interface StoreTreatmentPlanRequest {
   patient_id: number;
   /** @example 1 */
   protocol_id: number;
+  /** @example 1 */
+  sector_id?: number;
   /**
    * Number of cycles
    * @example 10
@@ -227,7 +229,8 @@ export interface TreatmentMedicineResource {
   id?: number;
   treatment_medicine_group_id?: number;
   medicine_id?: number;
-  dose?: number;
+  /** @example "20mg/m2" */
+  dose?: string;
   comment?: string;
   /** Medicine used in treatment protocols */
   medicine?: Medicine;
@@ -235,6 +238,7 @@ export interface TreatmentMedicineResource {
 
 export interface TreatmentPlanResource {
   id?: number;
+  sector_id?: number;
   patient_id?: number;
   /** Number of cycles */
   cycles?: number;
@@ -438,6 +442,11 @@ export interface Medicine {
    * @example "iv"
    */
   procedure?: MedicineProcedureEnum;
+  /**
+   * Default time of the treatment
+   * @example "Every 2 hours"
+   */
+  default_time?: string;
   /**
    * Creation date
    * @format date-time
@@ -1401,6 +1410,15 @@ export enum ProtocolCancerTypeEnum {
   BreastCancer = "breast_cancer",
   ProstateCancer = "prostate_cancer",
   SkinCancer = "skin_cancer",
+  LungCancer = "lung_cancer",
+  ColorectalCancer = "colorectal_cancer",
+  Melanoma = "melanoma",
+  Lymphoma = "lymphoma",
+  Leukemia = "leukemia",
+  MultipleMyeloma = "multiple_myeloma",
+  OvarianCancer = "ovarian_cancer",
+  PancreaticCancer = "pancreatic_cancer",
+  Other = "other",
 }
 
 /** 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday */
@@ -1598,7 +1616,7 @@ export interface CreateMedicinePayload {
   /** @example "Paracetamol" */
   name: string;
   /** @example "N02BE01" */
-  atc_code: string;
+  atc_code?: string;
   /** @example "iv" */
   procedure: CreateMedicineProcedureEnum;
   /** @example "01:30" */

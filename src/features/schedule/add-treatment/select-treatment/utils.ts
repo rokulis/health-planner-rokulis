@@ -11,7 +11,6 @@ export function mapTreatmentRequest(
   return {
     patient_id: currentRequest.patient_id,
     protocol_id: currentRequest.protocol_id,
-    //@ts-expect-error Fix this
     sector_id: currentRequest.sector_id,
     cycles: currentRequest.cycles,
     days_between_cycles: currentRequest.days_between_cycles,
