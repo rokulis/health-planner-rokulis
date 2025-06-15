@@ -14,6 +14,7 @@ import { RoomForm } from '@/features/rooms/add-room/RoomForm';
 import { TableActions } from '@/features/rooms/TableActions';
 import { RoomResource } from '@/types/swagger/data-contracts';
 import { Rooms } from '@/types/swagger/RoomsRoute';
+import { formatTimeToHHMM } from '@/utils/helpers';
 
 interface Props {
   rooms: Rooms.GetAllRooms.ResponseBody;
@@ -32,10 +33,18 @@ export const RoomsList: React.FC<Props> = ({ rooms, room }) => {
     {
       accessorKey: 'work_start_time',
       header: 'Work Start Time',
+      cell: info => {
+        const time = info.row.original.work_start_time;
+        return time ? formatTimeToHHMM(time) : 'Not set';
+      },
     },
     {
       accessorKey: 'work_end_time',
       header: 'Work End Time',
+      cell: info => {
+        const time = info.row.original.work_end_time;
+        return time ? formatTimeToHHMM(time) : 'Not set';
+      },
     },
     {
       accessorKey: 'working_days',
