@@ -20,6 +20,7 @@ import { roomSchema } from '@/features/rooms/add-room/validations';
 import { WorkingDaysSelector } from '@/features/rooms/add-room/WorkingDaysSelector';
 import { StoreRoomRequestCategoryEnum } from '@/types/swagger/data-contracts';
 import { Rooms } from '@/types/swagger/RoomsRoute';
+import { formatTimeToHHMM } from '@/utils/helpers';
 
 interface Props {
   isOpen: boolean;
@@ -33,8 +34,12 @@ export const RoomForm: React.FC<Props> = ({ isOpen, onClose, room }) => {
     defaultValues: {
       name: room?.name ?? '',
       sector_id: room?.sector_id ?? 1,
-      work_start_time: room?.work_start_time ?? '08:00',
-      work_end_time: room?.work_end_time ?? '17:00',
+      work_start_time: room?.work_start_time
+        ? formatTimeToHHMM(room.work_start_time)
+        : '09:00',
+      work_end_time: room?.work_end_time
+        ? formatTimeToHHMM(room.work_end_time)
+        : '17:00',
       working_days: room?.working_days ?? [],
       beds: room?.beds ?? [
         { name: '', category: StoreRoomRequestCategoryEnum.ShortTerm },
