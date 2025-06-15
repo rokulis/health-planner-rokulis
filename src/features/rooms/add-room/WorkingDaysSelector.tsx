@@ -51,8 +51,8 @@ export function WorkingDaysSelector({
         {daysOfWeek.map(day => {
           const isChecked = field.value?.includes(day.id) || false;
           return (
-            <div key={day.id} className="flex items-center space-x-3">
-              <div className="relative">
+            <div key={day.id} className="flex items-center space-x-1.5">
+              <div className="relative flex items-center">
                 <Checkbox
                   id={`day-${day.id}`}
                   checked={isChecked}
