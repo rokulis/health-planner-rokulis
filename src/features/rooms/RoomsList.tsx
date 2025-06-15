@@ -1,0 +1,88 @@
+'use client';
+
+import React from 'react';
+
+import { ColumnDef } from '@tanstack/table-core';
+import { Plus } from 'lucide-react';
+
+import { useRouter } from 'next/navigation';
+
+import { DataTable } from '@/commons/components/data-table/DataTable';
+import { Button } from '@/commons/components/ui/button';
+import { PageLayout } from '@/commons/layouts/PageLayout';
+import { RoomForm } from '@/features/rooms/add-room/RoomForm';
+import { TableActions } from '@/features/rooms/TableActions';
+import { RoomResource } from '@/types/swagger/data-contracts';
+import { Rooms } from '@/types/swagger/RoomsRoute';
+
+interface Props {
+  rooms: Rooms.GetAllRooms.ResponseBody;
+  room?: Rooms.GetRoom.ResponseBody;
+}
+
+export const RoomsList: React.FC<Props> = ({ rooms, room }) => {
+  const router = useRouter();
+  const [addRoom, setAddRoom] = React.useState(!!room?.id || false);
+
+  const columns: ColumnDef<RoomResource>[] = [
+    {
+      accessorKey: 'name',
+      header: 'Protocol',
+    },
+    {
+      accessorKey: 'work_start_time',
+      header: 'Work Start Time',
+    },
+    {
+      accessorKey: 'work_end_time',
+      header: 'Work End Time',
+    },
+    {
+      accessorKey: 'working_days',
+      header: 'Working Days',
+      cell: info => {
+        const days = info.row.original.working_days || [];
+        return days.length > 0
+          ? days.flatMap(d => d + 1).join(', ')
+          : 'No working days';
+      },
+    },
+    {
+      accessorKey: 'beds',
+      header: 'Beds count',
+      cell: info => {
+        const beds = info.row.original.beds || [];
+        return beds.length > 0 ? beds.length : 'No beds';
+      },
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => <TableActions room={row.original} />,
+    },
+  ];
+
+  const onClose = () => {
+    setAddRoom(false);
+    router.push('/rooms');
+  };
+
+  return (
+    <>
+      {addRoom ? (
+        <RoomForm room={room} isOpen={addRoom} onClose={onClose} />
+      ) : null}
+
+      <PageLayout
+        title="Rooms"
+        actions={
+          <Button size="sm" onClick={() => setAddRoom(true)}>
+            <Plus /> Add Room
+          </Button>
+        }
+      >
+        <DataTable columns={columns} data={rooms.data ?? []} />
+      </PageLayout>
+    </>
+  );
+};

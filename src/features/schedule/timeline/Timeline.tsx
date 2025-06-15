@@ -2,14 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import cx from 'classnames';
-import { Plus } from 'lucide-react';
-
-import { Button } from '@/commons/components/ui/button';
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -93,16 +88,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     }
 
     return false;
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const addBedToRoom = (roomId: string) => {
-    // do nothing for now
-  };
-
-  // Add a new room
-  const addRoom = () => {
-    // do nothing for now
   };
 
   // Get appointment background color based on type
@@ -329,7 +314,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                     key={room.id}
                     room={room}
                     timeSlots={timeSlots}
-                    onAddBed={addBedToRoom}
                     handleCellClick={handleCellClick}
                     renderAppointment={renderAppointment}
                     isCurrentHour={isCurrentHour}
@@ -337,54 +321,54 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                 ))}
 
                 {/* Add Room row */}
-                <TableRow>
-                  <TableCell
-                    style={{
-                      position: 'sticky',
-                      left: 0,
-                      zIndex: 50,
-                      backgroundColor: 'white',
-                      borderRight: '1px solid #e5e7eb',
-                      borderBottom: 'none',
-                      padding: 0,
-                    }}
-                  >
-                    <div className="p-4">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-sm flex items-center text-gray-500"
-                        onClick={addRoom}
-                      >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Add room
-                      </Button>
-                    </div>
-                  </TableCell>
+                {/*<TableRow>*/}
+                {/*  <TableCell*/}
+                {/*    style={{*/}
+                {/*      position: 'sticky',*/}
+                {/*      left: 0,*/}
+                {/*      zIndex: 50,*/}
+                {/*      backgroundColor: 'white',*/}
+                {/*      borderRight: '1px solid #e5e7eb',*/}
+                {/*      borderBottom: 'none',*/}
+                {/*      padding: 0,*/}
+                {/*    }}*/}
+                {/*  >*/}
+                {/*    <div className="p-4">*/}
+                {/*      <Button*/}
+                {/*        variant="ghost"*/}
+                {/*        size="sm"*/}
+                {/*        className="text-sm flex items-center text-gray-500"*/}
+                {/*        onClick={addRoom}*/}
+                {/*      >*/}
+                {/*        <Plus className="h-4 w-4 mr-1" />*/}
+                {/*        Add room*/}
+                {/*      </Button>*/}
+                {/*    </div>*/}
+                {/*  </TableCell>*/}
 
-                  {/* Empty time slots for Add Room */}
-                  {timeSlots.map(slot => (
-                    <TableCell
-                      key={`add-room-${slot}`}
-                      className={cx({
-                        'bg-primary/5': isCurrentHour(slot),
-                      })}
-                      style={{
-                        borderRight:
-                          slot !== timeSlots[timeSlots.length - 1]
-                            ? '1px solid #e5e7eb'
-                            : 'none',
-                        borderBottom: 'none',
-                        padding: 0,
-                      }}
-                    >
-                      <div
-                        className="h-12 cursor-pointer hover:bg-gray-50"
-                        onClick={() => handleCellClick('Add Room', null, slot)}
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
+                {/*  /!* Empty time slots for Add Room *!/*/}
+                {/*  {timeSlots.map(slot => (*/}
+                {/*    <TableCell*/}
+                {/*      key={`add-room-${slot}`}*/}
+                {/*      className={cx({*/}
+                {/*        'bg-primary/5': isCurrentHour(slot),*/}
+                {/*      })}*/}
+                {/*      style={{*/}
+                {/*        borderRight:*/}
+                {/*          slot !== timeSlots[timeSlots.length - 1]*/}
+                {/*            ? '1px solid #e5e7eb'*/}
+                {/*            : 'none',*/}
+                {/*        borderBottom: 'none',*/}
+                {/*        padding: 0,*/}
+                {/*      }}*/}
+                {/*    >*/}
+                {/*      <div*/}
+                {/*        className="h-12 cursor-pointer hover:bg-gray-50"*/}
+                {/*        onClick={() => handleCellClick('Add Room', null, slot)}*/}
+                {/*      />*/}
+                {/*    </TableCell>*/}
+                {/*  ))}*/}
+                {/*</TableRow>*/}
               </TableBody>
             </Table>
           </div>

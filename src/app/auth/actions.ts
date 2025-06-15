@@ -5,12 +5,53 @@ import { redirect } from 'next/navigation';
 
 import { apiClient } from '@/app/actions';
 import { Auth } from '@/types/swagger/AuthRoute';
+import { Invitations } from '@/types/swagger/InvitationsRoute';
 
 export async function login(data: Auth.Login.RequestBody) {
   const res = await apiClient<Auth.Login.ResponseBody, Auth.Login.RequestBody>(
     '/auth/login',
     { method: 'POST', body: data, skipAuth: true }
   );
+
+  if (res.data?.token) {
+    const cookieStore = await cookies();
+    cookieStore.set('accessToken', res.data.token);
+
+    redirect('/');
+  }
+
+  return res;
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('accessToken');
+
+  redirect('/auth/login');
+}
+
+export async function validateInvitationToken(token: string) {
+  const res = await apiClient<Invitations.ValidateInvitation.ResponseBody>(
+    '/auth/validate-invitation-token',
+    {
+      method: 'POST',
+      body: { token },
+      skipAuth: true,
+    }
+  );
+
+  if (!res.success) {
+    redirect('/auth/login');
+  }
+
+  return res;
+}
+
+export async function register(data: Auth.Register.RequestBody) {
+  const res = await apiClient<
+    Auth.Register.ResponseBody,
+    Auth.Register.RequestBody
+  >('/auth/register', { method: 'POST', body: data, skipAuth: true });
 
   if (res.data?.token) {
     const cookieStore = await cookies();

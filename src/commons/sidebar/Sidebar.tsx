@@ -1,11 +1,20 @@
 'use client';
 
+import React from 'react';
+
 import cx from 'classnames';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { logout } from '@/app/auth/actions';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/commons/components/ui/dropdown-menu';
 import ChevronDown from '@/commons/icons/svg/chevron_down.svg';
 import Hospital from '@/commons/icons/svg/hospital.svg';
 import Medicine from '@/commons/icons/svg/medicine.svg';
@@ -13,6 +22,9 @@ import Patient from '@/commons/icons/svg/patient.svg';
 import Protocols from '@/commons/icons/svg/protocols.svg';
 import Rooms from '@/commons/icons/svg/rooms.svg';
 import Settings from '@/commons/icons/svg/settings.svg';
+import { Me } from '@/types/swagger/MeRoute';
+
+import { Button } from '../components/ui/button';
 
 const SIDEBAR_LINKS = [
   {
@@ -42,7 +54,11 @@ const SIDEBAR_LINKS = [
   },
 ];
 
-export const Sidebar = () => {
+interface Props {
+  me: Me.GetProfile.ResponseBody;
+}
+
+export const Sidebar: React.FC<Props> = ({ me }) => {
   const pathname = usePathname();
 
   return (
@@ -56,9 +72,18 @@ export const Sidebar = () => {
             height={40}
             className="rounded-full"
           />
-          <h1 className="text-sm">Dr. Tomas Myliukas</h1>
+          <h1 className="text-sm">{me.data?.name}</h1>
         </div>
-        <ChevronDown />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild={true}>
+            <Button variant="ghost">
+              <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="flex flex-col gap-1 border-y border-gray my-4 py-4 text-dark-gray text-sm">
         {SIDEBAR_LINKS.map(link => (

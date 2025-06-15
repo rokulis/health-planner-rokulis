@@ -12,7 +12,7 @@ import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
 import { ProtocolForm } from '@/features/protocols/add-protocol/ProtocolForm';
 import { TableActions } from '@/features/protocols/TableActions';
-import { Protocol } from '@/types/swagger/data-contracts';
+import { ProtocolResource } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
@@ -30,7 +30,7 @@ export const ProtocolsList: React.FC<Props> = ({
   const router = useRouter();
   const [addNew, setAddNew] = React.useState(!!protocol?.data?.id || false);
 
-  const columns: ColumnDef<Protocol>[] = [
+  const columns: ColumnDef<ProtocolResource>[] = [
     {
       accessorKey: 'name',
       header: 'Protocol',
@@ -43,12 +43,10 @@ export const ProtocolsList: React.FC<Props> = ({
       id: 'medicines',
       header: 'Medicines',
       cell: ({ row }) => {
-        // @ts-expect-error TODO: Missing in swagger
-        const list = row.original.protocol_medicine_groups.flatMap(group =>
-          // @ts-expect-error TODO: Missing in swagger
-          group.protocol_medicines.map(med => med.medicine.atc_code)
+        const list = row.original.protocol_medicine_groups?.flatMap(group =>
+          group.protocol_medicines?.map(med => med.medicine?.atc_code)
         );
-        return list.length > 0 ? list.join(', ') : 'No medicines';
+        return list && list.length > 0 ? list?.join(', ') : 'No medicines';
       },
     },
     {

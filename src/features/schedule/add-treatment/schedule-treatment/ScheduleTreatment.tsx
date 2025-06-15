@@ -12,7 +12,7 @@ import { planVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
-import { Form } from '@/commons/components/ui/form';
+import { Form, FormLabel } from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
@@ -79,9 +79,10 @@ export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-between justify-between h-full"
+          className="flex flex-col items-between justify-between h-full px-4"
         >
-          <div className="flex gap-2 flex-wrap px-4">
+          <FormLabel className="mb-2">Select available time</FormLabel>
+          <div className="flex gap-2 flex-wrap">
             {uniqueTimeSlots.map((slot, index) => (
               <button
                 type="button"

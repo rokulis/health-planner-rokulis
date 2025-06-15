@@ -23,7 +23,7 @@ export function Tabs({ tabs, className }: TabsProps) {
   const pathname = usePathname();
 
   return (
-    <div className={cn(className)}>
+    <div className={cn('border-b border-muted-foreground/10', className)}>
       <div className="flex h-12 items-center px-4 gap-4">
         {tabs.map(tab => {
           const Icon = tab.icon;

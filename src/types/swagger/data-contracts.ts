@@ -185,6 +185,8 @@ export interface PatientResource {
   address?: string;
 }
 
+export type ProfileResource = User;
+
 export type ProtocolResource = Protocol & {
   protocol_medicine_groups?: ProtocolMedicineGroup[];
 };
@@ -695,7 +697,7 @@ export interface ProtocolMedicine {
    * @format int64
    * @example 1
    */
-  protocol_medicine_group_id: number;
+  protocol_medicine_group_id?: number;
   /**
    * Dose in mg
    * @example "100mg"
@@ -736,7 +738,7 @@ export interface ProtocolMedicineGroup {
    * @format int64
    * @example 1
    */
-  protocol_id: number;
+  protocol_id?: number;
   /**
    * Duration of treatment in seconds
    * @example 3600
@@ -1698,6 +1700,12 @@ export interface DeletePatientData {
   success?: boolean;
 }
 
+export interface GetProfileData {
+  /** @example true */
+  success?: boolean;
+  data?: ProfileResource;
+}
+
 export interface GetProtocolsData {
   /** @example true */
   success?: boolean;
@@ -1843,6 +1851,11 @@ export interface UpdateTreatmentPlanData {
 }
 
 export interface DeleteTreatmentPlanData {
+  /** @example true */
+  success?: boolean;
+}
+
+export interface CancelTreatmentPlanData {
   /** @example true */
   success?: boolean;
 }

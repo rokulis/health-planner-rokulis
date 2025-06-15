@@ -11,6 +11,7 @@
  */
 
 import {
+  CancelTreatmentPlanData,
   ConfirmTreatmentPlanData,
   CreateTreatmentPlanData,
   DeleteTreatmentPlanData,
@@ -169,5 +170,23 @@ export namespace TreatmentPlans {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = DeleteTreatmentPlanData;
+  }
+
+  /**
+   * No description
+   * @tags Treatment Plans
+   * @name CancelTreatmentPlan
+   * @request DELETE:/treatment-plans/{id}/cancel
+   * @secure
+   */
+  export namespace CancelTreatmentPlan {
+    export type RequestParams = {
+      /** Treatment Plan ID */
+      id: any;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CancelTreatmentPlanData;
   }
 }

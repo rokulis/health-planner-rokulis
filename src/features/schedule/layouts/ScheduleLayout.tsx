@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { Tabs } from '@/commons/components/tabs/Tabs';
 import { Button } from '@/commons/components/ui/button';
+import { DateNavigator } from '@/commons/date-navigator/DateNavigator';
 import List from '@/commons/icons/svg/list.svg';
 import Plus from '@/commons/icons/svg/plus.svg';
 import Timeline from '@/commons/icons/svg/timeline.svg';
@@ -53,6 +54,10 @@ export const ScheduleLayout: React.FC<Props> = ({
     router.push('/schedule');
   };
 
+  const onDateChange = (date: string) => {
+    router.push(`/schedule?date=${date}`);
+  };
+
   return (
     <>
       <Drawer title="Schedule treatment" isOpen={addNew} onClose={onClose}>
@@ -65,12 +70,19 @@ export const ScheduleLayout: React.FC<Props> = ({
       <PageLayout
         title="Today’s schedule"
         actions={
-          <Button size="sm" className="flex gap-2 items-center" asChild={true}>
-            <Link href="/schedule/new">
-              <Plus />
-              Schedule Treatment
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <DateNavigator onDateChange={onDateChange} />
+            <Button
+              size="sm"
+              className="flex gap-2 items-center"
+              asChild={true}
+            >
+              <Link href="/schedule/new">
+                <Plus />
+                Schedule Treatment
+              </Link>
+            </Button>
+          </div>
         }
       >
         <div className="flex flex-col">

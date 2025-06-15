@@ -12,7 +12,6 @@ import { RoomResource } from '@/types/swagger/data-contracts';
 interface RoomRowProps {
   room: RoomResource;
   timeSlots: string[];
-  onAddBed: (roomId: string) => void;
   handleCellClick: (
     roomName: string,
     bedName: string | null,

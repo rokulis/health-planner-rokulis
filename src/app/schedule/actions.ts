@@ -14,7 +14,7 @@ export const getSchedule = async (date: string) => {
   return apiClient<Schedule.GetSchedule.ResponseBody>(url, {
     next: {
       revalidate: 3600, // Revalidate every hour
-      tags: ['schedule'],
+      tags: [`schedule-${date}`],
     },
   });
 };
