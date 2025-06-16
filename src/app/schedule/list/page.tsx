@@ -1,12 +1,18 @@
 import { getMedicines } from '@/app/medicine/actions';
 import { getPatients } from '@/app/patients/actions';
 import { getProtocols } from '@/app/protocols/actions';
-import { getTreatmentPlans } from '@/app/treatment-plans/actions';
+import { getSchedule } from '@/app/schedule/actions';
 import { DashboardLayout } from '@/commons/layouts/DashboardLayout';
 import { TreatmentPlansList } from '@/features/schedule/treatment-plans-list/TreatmentPlansList';
+import { NextServerComponentProps } from '@/utils/ts-utils';
 
-export default async function Home() {
-  const treatmentPlans = getTreatmentPlans();
+export default async function Home({ searchParams }: NextServerComponentProps) {
+  const params = await searchParams;
+  const schedule = getSchedule(
+    params.date
+      ? (params.date as string)
+      : new Date().toISOString().split('T')[0]
+  );
   const patients = getPatients();
   const protocols = getProtocols();
   const medicines = getMedicines();
@@ -14,7 +20,7 @@ export default async function Home() {
   return (
     <DashboardLayout>
       <TreatmentPlansList
-        data={treatmentPlans}
+        scheduleData={schedule}
         patientsData={patients}
         protocolsData={protocols}
         medicinesData={medicines}

@@ -3,34 +3,37 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
+import { format } from 'date-fns';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
+import { VisitStatusBadge } from '@/commons/visit-status-badge/VisitStatusBadge';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
-import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
+import { VisitResource } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
+import { Schedule } from '@/types/swagger/ScheduleRoute';
+import { secondsToHHMM } from '@/utils/helpers';
 
 interface Props {
-  data: Promise<TreatmentPlans.GetTreatmentPlans.ResponseBody>;
+  scheduleData: Promise<Schedule.GetSchedule.ResponseBody>;
   patientsData: Promise<Patients.GetPatients.ResponseBody>;
   protocolsData: Promise<Protocols.GetProtocols.ResponseBody>;
   medicinesData: Promise<Medicines.GetMedicines.ResponseBody>;
 }
 
 export const TreatmentPlansList: React.FC<Props> = ({
-  data,
+  scheduleData,
   protocolsData,
   patientsData,
   medicinesData,
 }) => {
-  const treatmentPlans = React.use(data);
+  const schedule = React.use(scheduleData);
   const patients = React.use(patientsData);
   const protocols = React.use(protocolsData);
   const medicines = React.use(medicinesData);
 
-  const columns: ColumnDef<TreatmentPlanResource>[] = [
+  const columns: ColumnDef<VisitResource>[] = [
     {
       accessorKey: 'id',
       header: '#',
@@ -46,16 +49,45 @@ export const TreatmentPlansList: React.FC<Props> = ({
       },
     },
     {
-      accessorKey: 'patient_id',
-      header: 'Patient',
+      accessorKey: 'date_time',
+      header: 'Date & Time',
+      cell: info => (
+        <>
+          {info.row.original.date_time
+            ? format(new Date(info.row.original.date_time), 'yyyy-MM-dd HH:mm')
+            : '-'}
+        </>
+      ),
     },
     {
-      accessorKey: 'days_between_cycles',
-      header: 'Days Between Cycles',
+      accessorKey: 'duration',
+      header: 'Duration',
+      cell: ({ row }) => {
+        const duration = row.original.duration;
+        if (duration) {
+          return <span>{secondsToHHMM(duration)}</span>;
+        }
+
+        return <span>-</span>;
+      },
     },
     {
       accessorKey: 'status',
       header: 'Status',
+      cell: ({ row }) => {
+        if (!row.original.status) {
+          return <span>-</span>;
+        }
+        return <VisitStatusBadge status={row.original.status} />;
+      },
+    },
+    {
+      accessorKey: 'notes',
+      header: 'Notes',
+      cell: ({ row }) => {
+        const notes = row.original.notes || '-';
+        return <span>{notes}</span>;
+      },
     },
   ];
 
@@ -65,7 +97,7 @@ export const TreatmentPlansList: React.FC<Props> = ({
       patients={patients}
       medicines={medicines}
     >
-      <DataTable columns={columns} data={treatmentPlans.data ?? []} />
+      <DataTable columns={columns} data={schedule.data ?? []} />
     </ScheduleLayout>
   );
 };
