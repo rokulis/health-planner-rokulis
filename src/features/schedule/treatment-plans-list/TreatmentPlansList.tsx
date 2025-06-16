@@ -13,7 +13,6 @@ import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
-import { secondsToHHMM } from '@/utils/helpers';
 
 interface Props {
   scheduleData: Promise<Schedule.GetSchedule.ResponseBody>;
