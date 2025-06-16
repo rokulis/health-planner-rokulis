@@ -62,19 +62,23 @@ export const Team: React.FC<Props> = ({ invitations, addNew }) => {
     <>
       <TeamForm isOpen={addNewMember} onClose={onClose} />
       <SettingsLayout>
-        <div className="flex justify-between items-center my-6 px-6">
-          <h2 className="text-xl font-semibold">Pending Invitations</h2>
-          <Button size="sm" className="btn btn-primary" asChild={true}>
-            <Link href="/settings/team/new">
-              <Plus /> Add Member
-            </Link>
-          </Button>
-        </div>
-        <DataTable
-          columns={columns}
-          data={invitations.data ?? []}
-          showPagination={false}
-        />
+        {!!invitations.data ? (
+          <>
+            <div className="flex justify-between items-center my-6 px-6">
+              <h2 className="text-xl font-semibold">Pending Invitations</h2>
+              <Button size="sm" className="btn btn-primary" asChild={true}>
+                <Link href="/settings/team/new">
+                  <Plus /> Add Member
+                </Link>
+              </Button>
+            </div>
+            <DataTable
+              columns={columns}
+              data={invitations.data ?? []}
+              showPagination={false}
+            />
+          </>
+        ) : null}
       </SettingsLayout>
     </>
   );

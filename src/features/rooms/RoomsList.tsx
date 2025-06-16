@@ -14,14 +14,16 @@ import { RoomForm } from '@/features/rooms/add-room/RoomForm';
 import { TableActions } from '@/features/rooms/TableActions';
 import { RoomResource } from '@/types/swagger/data-contracts';
 import { Rooms } from '@/types/swagger/RoomsRoute';
+import { Sectors } from '@/types/swagger/SectorsRoute';
 import { formatTimeToHHMM } from '@/utils/helpers';
 
 interface Props {
   rooms: Rooms.GetAllRooms.ResponseBody;
+  sectors: Sectors.GetSectors.ResponseBody;
   room?: Rooms.GetRoom.ResponseBody;
 }
 
-export const RoomsList: React.FC<Props> = ({ rooms, room }) => {
+export const RoomsList: React.FC<Props> = ({ rooms, sectors, room }) => {
   const router = useRouter();
   const [addRoom, setAddRoom] = React.useState(!!room?.id || false);
 
@@ -79,7 +81,12 @@ export const RoomsList: React.FC<Props> = ({ rooms, room }) => {
   return (
     <>
       {addRoom ? (
-        <RoomForm room={room} isOpen={addRoom} onClose={onClose} />
+        <RoomForm
+          sectors={sectors}
+          room={room}
+          isOpen={addRoom}
+          onClose={onClose}
+        />
       ) : null}
 
       <PageLayout

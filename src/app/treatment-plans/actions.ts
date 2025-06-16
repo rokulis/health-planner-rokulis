@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidateTag } from 'next/cache';
+
 import { apiClient } from '@/app/actions';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
@@ -12,13 +14,20 @@ export const getTreatmentPlans = async () => {
 export const createTreatmentPlan = async (
   data: TreatmentPlans.CreateTreatmentPlan.RequestBody
 ) => {
-  return await apiClient<TreatmentPlans.CreateTreatmentPlan.ResponseBody>(
+  const res = await apiClient<TreatmentPlans.CreateTreatmentPlan.ResponseBody>(
     '/treatment-plans',
     {
       method: 'POST',
       body: data,
     }
   );
+
+  if (res.success) {
+    revalidateTag('schedule');
+    revalidateTag('treatment-plans');
+  }
+
+  return res;
 };
 
 export const planVisits = async ({

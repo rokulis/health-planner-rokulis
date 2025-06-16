@@ -14,7 +14,7 @@ export const getSchedule = async (date: string) => {
   return apiClient<Schedule.GetSchedule.ResponseBody>(url, {
     next: {
       revalidate: 3600, // Revalidate every hour
-      tags: [`schedule-${date}`],
+      tags: ['schedule', `schedule-${date}`],
     },
   });
 };
@@ -35,6 +35,7 @@ export const confirmTreatmentPlan = async (id: number) => {
 
   if (res.success) {
     revalidateTag('schedule');
+    revalidateTag('treatment-plans');
   }
 
   return res;

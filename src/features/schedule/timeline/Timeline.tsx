@@ -244,7 +244,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
 
   return (
     <div className="overflow-hidden bg-white shadow-sm">
-      {/* Header styled like the image */}
       <div className="bg-white p-2 border-b border-primary/20">
         <h2 className="text-md font-medium">{formatDisplayDate()}</h2>
       </div>
@@ -319,56 +318,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                     isCurrentHour={isCurrentHour}
                   />
                 ))}
-
-                {/* Add Room row */}
-                {/*<TableRow>*/}
-                {/*  <TableCell*/}
-                {/*    style={{*/}
-                {/*      position: 'sticky',*/}
-                {/*      left: 0,*/}
-                {/*      zIndex: 50,*/}
-                {/*      backgroundColor: 'white',*/}
-                {/*      borderRight: '1px solid #e5e7eb',*/}
-                {/*      borderBottom: 'none',*/}
-                {/*      padding: 0,*/}
-                {/*    }}*/}
-                {/*  >*/}
-                {/*    <div className="p-4">*/}
-                {/*      <Button*/}
-                {/*        variant="ghost"*/}
-                {/*        size="sm"*/}
-                {/*        className="text-sm flex items-center text-gray-500"*/}
-                {/*        onClick={addRoom}*/}
-                {/*      >*/}
-                {/*        <Plus className="h-4 w-4 mr-1" />*/}
-                {/*        Add room*/}
-                {/*      </Button>*/}
-                {/*    </div>*/}
-                {/*  </TableCell>*/}
-
-                {/*  /!* Empty time slots for Add Room *!/*/}
-                {/*  {timeSlots.map(slot => (*/}
-                {/*    <TableCell*/}
-                {/*      key={`add-room-${slot}`}*/}
-                {/*      className={cx({*/}
-                {/*        'bg-primary/5': isCurrentHour(slot),*/}
-                {/*      })}*/}
-                {/*      style={{*/}
-                {/*        borderRight:*/}
-                {/*          slot !== timeSlots[timeSlots.length - 1]*/}
-                {/*            ? '1px solid #e5e7eb'*/}
-                {/*            : 'none',*/}
-                {/*        borderBottom: 'none',*/}
-                {/*        padding: 0,*/}
-                {/*      }}*/}
-                {/*    >*/}
-                {/*      <div*/}
-                {/*        className="h-12 cursor-pointer hover:bg-gray-50"*/}
-                {/*        onClick={() => handleCellClick('Add Room', null, slot)}*/}
-                {/*      />*/}
-                {/*    </TableCell>*/}
-                {/*  ))}*/}
-                {/*</TableRow>*/}
               </TableBody>
             </Table>
           </div>

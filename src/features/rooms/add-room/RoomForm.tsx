@@ -13,6 +13,7 @@ import { createRoom, updateRoom } from '@/app/rooms/actions';
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
+import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import { RoomBed } from '@/features/rooms/add-room/RoomBed';
@@ -20,20 +21,27 @@ import { roomSchema } from '@/features/rooms/add-room/validations';
 import { WorkingDaysSelector } from '@/features/rooms/add-room/WorkingDaysSelector';
 import { StoreRoomRequestCategoryEnum } from '@/types/swagger/data-contracts';
 import { Rooms } from '@/types/swagger/RoomsRoute';
+import { Sectors } from '@/types/swagger/SectorsRoute';
 import { formatTimeToHHMM } from '@/utils/helpers';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   room?: Rooms.GetRoom.ResponseBody;
+  sectors: Sectors.GetSectors.ResponseBody;
 }
 
-export const RoomForm: React.FC<Props> = ({ isOpen, onClose, room }) => {
+export const RoomForm: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  room,
+  sectors,
+}) => {
   const form = useForm<z.infer<typeof roomSchema>>({
     resolver: zodResolver(roomSchema),
     defaultValues: {
       name: room?.name ?? '',
-      sector_id: room?.sector_id ?? 1,
+      sector_id: room?.sector_id ?? sectors.data?.[0]?.id ?? 1,
       work_start_time: room?.work_start_time
         ? formatTimeToHHMM(room.work_start_time)
         : '09:00',
@@ -80,13 +88,22 @@ export const RoomForm: React.FC<Props> = ({ isOpen, onClose, room }) => {
     <Drawer title="Room Form" isOpen={isOpen} onClose={onClose}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <input type="hidden" {...form.register('sector_id')} value="1" />
-
           <FormLabel className="my-4">Room information</FormLabel>
           <div className="grid grid-cols-6 gap-4">
             <div className="col-span-6">
               <FieldWrapper control={form.control} name="name">
                 <FloatingLabelInput id="name" label="Room name" />
+              </FieldWrapper>
+            </div>
+            <div className="col-span-6">
+              <FieldWrapper control={form.control} name="sector_id">
+                <FloatingLabelSelect
+                  label="Sector"
+                  options={(sectors?.data ?? [])?.map(s => ({
+                    value: String(s.id),
+                    label: String(s.name),
+                  }))}
+                />
               </FieldWrapper>
             </div>
             <div className="col-span-3">
