@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { minutesToSeconds, secondsToMinutes } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -36,6 +37,7 @@ const transformTreatmentDaysToArrayOfNumber = (
     ...data,
     medicine_groups: data.medicine_groups.map(mg => ({
       ...mg,
+      duration: minutesToSeconds(mg.duration),
       treatment_days: mg.treatment_days
         .split(',')
         .map(day => parseInt(day.trim(), 10))
@@ -60,6 +62,7 @@ export const ProtocolForm: React.FC<Props> = ({
       cycle_duration: protocol?.data?.cycle_duration ?? 1,
       medicine_groups: protocol?.data?.protocol_medicine_groups?.map(mg => ({
         ...mg,
+        duration: secondsToMinutes(mg.duration) ?? 1,
         treatment_days: mg.treatment_days.join(',') ?? '',
         medicines:
           mg.protocol_medicines?.map(pm => ({

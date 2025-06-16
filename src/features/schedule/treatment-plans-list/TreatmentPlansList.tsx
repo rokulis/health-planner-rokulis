@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
-import { format } from 'date-fns';
+import { format, secondsToMinutes } from 'date-fns';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { VisitStatusBadge } from '@/commons/visit-status-badge/VisitStatusBadge';
@@ -65,7 +65,7 @@ export const TreatmentPlansList: React.FC<Props> = ({
       cell: ({ row }) => {
         const duration = row.original.duration;
         if (duration) {
-          return <span>{secondsToHHMM(duration)}</span>;
+          return <span>{secondsToMinutes(duration)}min</span>;
         }
 
         return <span>-</span>;

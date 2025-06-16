@@ -1,3 +1,5 @@
+import { minutesToSeconds } from 'date-fns';
+
 import { SelectTreatmentFormValues } from '@/features/schedule/add-treatment/select-treatment/validations';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
@@ -18,7 +20,7 @@ export function mapTreatmentRequest(
       protocol_id: currentRequest.protocol_id,
       medicine_groups: currentRequest.medicine_groups.map(group => ({
         protocol_medicine_group_id: group.protocol_medicine_group_id,
-        duration: group.duration,
+        duration: minutesToSeconds(group.duration),
         treatment_days: group.treatment_days,
         medicines: group.medicines.map(medicine => ({
           medicine_id: medicine.medicine_id,

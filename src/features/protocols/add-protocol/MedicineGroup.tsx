@@ -59,7 +59,7 @@ export function MedicineGroup({
             control={form.control}
             name={`medicine_groups.${index}.duration`}
           >
-            <FloatingLabelInput label="Duration" />
+            <FloatingLabelInput label="Duration (minutes)" />
           </FieldWrapper>
         </div>
         <div className="col-span-2">

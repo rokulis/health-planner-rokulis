@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { secondsToMinutes } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 
@@ -70,7 +71,7 @@ export const SelectTreatment: React.FC<Props> = ({
       const medicineGroups = selectedProtocol.protocol_medicine_groups?.map(
         group => ({
           protocol_medicine_group_id: group.id,
-          duration: group.duration,
+          duration: secondsToMinutes(group.duration),
           treatment_days: group.treatment_days,
           medicines: group.protocol_medicines?.map(medicine => {
             // Parse dose to extract number and unit
