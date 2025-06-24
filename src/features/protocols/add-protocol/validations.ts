@@ -19,7 +19,7 @@ export const medicineSchema = z.object({
 export const protocolMedicineSchema = z.object({
   medicine_id: z.coerce.number().min(1, 'Medicine ID is required'),
   dose: z.coerce.string().min(1, 'Dosage must be at least 1'),
-  comments: z.string().optional(),
+  comments: z.string().optional().nullish(),
   protocol_medicine_group_id: z.coerce.number().int().nonnegative(),
   medicine: medicineSchema,
 });
@@ -42,21 +42,3 @@ export const protocolSchema = z.object({
     .array(medicineGroupSchema)
     .min(1, 'At least one medicine group is required'),
 });
-
-export type FormInputs = z.infer<typeof protocolSchema> & {
-  medicine_groups: {
-    protocol_id: number;
-    duration: number;
-    treatment_days: string;
-    medicines: {
-      protocol_medicine_group_id: number;
-      dose: string;
-      comments?: string;
-      medicine: {
-        atc_code: string;
-        procedure: MedicineProcedureEnum;
-        default_time?: string;
-      };
-    }[];
-  };
-};

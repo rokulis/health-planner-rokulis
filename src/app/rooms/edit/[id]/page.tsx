@@ -19,8 +19,7 @@ export default async function Rooms(props: NextServerComponentProps) {
 
   return (
     <DashboardLayout>
-      {/*@ts-expect-error TODO: Fix in API*/}
-      <RoomsList room={room.data} rooms={rooms} sectors={sectors} />
+      <RoomsList room={room} rooms={rooms} sectors={sectors} />
     </DashboardLayout>
   );
 }

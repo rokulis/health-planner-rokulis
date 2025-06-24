@@ -12,6 +12,22 @@
 
 type UtilRequiredKeys<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
+/**
+ * Status of the visit
+ * @example "scheduled"
+ */
+export enum VisitStatusEnum {
+  Scheduled = "scheduled",
+  InProgress = "in_progress",
+  Completed = "completed",
+  Cancelled = "cancelled",
+}
+
+export interface ApiResponse {
+  /** @example true */
+  success: boolean;
+}
+
 export interface StoreBedRequest {
   /** @example "Bed 1" */
   name: string;
@@ -170,6 +186,10 @@ export interface UpdateTreatmentPlanRequest {
   }[];
 }
 
+export type ClinicResource = Clinic & {
+  users?: User[];
+};
+
 export interface PatientResource {
   id?: number;
   name?: string;
@@ -257,12 +277,19 @@ export interface VisitResource {
   treatment_cycle_id?: number;
   room_id?: number;
   bed_id?: number;
-  status?: VisitResourceStatusEnum;
+  /** Possible statuses for a visit */
+  status?: VisitStatusEnum;
   /** @format date-time */
   date_time?: string;
+  /** @format date-time */
+  end_time?: string;
   duration?: number;
   notes?: string;
   patient?: PatientResource;
+  /** Room within a clinic sector */
+  room?: Room;
+  /** Bed within a room */
+  bed?: Bed;
   visit_treatments?: VisitTreatmentResource[];
 }
 
@@ -329,22 +356,6 @@ export interface Clinic {
    * @example "Memorial Cancer Center"
    */
   name: string;
-  /**
-   * Clinic address
-   * @example "123 Main St, Anytown, USA"
-   */
-  address?: string;
-  /**
-   * Clinic phone number
-   * @example "555-123-4567"
-   */
-  phone?: string;
-  /**
-   * Clinic email address
-   * @format email
-   * @example "info@memorialcancer.com"
-   */
-  email?: string;
   /**
    * Creation date
    * @format date-time
@@ -1359,13 +1370,6 @@ export enum TreatmentPlanResourceStatusEnum {
   Confirmed = "confirmed",
 }
 
-export enum VisitResourceStatusEnum {
-  InProgress = "in_progress",
-  Completed = "completed",
-  Stopped = "stopped",
-  Paused = "paused",
-}
-
 export enum VisitTreatmentResourceStatusEnum {
   Administering = "administering",
   Pending = "pending",
@@ -1468,17 +1472,6 @@ export enum UserRoleEnum {
 }
 
 /**
- * Status of the visit
- * @example "scheduled"
- */
-export enum VisitStatusEnum {
-  Scheduled = "scheduled",
-  InProgress = "in_progress",
-  Completed = "completed",
-  Cancelled = "cancelled",
-}
-
-/**
  * Status of the treatment
  * @example "planned"
  */
@@ -1545,6 +1538,12 @@ export interface RegisterData {
 export interface LogoutData {
   /** @example true */
   success?: boolean;
+}
+
+export interface GetClinicData {
+  /** @example true */
+  success?: boolean;
+  data?: ClinicResource;
 }
 
 export interface GetInvitationsData {
@@ -1706,6 +1705,28 @@ export interface GetProfileData {
   data?: ProfileResource;
 }
 
+export interface UpdateUserProfilePayload {
+  /**
+   * Updated name
+   * @example "John Doe"
+   */
+  name?: string;
+  /**
+   * Updated email
+   * @format email
+   * @example "john.doe@example.com"
+   */
+  email?: string;
+  /**
+   * New password
+   * @format password
+   * @example "newpassword123"
+   */
+  password?: string;
+}
+
+export type UpdateUserProfileData = ApiResponse;
+
 export interface GetProtocolsData {
   /** @example true */
   success?: boolean;
@@ -1751,13 +1772,35 @@ export interface GetAllRoomsData {
   data?: RoomResource[];
 }
 
-export type CreateRoomData = Room;
+export interface CreateRoomData {
+  /** @example true */
+  success?: boolean;
+  /** Room within a clinic sector */
+  data?: Room;
+}
 
-export type GetRoomData = Room;
+export interface GetRoomData {
+  /** @example true */
+  success?: boolean;
+  /** Room within a clinic sector */
+  data?: Room;
+}
 
-export type UpdateRoomData = Room;
+export type UpdateRoomPayload = Room & {
+  beds?: Bed[];
+};
 
-export type Cf9104Dbefd91A81Bebb07Cafe7E70CfData = any;
+export interface UpdateRoomData {
+  /** @example true */
+  success?: boolean;
+  /** Room within a clinic sector */
+  data?: Room;
+}
+
+export interface Cf9104Dbefd91A81Bebb07Cafe7E70CfData {
+  /** @example true */
+  success?: boolean;
+}
 
 export interface GetScheduleParams {
   /** @format date */
@@ -1858,4 +1901,10 @@ export interface DeleteTreatmentPlanData {
 export interface CancelTreatmentPlanData {
   /** @example true */
   success?: boolean;
+}
+
+export interface GetVisitData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource;
 }

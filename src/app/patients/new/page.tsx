@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation';
-
 import { getMedicines } from '@/app/medicine/actions';
 import { getPatient, getPatients } from '@/app/patients/actions';
 import { getProtocols } from '@/app/protocols/actions';
@@ -13,19 +11,15 @@ export default async function Patients(props: NextServerComponentProps) {
   const protocols = await getProtocols();
   const medicines = await getMedicines();
 
-  if (!params.id) {
-    return redirect('/patients');
-  }
-
   const patient = await getPatient(params.id);
 
   return (
     <DashboardLayout>
       <PatientsList
-        medicines={medicines}
-        protocols={protocols}
         patients={patients}
         patient={patient}
+        medicines={medicines}
+        protocols={protocols}
         isDefaultOpen={true}
       />
     </DashboardLayout>

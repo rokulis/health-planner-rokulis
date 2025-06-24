@@ -15,9 +15,9 @@ import {
   CreateRoomData,
   GetAllRoomsData,
   GetRoomData,
-  Room,
   StoreRoomRequest,
   UpdateRoomData,
+  UpdateRoomPayload,
 } from "./data-contracts";
 
 export namespace Rooms {
@@ -87,7 +87,7 @@ export namespace Rooms {
       id: number;
     };
     export type RequestQuery = {};
-    export type RequestBody = Room;
+    export type RequestBody = UpdateRoomPayload;
     export type RequestHeaders = {};
     export type ResponseBody = UpdateRoomData;
   }

@@ -5,28 +5,29 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format } from 'date-fns';
 
-import { useRouter } from 'next/navigation';
-
 import { DataTable } from '@/commons/components/data-table/DataTable';
-import { Button } from '@/commons/components/ui/button';
-import Plus from '@/commons/icons/svg/plus.svg';
-import { PageLayout } from '@/commons/layouts/PageLayout';
-import { PatientForm } from '@/features/patients/patient-form/PatientForm';
+import { PatientsLayout } from '@/features/patients/layouts/PatientsLayout';
 import { TableActions } from '@/features/patients/TableActions';
 import { PatientResource } from '@/types/swagger/data-contracts';
+import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Patients } from '@/types/swagger/PatientsRoute';
+import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
 interface Props {
   patients: Patients.GetPatients.ResponseBody;
   patient?: Patients.GetPatient.ResponseBody;
+  protocols: Protocols.GetProtocols.ResponseBody;
+  medicines: Medicines.GetMedicines.ResponseBody;
+  isDefaultOpen?: boolean;
 }
 
-export const PatientsList: React.FC<Props> = ({ patients, patient }) => {
-  const router = useRouter();
-  const [addPatientOpen, setAddPatientOpen] = React.useState(
-    !!patient?.data?.id || false
-  );
-
+export const PatientsList: React.FC<Props> = ({
+  patients,
+  patient,
+  medicines,
+  protocols,
+  isDefaultOpen,
+}) => {
   const columns: ColumnDef<PatientResource>[] = [
     {
       accessorKey: 'name',
@@ -70,36 +71,14 @@ export const PatientsList: React.FC<Props> = ({ patients, patient }) => {
     },
   ];
 
-  const onCloseForm = () => {
-    setAddPatientOpen(false);
-    router.push('/patients');
-  };
-
   return (
-    <>
-      {addPatientOpen ? (
-        <PatientForm
-          patient={patient}
-          isOpen={addPatientOpen}
-          onClose={onCloseForm}
-        />
-      ) : null}
-
-      <PageLayout
-        title="Patients"
-        actions={
-          <Button
-            onClick={() => setAddPatientOpen(true)}
-            size="sm"
-            className="flex gap-2 items-center justify-center"
-          >
-            <Plus />
-            Add Patient
-          </Button>
-        }
-      >
-        <DataTable columns={columns} data={patients.data ?? []} />
-      </PageLayout>
-    </>
+    <PatientsLayout
+      patient={patient}
+      medicines={medicines}
+      protocols={protocols}
+      isDefaultOpen={isDefaultOpen}
+    >
+      <DataTable columns={columns} data={patients.data ?? []} />
+    </PatientsLayout>
   );
 };

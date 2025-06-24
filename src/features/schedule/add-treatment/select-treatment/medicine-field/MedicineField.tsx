@@ -5,7 +5,7 @@ import type { Control } from 'react-hook-form';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
-import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
+import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { Button } from '@/commons/components/ui/button';
 import { FormLabel } from '@/commons/components/ui/form';
 import { Textarea } from '@/commons/components/ui/textarea';
@@ -49,7 +49,7 @@ export function MedicineField({
             control={control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine_id`}
           >
-            <FloatingLabelSelect
+            <FloatingLabelSearchableSelect
               label="Select medicine"
               options={(medicines.data ?? [])?.map(m => ({
                 value: String(m.id),

@@ -6,10 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
-import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
+import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import { Patients } from '@/types/swagger/PatientsRoute';
@@ -28,7 +29,7 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      patientId: 0,
+      patientId: patients.data?.[0]?.id ?? -1, // Default to the first patient or -1 if none
     },
   });
 
@@ -48,16 +49,25 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col items-between justify-between h-full"
         >
-          <FieldWrapper control={form.control} name="patientId">
-            <FloatingLabelSelect
-              label="Patient"
-              name="patientId"
-              options={(patients.data ?? [])?.map(p => ({
-                value: String(p.id),
-                label: String(p.name),
-              }))}
-            />
-          </FieldWrapper>
+          <div className="flex flex-col gap-4 items-center justify-center">
+            <FieldWrapper control={form.control} name="patientId">
+              <FloatingLabelSearchableSelect
+                label="Patient"
+                name="patientId"
+                options={(patients.data ?? [])?.map(p => ({
+                  value: String(p.id),
+                  label: String(p.name),
+                }))}
+              />
+            </FieldWrapper>
+            <span className="text-muted-foreground/80">or</span>
+            <div className="flex justify-end mb-2">
+              <Button asChild={true} className="w-full" size="sm">
+                <Link href="/patients/new">Add new patient</Link>
+              </Button>
+            </div>
+          </div>
+
           <div className="flex justify-end">
             <Button>Next</Button>
           </div>

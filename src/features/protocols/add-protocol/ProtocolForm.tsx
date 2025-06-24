@@ -183,6 +183,7 @@ export const ProtocolForm: React.FC<Props> = ({
           <div className="p-2 mt-4 border border-dashed border-black/10 rounded-md">
             <Button
               variant="ghost"
+              type="button"
               onClick={() =>
                 append({
                   duration: 1,

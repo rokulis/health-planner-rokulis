@@ -15,6 +15,7 @@ import { MedicineForm } from '@/features/medicine/medicine-form/MedicineForm';
 import { TableActions } from '@/features/medicine/TableActions';
 import { Medicine } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
+import { MedicineProcedure } from '@/utils/factory';
 
 interface Props {
   medicines: Medicines.GetMedicines.ResponseBody;
@@ -39,6 +40,10 @@ export const MedicineList: React.FC<Props> = ({ medicines, medicine }) => {
     {
       accessorKey: 'procedure',
       header: 'Procedure',
+      cell: info =>
+        info.row.original.procedure
+          ? MedicineProcedure[info.row.original.procedure]
+          : '-',
     },
     {
       accessorKey: 'created_at',

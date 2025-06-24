@@ -15,6 +15,7 @@ import {
 import { Input } from '@/commons/components/ui/input';
 import { Label } from '@/commons/components/ui/label';
 import { roomSchema } from '@/features/rooms/add-room/validations';
+import { BedTimeLimit } from '@/features/rooms/utils';
 import { StoreRoomRequestCategoryEnum } from '@/types/swagger/data-contracts';
 
 interface SpotCardProps {
@@ -64,6 +65,13 @@ export function RoomBed({ index, form, onRemove }: SpotCardProps) {
         </div>
 
         <div className="space-y-4">
+          <div className="flex flex-col">
+            <Label className="text-base font-medium text-gray-700">
+              Time Limit
+            </Label>
+            <span className="text-sm text-black/50">{BedTimeLimit[categoryField.value]}</span>
+          </div>
+
           <div className="grid grid-cols-3 gap-2">
             {Object.keys(StoreRoomRequestCategoryEnum).map(key => {
               const isSelected =

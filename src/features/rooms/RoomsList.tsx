@@ -25,7 +25,7 @@ interface Props {
 
 export const RoomsList: React.FC<Props> = ({ rooms, sectors, room }) => {
   const router = useRouter();
-  const [addRoom, setAddRoom] = React.useState(!!room?.id || false);
+  const [addRoom, setAddRoom] = React.useState(!!room?.data?.id || false);
 
   const columns: ColumnDef<RoomResource>[] = [
     {

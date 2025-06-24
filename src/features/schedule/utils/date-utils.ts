@@ -5,27 +5,57 @@
  */
 export function roundToNearest15Min(dateTime: Date | string): Date {
   // Convert to Date object if string is provided
-  const date =
-    typeof dateTime === 'string' ? new Date(dateTime) : new Date(dateTime);
+  const inputDate = typeof dateTime === 'string' ? new Date(dateTime) : new Date(dateTime);
 
-  // Get minutes and round to nearest 15
-  const minutes = date.getMinutes();
-  const remainder = minutes % 15;
+  // If input was a UTC string, we need to work with the UTC time but return local equivalent
+  const isUTCString = typeof dateTime === 'string' && dateTime.endsWith('Z');
 
-  // Round up or down based on remainder
-  if (remainder < 7.5) {
-    // Round down
-    date.setMinutes(minutes - remainder);
+  let minutes: number;
+
+  if (isUTCString) {
+    // Get UTC minutes for calculation
+    minutes = inputDate.getUTCMinutes();
+
+    // Create a new date in local timezone with the same UTC time components
+    const date = new Date(
+      inputDate.getUTCFullYear(),
+      inputDate.getUTCMonth(),
+      inputDate.getUTCDate(),
+      inputDate.getUTCHours(),
+      inputDate.getUTCMinutes(),
+      0, // seconds
+      0  // milliseconds
+    );
+
+    // Round the minutes
+    const remainder = minutes % 15;
+
+    if (remainder < 7.5) {
+      // Round down
+      date.setMinutes(minutes - remainder);
+    } else {
+      // Round up
+      date.setMinutes(minutes + (15 - remainder));
+    }
+
+    return date;
   } else {
-    // Round up
-    date.setMinutes(minutes + (15 - remainder));
+    // Work with local time for non-UTC inputs
+    const date = new Date(inputDate);
+    minutes = date.getMinutes();
+    const remainder = minutes % 15;
+
+    if (remainder < 7.5) {
+      date.setMinutes(minutes - remainder);
+    } else {
+      date.setMinutes(minutes + (15 - remainder));
+    }
+
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    return date;
   }
-
-  // Reset seconds and milliseconds
-  date.setSeconds(0);
-  date.setMilliseconds(0);
-
-  return date;
 }
 
 /**
@@ -61,17 +91,11 @@ export interface ParsedVisitTime {
   end_date: Date;
 }
 
-/**
- * Processes a visit to get the correct timeline start and end times
- * @param dateTime ISO date string for the visit start time
- * @param durationInSeconds Duration of the visit in seconds
- * @returns Object with formatted start and end times for the timeline
- */
 export function processVisitTime(
   dateTime?: string,
-  durationInSeconds?: number
+  endTime?: string,
 ): ParsedVisitTime {
-  if(!dateTime || !durationInSeconds) {
+  if (!dateTime || !endTime) {
     return {
       start_time: '',
       end_time: '',
@@ -82,14 +106,12 @@ export function processVisitTime(
 
   // Round the start time to nearest 15 minutes
   const roundedStartTime = roundToNearest15Min(dateTime);
-
-  // Calculate the end time based on duration
-  const endTime = calculateEndTime(roundedStartTime, durationInSeconds);
+  const roundedEndTime = roundToNearest15Min(endTime);
 
   return {
     start_time: formatTimeForTimeline(roundedStartTime),
-    end_time: formatTimeForTimeline(endTime),
+    end_time: formatTimeForTimeline(roundedEndTime),
     start_date: roundedStartTime,
-    end_date: endTime,
+    end_date: roundedEndTime,
   };
 }

@@ -5,8 +5,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { useRouter } from 'next/navigation';
-
 import { createMedicine, updateMedicine } from '@/app/medicine/actions';
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
@@ -19,6 +17,7 @@ import { Form, FormLabel } from '@/commons/components/ui/form';
 import { medicineSchema } from '@/features/medicine/medicine-form/validations';
 import { CreateMedicineProcedureEnum } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
+import { MedicineProcedure } from '@/utils/factory';
 
 interface Props {
   isOpen: boolean;
@@ -32,7 +31,6 @@ export const MedicineForm: React.FC<Props> = ({
   medicine,
 }) => {
   const [isPending, startTransition] = React.useTransition();
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof medicineSchema>>({
     resolver: zodResolver(medicineSchema),
@@ -58,7 +56,7 @@ export const MedicineForm: React.FC<Props> = ({
             return;
           } else {
             toast.success('Medicine updated successfully');
-            router.push('/patients');
+            onClose();
           }
         });
       }
@@ -108,7 +106,12 @@ export const MedicineForm: React.FC<Props> = ({
                           CreateMedicineProcedureEnum[
                             key as keyof typeof CreateMedicineProcedureEnum
                           ],
-                        label: key.replace(/([A-Z])/g, ' $1').trim(),
+                        label:
+                          MedicineProcedure[
+                            CreateMedicineProcedureEnum[
+                              key as keyof typeof CreateMedicineProcedureEnum
+                            ]
+                          ],
                       })
                     )}
                   />

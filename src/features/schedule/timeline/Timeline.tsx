@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useSearchParams } from 'next/navigation';
+
 import {
   Table,
   TableBody,
@@ -15,11 +17,7 @@ import {
   processVisitTime,
 } from '@/features/schedule/utils/date-utils';
 import { cn } from '@/lib/utils';
-import {
-  RoomResource,
-  VisitResource,
-  VisitResourceStatusEnum,
-} from '@/types/swagger/data-contracts';
+import { RoomResource, VisitResource, VisitStatusEnum } from '@/types/swagger/data-contracts';
 
 // Fixed cell width for time slots
 const TIME_CELL_WIDTH = 80;
@@ -32,13 +30,13 @@ interface Props {
 type Appointment = VisitResource & ParsedVisitTime;
 
 export default function HospitalTimeline({ rooms, schedule }: Props) {
-  // Ref for the scrollable container
+  const searchParams = useSearchParams();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
 
   const appointments = schedule?.map(s => ({
     ...s,
-    ...processVisitTime(s.date_time, s.duration),
+    ...processVisitTime(s.date_time, s.end_time),
   }));
 
   // State for current time
@@ -91,15 +89,15 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
   };
 
   // Get appointment background color based on type
-  const getAppointmentBgColor = (status?: VisitResourceStatusEnum) => {
+  const getAppointmentBgColor = (status?: VisitStatusEnum) => {
     switch (status) {
-      case VisitResourceStatusEnum.Completed:
+      case VisitStatusEnum.Completed:
         return 'bg-green-100';
-      case VisitResourceStatusEnum.InProgress:
+      case VisitStatusEnum.Cancelled:
         return 'bg-yellow-100';
-      case VisitResourceStatusEnum.Paused:
+      case VisitStatusEnum.InProgress:
         return 'bg-red-100';
-      case VisitResourceStatusEnum.Stopped:
+      case VisitStatusEnum.Scheduled:
         return 'bg-gray-100';
       default:
         return 'bg-blue-100';
@@ -108,7 +106,8 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
 
   // Format date for display
   const formatDisplayDate = () => {
-    const date = new Date();
+    const dateParam = searchParams.get('date');
+    const date = dateParam ? new Date(dateParam) : new Date();
     return `${date.toLocaleDateString('en-US', { weekday: 'long' })}, ${date.toLocaleDateString('en-US', { month: 'long' })} ${date.getDate()}`;
   };
 
@@ -254,7 +253,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
           ref={scrollContainerRef}
           style={{ position: 'relative' }}
         >
-          {/* Custom table with shadcn components */}
           <div className="relative" style={{ overflow: 'hidden' }}>
             <Table className="border-collapse" ref={tableRef}>
               <TableHeader className="sticky top-0 z-20">

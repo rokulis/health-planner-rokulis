@@ -12,7 +12,7 @@ const bedSchema = z.object({
 
 export const roomSchema = z.object({
   name: z.string().min(1, 'Room name is required'),
-  sector_id: z.number().min(1, 'Sector ID must be at least 1'),
+  sector_id: z.coerce.number().min(1, 'Sector ID must be at least 1'),
   work_start_time: z
     .string()
     .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format'),

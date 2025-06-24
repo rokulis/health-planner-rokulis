@@ -37,7 +37,7 @@ export const ConfirmVisits: React.FC<Props> = ({ visits }) => {
 
   return (
     <div className="flex flex-col h-full justify-between py-6">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full rounded-md">
         {visits?.data?.treatment_cycles?.map((cycle, idx) => (
           <Cycle
             key={idx}

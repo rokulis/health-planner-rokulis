@@ -40,16 +40,16 @@ export const RoomForm: React.FC<Props> = ({
   const form = useForm<z.infer<typeof roomSchema>>({
     resolver: zodResolver(roomSchema),
     defaultValues: {
-      name: room?.name ?? '',
-      sector_id: room?.sector_id ?? sectors.data?.[0]?.id ?? 1,
-      work_start_time: room?.work_start_time
-        ? formatTimeToHHMM(room.work_start_time)
+      name: room?.data.name ?? '',
+      sector_id: room?.data.sector_id ?? sectors.data?.[0]?.id ?? 1,
+      work_start_time: room?.data.work_start_time
+        ? formatTimeToHHMM(room.data.work_start_time)
         : '09:00',
-      work_end_time: room?.work_end_time
-        ? formatTimeToHHMM(room.work_end_time)
+      work_end_time: room?.data.work_end_time
+        ? formatTimeToHHMM(room.data.work_end_time)
         : '17:00',
-      working_days: room?.working_days ?? [],
-      beds: room?.beds ?? [
+      working_days: room?.data.working_days ?? [],
+      beds: room?.data.beds ?? [
         { name: '', category: StoreRoomRequestCategoryEnum.ShortTerm },
       ],
     },

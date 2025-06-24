@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
+import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
 import { Button } from '@/commons/components/ui/button';
 import { FormLabel } from '@/commons/components/ui/form';
@@ -15,6 +16,7 @@ import { Textarea } from '@/commons/components/ui/textarea';
 import { protocolSchema } from '@/features/protocols/add-protocol/validations';
 import { MedicineProcedureEnum } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
+import { MedicineProcedure } from '@/utils/factory';
 
 interface MedicineFieldProps {
   groupIndex: number;
@@ -77,7 +79,7 @@ export function MedicineField({
               control={form.control}
               name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine_id`}
             >
-              <FloatingLabelSelect
+              <FloatingLabelSearchableSelect
                 label="Select medicine"
                 options={medicines.data.map(m => ({
                   value: String(m.id),
@@ -108,7 +110,9 @@ export function MedicineField({
                   MedicineProcedureEnum[
                     key as keyof typeof MedicineProcedureEnum
                   ],
-                label: key.replace(/([A-Z])/g, ' $1').trim(),
+                label: MedicineProcedure[MedicineProcedureEnum[
+                  key as keyof typeof MedicineProcedureEnum
+                ]],
               }))}
             />
           </FieldWrapper>

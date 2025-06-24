@@ -63,6 +63,7 @@ export function MedicineGroup({
           <FieldWrapper
             control={control}
             name={`medicine_groups.${index}.treatment_days`}
+            description="Separated by comma. ie: 1,4,8"
           >
             <FloatingLabelInput label="Treatment Days" />
           </FieldWrapper>

@@ -2,7 +2,6 @@
 
 import { ChevronDown, ChevronUp, Clock, MapPin, Calendar } from 'lucide-react';
 
-import { Badge } from '@/commons/components/ui/badge';
 import {
   Card,
   CardContent,
@@ -35,36 +34,31 @@ function formatDate(dateString: string) {
 }
 
 function formatDuration(seconds: number) {
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
 
   if (hours > 0) {
-    return `${hours}h ${minutes > 0 ? `${minutes}min` : ""}`
+    return `${hours}h ${minutes > 0 ? `${minutes}min` : ''}`;
   }
-  return `${minutes}min`
+  return `${minutes}min`;
 }
 
 export default function Cycle({ cycle, isOpen, index, onToggle }: CycleProps) {
   return (
-    <Card className="overflow-hidden bg-primary/5 py-2 border-0 shadow-none rounded-sm border-b border-primary/50">
+    <Card className="overflow-hidden bg-primary/10 py-2 px-0 border-0 shadow-none rounded-none border-b border-primary/20">
       <Collapsible open={isOpen} onOpenChange={onToggle}>
-        <CollapsibleTrigger asChild={true} className="flex items-center justify-between w-full">
-          <CardHeader className="cursor-pointer transition-colors">
+        <CollapsibleTrigger
+          asChild={true}
+          className="flex items-center justify-between w-full"
+        >
+          <CardHeader className="cursor-pointer transition-colors py-1">
             <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 bg-white px-1.5 py-1 text-sm">
                 <CardTitle className="text-md font-semibold text-primary">
                   Cycle {index + 1}
                 </CardTitle>
-                {cycle.start_date ? (
-                  <div className="text-xs text-gray-500">
-                    {formatDate(cycle.start_date)}
-                  </div>
-                ) : null}
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-xs">
-                  {cycle.visits?.length} visits
-                </Badge>
                 {isOpen ? (
                   <ChevronUp className="h-5 w-5 text-gray-400" />
                 ) : (
@@ -76,13 +70,10 @@ export default function Cycle({ cycle, isOpen, index, onToggle }: CycleProps) {
         </CollapsibleTrigger>
 
         <CollapsibleContent>
-          <CardContent className="py-2">
-            <div className="space-y-2">
+          <CardContent className="bg-white px-0">
+            <div className="space-y-2 px-5 bg-primary/5">
               {cycle.visits?.map((visit, idx) => (
-                <div
-                  key={visit.id}
-                  className="p-2 bg-gray-50 rounded-md"
-                >
+                <div key={visit.id} className="p-2 border-b border-primary/10">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
                       <h4 className="font-medium text-black text-sm">
@@ -108,9 +99,6 @@ export default function Cycle({ cycle, isOpen, index, onToggle }: CycleProps) {
                         </div>
                       </div>
                     </div>
-                    <Badge variant="default" className="text-xs capitalize">
-                      {visit.status}
-                    </Badge>
                   </div>
                 </div>
               ))}

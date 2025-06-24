@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { createTreatmentPlan } from '@/app/treatment-plans/actions';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
-import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
+import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import { mapTreatmentRequest } from '@/features/schedule/add-treatment/select-treatment/utils';
@@ -44,7 +44,7 @@ export const SelectTreatment: React.FC<Props> = ({
     resolver: zodResolver(SelectTreatmentFormSchema),
     defaultValues: {
       patient_id: patientId,
-      protocol_id: 0, // No protocol selected initially
+      protocol_id: null as unknown as number, // Protocol ID will be set after selection
       cycles: 10,
       days_between_cycles: 7,
       sector_id: 1,
@@ -125,7 +125,7 @@ export const SelectTreatment: React.FC<Props> = ({
         <div className="grid grid-cols-6 gap-4">
           <div className="col-span-6">
             <FieldWrapper control={form.control} name="protocol_id">
-              <FloatingLabelSelect
+              <FloatingLabelSearchableSelect
                 label="Select protocol"
                 onValueChange={handleProtocolSelect}
                 options={(protocols.data ?? [])?.map(p => ({
