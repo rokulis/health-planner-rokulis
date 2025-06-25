@@ -14,17 +14,12 @@ interface StepperProps {
   onStepChange?: (step: number) => void;
 }
 
-export function Stepper({ steps, currentStep, onStepChange }: StepperProps) {
+export function Stepper({ steps, currentStep }: StepperProps) {
   return (
     <div className="w-full flex flex-col h-full mb-4">
       <div className="flex items-center justify-center">
         {steps.map((step, index) => (
-          <button
-            type="button"
-            onClick={() => onStepChange?.(step.id)}
-            key={step.id}
-            className="flex items-center cursor-pointer"
-          >
+          <button type="button" key={step.id} className="flex items-center">
             <div
               className={`flex text-sm items-center justify-center w-[24px] h-[24px] rounded-full border-2 ${
                 step.id === currentStep
