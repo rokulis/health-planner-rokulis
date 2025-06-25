@@ -12,11 +12,6 @@ import { RoomResource } from '@/types/swagger/data-contracts';
 interface RoomRowProps {
   room: RoomResource;
   timeSlots: string[];
-  handleCellClick: (
-    roomName: string,
-    bedName: string | null,
-    timeSlot: string
-  ) => void;
   renderAppointment: (
     roomId: number,
     bedId: number,
@@ -29,7 +24,6 @@ interface RoomRowProps {
 export function RoomRow({
   room,
   timeSlots,
-  handleCellClick,
   renderAppointment,
   isCurrentHour,
   expandedByDefault = true,
@@ -86,12 +80,7 @@ export function RoomRow({
               padding: 0,
             }}
           >
-            <div
-              className="h-12 relative cursor-pointer hover:bg-gray-50"
-              onClick={() =>
-                room.name && handleCellClick(room.name, null, slot)
-              }
-            />
+            <div className="h-12 relative cursor-pointer hover:bg-gray-50" />
           </TableCell>
         ))}
       </TableRow>
@@ -133,13 +122,7 @@ export function RoomRow({
                   padding: 0,
                 }}
               >
-                <div
-                  className="h-12 cursor-pointer hover:bg-gray-50"
-                  onClick={() =>
-                    room.name &&
-                    handleCellClick(room.name, bed?.name ?? '', slot)
-                  }
-                >
+                <div className="h-12 cursor-pointer hover:bg-gray-50">
                   {renderAppointment(room.id ?? 1, bed.id ?? 1, slot)}
                 </div>
               </TableCell>

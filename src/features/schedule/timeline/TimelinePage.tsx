@@ -7,6 +7,7 @@ import { Patients } from '@/types/swagger/PatientsRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 import { Rooms } from '@/types/swagger/RoomsRoute';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
+import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface Props {
   roomsData: Promise<Rooms.GetAllRooms.ResponseBody>;
@@ -14,6 +15,7 @@ interface Props {
   patientsData: Promise<Patients.GetPatients.ResponseBody>;
   protocolsData: Promise<Protocols.GetProtocols.ResponseBody>;
   medicinesData: Promise<Medicines.GetMedicines.ResponseBody>;
+  visitData?: Promise<Visits.GetVisit.ResponseBody>;
   isDrawerOpen?: boolean;
 }
 
@@ -23,6 +25,7 @@ export const TimelinePage: React.FC<Props> = ({
   patientsData,
   protocolsData,
   medicinesData,
+  visitData,
   isDrawerOpen,
 }) => {
   const rooms = React.use(roomsData);
@@ -30,6 +33,7 @@ export const TimelinePage: React.FC<Props> = ({
   const patients = React.use(patientsData);
   const protocols = React.use(protocolsData);
   const medicines = React.use(medicinesData);
+  const visit = visitData ? React.use(visitData) : null;
 
   return (
     <ScheduleLayout
@@ -37,6 +41,7 @@ export const TimelinePage: React.FC<Props> = ({
       patients={patients}
       protocols={protocols}
       medicines={medicines}
+      visit={visit}
     >
       <HospitalTimeline rooms={rooms.data} schedule={schedule.data} />
     </ScheduleLayout>

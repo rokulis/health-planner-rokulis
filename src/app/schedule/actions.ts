@@ -4,6 +4,7 @@ import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
+import { Visits } from '@/types/swagger/VisitsRoute';
 
 export const getSchedule = async (date: string) => {
   const queryParams = new URLSearchParams();
@@ -39,4 +40,16 @@ export const confirmTreatmentPlan = async (id: number) => {
   }
 
   return res;
+};
+
+export const getVisit = async (visitId: number) => {
+  return apiClient<Visits.GetVisit.ResponseBody>(
+    `/visits/${visitId}`,
+    {
+      next: {
+        tags: ['schedule', `visit-${visitId}`],
+        revalidate: 3600, // Revalidate every hour
+      },
+    }
+  );
 };

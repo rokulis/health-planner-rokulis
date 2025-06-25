@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import {
@@ -17,7 +18,11 @@ import {
   processVisitTime,
 } from '@/features/schedule/utils/date-utils';
 import { cn } from '@/lib/utils';
-import { RoomResource, VisitResource, VisitStatusEnum } from '@/types/swagger/data-contracts';
+import {
+  RoomResource,
+  VisitResource,
+  VisitStatusEnum,
+} from '@/types/swagger/data-contracts';
 
 // Fixed cell width for time slots
 const TIME_CELL_WIDTH = 80;
@@ -156,16 +161,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     return endIndex - startIndex;
   };
 
-  // Handle cell click
-  const handleCellClick = (
-    roomName: string,
-    bedName: string | null,
-    timeSlot: string
-  ) => {
-    const locationName = bedName ? `${roomName} - ${bedName}` : roomName;
-    alert(`Selected: ${locationName} at ${timeSlot}`);
-  };
-
   // Render appointment for a specific bed and time slot
   const renderAppointment = (
     roomId: number,
@@ -181,11 +176,8 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       const span = calculateAppointmentWidth(appointmentForSlot);
       const width = span * TIME_CELL_WIDTH - 10;
 
-      const room = rooms?.find(r => r.id === roomId);
-      const bed = room?.beds?.find(b => b?.id === bedId);
-
       return (
-        <div
+        <Link
           className={cn(
             'absolute top-1 left-0  border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40',
             getAppointmentBgColor(appointmentForSlot.status)
@@ -195,15 +187,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
             maxWidth: 'none',
             overflow: 'visible',
           }}
-          onClick={e => {
-            e.stopPropagation();
-            alert(
-              `Appointment Details:\n\n` +
-                `Patient: ${appointmentForSlot?.patient?.name}\n` +
-                `Time: ${appointmentForSlot.start_time} - ${appointmentForSlot.end_time}\n` +
-                `Location: ${room?.name || 'Unknown Room'} - ${bed?.name || 'Unknown Bed'}\n`
-            );
-          }}
+          href={`/schedule/view/${appointmentForSlot.id}`}
         >
           <span
             className={cn(
@@ -215,7 +199,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
           <span className="whitespace-nowrap overflow-hidden text-ellipsis">
             {appointmentForSlot?.patient?.name}
           </span>
-        </div>
+        </Link>
       );
     }
 
@@ -311,7 +295,6 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                     key={room.id}
                     room={room}
                     timeSlots={timeSlots}
-                    handleCellClick={handleCellClick}
                     renderAppointment={renderAppointment}
                     isCurrentHour={isCurrentHour}
                   />
