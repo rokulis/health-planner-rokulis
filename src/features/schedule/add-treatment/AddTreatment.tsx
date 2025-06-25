@@ -26,7 +26,9 @@ export const AddTreatment: React.FC<Props> = ({
   const [proposedVisits, setProposedVisits] =
     React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const [currentStep, setCurrentStep] = React.useState(1);
-  const [patientId, setPatientId] = React.useState<number | undefined>(undefined);
+  const [patientId, setPatientId] = React.useState<number | undefined>(
+    undefined
+  );
 
   // Define your steps with their content
   const steps: Step[] = [
@@ -70,7 +72,12 @@ export const AddTreatment: React.FC<Props> = ({
     {
       id: 4,
       label: 'Confirm',
-      content: <ConfirmVisits visits={proposedVisits} />,
+      content: (
+        <ConfirmVisits
+          visits={proposedVisits}
+          onBack={() => setCurrentStep(prev => prev - 1)}
+        />
+      ),
     },
   ];
 

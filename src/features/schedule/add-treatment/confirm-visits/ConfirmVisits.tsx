@@ -13,9 +13,10 @@ import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
   visits?: TreatmentPlans.PlanVisits.ResponseBody;
+  onBack?: () => void;
 }
 
-export const ConfirmVisits: React.FC<Props> = ({ visits }) => {
+export const ConfirmVisits: React.FC<Props> = ({ visits, onBack }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const treatmentPlanId = searchParams.get('treatment');
@@ -48,7 +49,12 @@ export const ConfirmVisits: React.FC<Props> = ({ visits }) => {
           />
         ))}
       </div>
-      <div className="col-span-6 mt-12 flex justify-end">
+      <div className="col-span-6 mt-12 flex justify-between">
+        {onBack ? (
+          <Button onClick={onBack} variant="outline">
+            Back
+          </Button>
+        ) : null}
         <Button onClick={onConfirm} type="submit" className="w-1/2">
           Confirm Visits
         </Button>

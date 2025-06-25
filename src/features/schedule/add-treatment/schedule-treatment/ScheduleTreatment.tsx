@@ -25,6 +25,7 @@ const FormSchema = z.object({
 
 interface Props {
   onStepSubmit: (visits: TreatmentPlans.PlanVisits.ResponseBody) => void;
+  onBack?: () => void;
 }
 
 export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
@@ -67,7 +68,7 @@ export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
   };
 
   return (
-    <div className="flex flex-col gap-8 h-full">
+    <div className="flex flex-col gap-8 h-full pb-8">
       {isPending ? <PageTopLoader /> : null}
       <Calendar
         mode="single"
@@ -104,7 +105,7 @@ export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
             ))}
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end mt-8 gap-2">
             <Button disabled={!!form.formState.errors.start_time}>
               Schedule all
             </Button>
