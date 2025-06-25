@@ -187,7 +187,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
             maxWidth: 'none',
             overflow: 'visible',
           }}
-          href={`/schedule/view/${appointmentForSlot.id}?date=${searchParams.get('date')}`}
+          href={`/schedule/view/${appointmentForSlot.id}`}
         >
           <span
             className={cn(
