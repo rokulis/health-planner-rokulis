@@ -5,7 +5,7 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format, secondsToMinutes } from 'date-fns';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { VisitStatusBadge } from '@/commons/visit-status-badge/VisitStatusBadge';
@@ -32,7 +32,6 @@ export const TreatmentPlansList: React.FC<Props> = ({
   medicinesData,
   visitData = undefined,
 }) => {
-  const searchParams = useSearchParams();
   const router = useRouter();
   const schedule = React.use(scheduleData);
   const patients = React.use(patientsData);
