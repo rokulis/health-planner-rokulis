@@ -5,6 +5,8 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format, secondsToMinutes } from 'date-fns';
 
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { VisitStatusBadge } from '@/commons/visit-status-badge/VisitStatusBadge';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
@@ -13,12 +15,14 @@ import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
+import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface Props {
   scheduleData: Promise<Schedule.GetSchedule.ResponseBody>;
   patientsData: Promise<Patients.GetPatients.ResponseBody>;
   protocolsData: Promise<Protocols.GetProtocols.ResponseBody>;
   medicinesData: Promise<Medicines.GetMedicines.ResponseBody>;
+  visitData?: Promise<Visits.GetVisit.ResponseBody>;
 }
 
 export const TreatmentPlansList: React.FC<Props> = ({
@@ -26,11 +30,15 @@ export const TreatmentPlansList: React.FC<Props> = ({
   protocolsData,
   patientsData,
   medicinesData,
+  visitData = undefined,
 }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const schedule = React.use(scheduleData);
   const patients = React.use(patientsData);
   const protocols = React.use(protocolsData);
   const medicines = React.use(medicinesData);
+  const visit = visitData ? React.use(visitData) : null;
 
   const columns: ColumnDef<VisitResource>[] = [
     {
@@ -95,8 +103,17 @@ export const TreatmentPlansList: React.FC<Props> = ({
       protocols={protocols}
       patients={patients}
       medicines={medicines}
+      visit={visit}
     >
-      <DataTable columns={columns} data={schedule.data ?? []} />
+      <DataTable
+        columns={columns}
+        data={schedule.data ?? []}
+        onRowClick={data => {
+          router.push(
+            `/schedule/list/${data.original.id}`
+          );
+        }}
+      />
     </ScheduleLayout>
   );
 };

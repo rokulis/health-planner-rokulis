@@ -6,7 +6,7 @@
 import React from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { Tabs } from '@/commons/components/tabs/Tabs';
@@ -55,10 +55,15 @@ export const ScheduleLayout: React.FC<Props> = ({
 }) => {
   const router = useRouter();
   const [addNew, setAddNew] = React.useState(isDefaultOpen ?? false);
+  const pathname = usePathname();
 
   const onClose = () => {
     setAddNew(false);
-    router.push('/schedule');
+    if (pathname.includes('list')) {
+      return router.push('/schedule/list');
+    }
+
+    return router.push('/schedule');
   };
 
   const onDateChange = (date: string) => {

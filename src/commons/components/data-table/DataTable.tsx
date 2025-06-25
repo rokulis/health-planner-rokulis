@@ -10,8 +10,10 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   PaginationState,
+  Row,
   useReactTable,
 } from '@tanstack/react-table';
+import cx from 'classnames';
 
 import { DataTablePagination } from '@/commons/components/data-table/DataTablePagination';
 import {
@@ -27,12 +29,17 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   showPagination?: boolean;
+  onRowClick?: (
+    row: Row<TData>,
+    event: React.MouseEvent<HTMLTableRowElement>
+  ) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   showPagination = true,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -78,6 +85,10 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
+                onClick={e => onRowClick?.(row, e)}
+                className={cx({
+                  'cursor-pointer': Boolean(onRowClick),
+                })}
               >
                 {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id}>
