@@ -75,3 +75,22 @@ export const deletePatient = async (patientId: number) => {
 
   return res;
 };
+
+export const updateRelatives = async (
+  patientId: number,
+  data: Patients.StorePatientRelatives.RequestBody
+) => {
+  const res = await apiClient<Patients.StorePatientRelatives.ResponseBody>(
+    `/patients/${patientId}/relatives`,
+    {
+      method: 'PUT',
+      body: data,
+    }
+  );
+
+  if (res.success) {
+    revalidateTag('patients');
+  }
+
+  return res;
+};

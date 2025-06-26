@@ -15,6 +15,8 @@ import {
   DeletePatientData,
   GetPatientData,
   GetPatientsData,
+  StorePatientRelativesData,
+  StorePatientRelativesPayload,
   StorePatientRequest,
   UpdatePatientData,
   UpdatePatientRequest,
@@ -105,5 +107,23 @@ export namespace Patients {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = DeletePatientData;
+  }
+
+  /**
+   * No description
+   * @tags Patients
+   * @name StorePatientRelatives
+   * @summary Store patient relatives
+   * @request PUT:/patients/{id}/relatives
+   * @secure
+   */
+  export namespace StorePatientRelatives {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = StorePatientRelativesPayload;
+    export type RequestHeaders = {};
+    export type ResponseBody = StorePatientRelativesData;
   }
 }

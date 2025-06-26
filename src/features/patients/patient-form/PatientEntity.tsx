@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { PatientForm } from '@/features/patients/patient-form/PatientForm';
+import { RelativesForm } from '@/features/patients/patient-form/relatives/RelativesForm';
 import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/ConfirmVisits';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { SelectTreatment } from '@/features/schedule/add-treatment/select-treatment/SelectTreatment';
@@ -44,6 +45,17 @@ export const PatientEntity: React.FC<Props> = ({
     },
     {
       id: 2,
+      label: 'Relative',
+      content: (
+        <RelativesForm
+          patientId={patientId}
+          onStepSubmit={() => setCurrentStep(prev => prev + 1)}
+          onSkip={() => setCurrentStep(prev => prev + 1)}
+        />
+      ),
+    },
+    {
+      id: 3,
       label: 'Treatment',
       content: (
         <SelectTreatment
@@ -55,7 +67,7 @@ export const PatientEntity: React.FC<Props> = ({
       ),
     },
     {
-      id: 3,
+      id: 4,
       label: 'Schedule',
       content: (
         <ScheduleTreatment
@@ -67,7 +79,7 @@ export const PatientEntity: React.FC<Props> = ({
       ),
     },
     {
-      id: 4,
+      id: 5,
       label: 'Confirm',
       content: <ConfirmVisits visits={proposedVisits} />,
     },

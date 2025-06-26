@@ -10,7 +10,13 @@
  * ---------------------------------------------------------------
  */
 
-import { GetVisitData } from "./data-contracts";
+import {
+  ChangeVisitStatusData,
+  ChangeVisitStatusPayload,
+  ChangeVisitTreatmentStatusData,
+  ChangeVisitTreatmentStatusPayload,
+  GetVisitData,
+} from "./data-contracts";
 
 export namespace Visits {
   /**
@@ -29,5 +35,42 @@ export namespace Visits {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = GetVisitData;
+  }
+
+  /**
+   * No description
+   * @tags Visits
+   * @name ChangeVisitTreatmentStatus
+   * @summary Change visit treatment status
+   * @request POST:/visits/{id}/treatments/{treatmentId}/change-status
+   * @secure
+   */
+  export namespace ChangeVisitTreatmentStatus {
+    export type RequestParams = {
+      id: number;
+      treatmentId: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = ChangeVisitTreatmentStatusPayload;
+    export type RequestHeaders = {};
+    export type ResponseBody = ChangeVisitTreatmentStatusData;
+  }
+
+  /**
+   * No description
+   * @tags Visits
+   * @name ChangeVisitStatus
+   * @summary Change visit status
+   * @request POST:/visits/{id}/change-status
+   * @secure
+   */
+  export namespace ChangeVisitStatus {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = ChangeVisitStatusPayload;
+    export type RequestHeaders = {};
+    export type ResponseBody = ChangeVisitStatusData;
   }
 }

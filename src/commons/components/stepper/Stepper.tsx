@@ -17,11 +17,11 @@ interface StepperProps {
 export function Stepper({ steps, currentStep }: StepperProps) {
   return (
     <div className="w-full flex flex-col h-full mb-4">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mb-4">
         {steps.map((step, index) => (
           <button type="button" key={step.id} className="flex items-center">
             <div
-              className={`flex text-sm items-center justify-center w-[24px] h-[24px] rounded-full border-2 ${
+              className={`flex text-sm items-center justify-center w-[20px] h-[20px] rounded-full border-2 ${
                 step.id === currentStep
                   ? 'bg-light-blue border-transparent text-black font-semibold'
                   : 'bg-white border-gray/50 text-black'
@@ -29,10 +29,10 @@ export function Stepper({ steps, currentStep }: StepperProps) {
             >
               {step.id}
             </div>
-            <span className="ml-1 text-sm font-medium">{step.label}</span>
+            <span className="ml-1 text-xs font-medium">{step.label}</span>
 
             {index < steps.length - 1 && (
-              <div className="mx-1 text-gray-300">
+              <div className="text-gray-300 scale-75">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

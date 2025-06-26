@@ -66,6 +66,7 @@ export interface StorePatientRequest {
   height: number;
   /** @maxLength 255 */
   address: string;
+  relatives?: BaseRelative[];
 }
 
 export interface UpdatePatientRequest {
@@ -203,6 +204,8 @@ export interface PatientResource {
   weight?: number;
   height?: number;
   address?: string;
+  treatment_plans?: TreatmentPlanResource[];
+  relatives?: Relative[];
 }
 
 export type ProfileResource = User;
@@ -777,7 +780,7 @@ export interface ProtocolMedicineGroup {
  * Relative
  * Patient's relative or emergency contact
  */
-export interface Relative {
+export type Relative = UtilRequiredKeys<BaseRelative, "name" | "kinship"> & {
   /**
    * Relative ID
    * @format int64
@@ -789,7 +792,7 @@ export interface Relative {
    * @format int64
    * @example 1
    */
-  patient_id: number;
+  patient_id?: number;
   /**
    * Relative name
    * @example "Jane Doe"
@@ -816,16 +819,35 @@ export interface Relative {
    * @example "123 Main St"
    */
   address?: string;
+};
+
+export interface BaseRelative {
   /**
-   * Creation date
-   * @format date-time
+   * Relative name
+   * @example "Jane Doe"
    */
-  created_at?: string;
+  name: string;
   /**
-   * Last update date
-   * @format date-time
+   * Relationship to patient (e.g., Husband, Father)
+   * @example "Spouse"
    */
-  updated_at?: string;
+  kinship: string;
+  /**
+   * Relative email
+   * @format email
+   * @example "jane.doe@example.com"
+   */
+  email?: string;
+  /**
+   * Relative phone number
+   * @example "+1234567890"
+   */
+  phone_number?: string;
+  /**
+   * Relative address
+   * @example "123 Main St"
+   */
+  address?: string;
 }
 
 /**
@@ -1699,6 +1721,13 @@ export interface DeletePatientData {
   success?: boolean;
 }
 
+export type StorePatientRelativesPayload = Relative[];
+
+export interface StorePatientRelativesData {
+  /** @example true */
+  success?: boolean;
+}
+
 export interface GetProfileData {
   /** @example true */
   success?: boolean;
@@ -1904,6 +1933,42 @@ export interface CancelTreatmentPlanData {
 }
 
 export interface GetVisitData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource;
+}
+
+/** @example "upcoming" */
+export enum ChangeVisitTreatmentStatusStatusEnum {
+  Upcoming = "upcoming",
+  Done = "done",
+  Administering = "administering",
+}
+
+export interface ChangeVisitTreatmentStatusPayload {
+  /** @example "upcoming" */
+  status?: ChangeVisitTreatmentStatusStatusEnum;
+}
+
+export interface ChangeVisitTreatmentStatusData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource;
+}
+
+/** @example "upcoming" */
+export enum ChangeVisitStatusStatusEnum {
+  Upcoming = "upcoming",
+  Cancelled = "cancelled",
+  Completed = "completed",
+}
+
+export interface ChangeVisitStatusPayload {
+  /** @example "upcoming" */
+  status?: ChangeVisitStatusStatusEnum;
+}
+
+export interface ChangeVisitStatusData {
   /** @example true */
   success?: boolean;
   data?: VisitResource;
