@@ -13,6 +13,7 @@ import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
+import AddPatient from '@/commons/icons/svg/add_patient.svg';
 import { Patients } from '@/types/swagger/PatientsRoute';
 
 interface Props {
@@ -61,9 +62,11 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
               />
             </FieldWrapper>
             <span className="text-muted-foreground/80">or</span>
-            <div className="flex justify-end mb-2">
-              <Button asChild={true} className="w-full" size="sm">
-                <Link href="/patients/new">Add new patient</Link>
+            <div className="flex justify-end mb-2 w-full">
+              <Button asChild={true} className="w-full" size="sm" variant="outline">
+                <Link href="/patients/new">
+                  <AddPatient /> Register new patient
+                </Link>
               </Button>
             </div>
           </div>
