@@ -119,7 +119,7 @@ export const MedicineForm: React.FC<Props> = ({
               </div>
               <div className="col-span-2">
                 <FieldWrapper control={form.control} name="default_time">
-                  <TimeInput label="MM:SS" />
+                  <TimeInput label="HH:MM" />
                 </FieldWrapper>
               </div>
             </div>
