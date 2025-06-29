@@ -16,7 +16,7 @@ export const PatientViewLayout: React.FC<Props> = ({ children, patient }) => {
     {
       label: 'Profile',
       icon: <Timeline />,
-      href: `/patients/${patient.data?.id}`,
+      href: `/patients/view/${patient.data?.id}`,
     },
     {
       label: 'Treatment Plans',
