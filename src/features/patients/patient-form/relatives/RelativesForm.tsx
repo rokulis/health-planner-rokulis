@@ -78,6 +78,7 @@ export const RelativesForm: React.FC<Props> = ({
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'relatives',
+    keyName: '_id',
   });
 
   return (
@@ -173,11 +174,16 @@ export const RelativesForm: React.FC<Props> = ({
                     <Plus /> Add relative
                   </Button>
                 </div>
-                <input
-                  type="hidden"
-                  {...form.register(`relatives.${i}.id`)}
-                  value={field.id}
-                />
+                {field.id ? (
+                  <input
+                    type="hidden"
+                    {...form.register(`relatives.${i}.id`, {
+                      valueAsNumber: true,
+                    })}
+                    value={field.id ?? undefined}
+                  />
+                ) : null}
+
                 <input
                   type="hidden"
                   {...form.register(`relatives.${i}.patient_id`)}
@@ -192,11 +198,7 @@ export const RelativesForm: React.FC<Props> = ({
           <Button type="button" variant="ghost" onClick={onSkip}>
             Skip
           </Button>
-          <Button
-            type="submit"
-            className="w-1/2"
-            disabled={!form.formState.isValid}
-          >
+          <Button type="submit" className="w-1/2">
             Next
           </Button>
         </div>

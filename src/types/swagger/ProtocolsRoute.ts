@@ -30,7 +30,10 @@ export namespace Protocols {
    */
   export namespace GetProtocols {
     export type RequestParams = {};
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      /** Name of the protocol */
+      name?: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = GetProtocolsData;

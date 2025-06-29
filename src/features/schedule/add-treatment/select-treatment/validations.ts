@@ -20,7 +20,7 @@ export const SelectTreatmentFormSchema = z.object({
           procedure: z.string().min(1),
           dose: z.coerce.string(),
           dose_unit: z.string().min(1),
-          comment: z.string().optional(),
+          comment: z.string().nullish(),
         })
       ),
     })

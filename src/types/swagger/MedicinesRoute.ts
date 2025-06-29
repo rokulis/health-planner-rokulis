@@ -31,7 +31,12 @@ export namespace Medicines {
    */
   export namespace GetMedicines {
     export type RequestParams = {};
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      /** Name of the medicine */
+      name?: string;
+      /** ATC code of the medicine */
+      code?: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = GetMedicinesData;

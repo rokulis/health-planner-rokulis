@@ -4,6 +4,7 @@ import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
 import { Patients } from '@/types/swagger/PatientsRoute';
+import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 export const getPatients = async () => {
   return await apiClient<Patients.GetPatients.ResponseBody>('/patients', {
@@ -93,4 +94,16 @@ export const updateRelatives = async (
   }
 
   return res;
+};
+
+export const getPatientTreatmentPlans = async (patientId: string) => {
+  return await apiClient<TreatmentPlans.GetPatientTreatmentPlans.ResponseBody>(
+    `/treatment-plans/patient/${patientId}`,
+    {
+      next: {
+        tags: [`patient-treatment-plans-${patientId}`],
+        revalidate: 3600,
+      },
+    }
+  );
 };

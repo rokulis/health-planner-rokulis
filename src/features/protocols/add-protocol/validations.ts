@@ -1,14 +1,11 @@
 import { z } from 'zod';
 
-import {
-  MedicineProcedureEnum,
-  ProtocolCancerTypeEnum,
-} from '@/types/swagger/data-contracts';
+import { MedicineProcedureEnum } from '@/types/swagger/data-contracts';
 
 const flexibleDaysSchema = z
   .string()
-  .regex(/^[1-9]\d*(\s*,\s*[1-9]\d*)*$/, "Must be numbers separated by commas")
-  .transform((value) => value.replace(/\s/g, ''));
+  .regex(/^[1-9]\d*(\s*,\s*[1-9]\d*)*$/, 'Must be numbers separated by commas')
+  .transform(value => value.replace(/\s/g, ''));
 
 export const medicineSchema = z.object({
   atc_code: z.string().min(1, 'ATC code is required'),
@@ -36,7 +33,7 @@ export const medicineGroupSchema = z.object({
 export const protocolSchema = z.object({
   clinic_id: z.coerce.number().int().nonnegative(),
   name: z.string().min(1, 'Protocol name is required'),
-  cancer_type: z.nativeEnum(ProtocolCancerTypeEnum),
+  diagnosis_id: z.coerce.number(),
   cycle_duration: z.coerce.number(),
   medicine_groups: z
     .array(medicineGroupSchema)

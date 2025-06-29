@@ -10,22 +10,25 @@
  * ---------------------------------------------------------------
  */
 
-import { GetClinicData } from "./data-contracts";
+import { GetDiagnosesData } from "./data-contracts";
 
-export namespace Clinic {
+export namespace Diagnoses {
   /**
    * No description
-   * @tags Clinics
-   * @name GetClinic
-   * @summary Get clinic information
-   * @request GET:/clinic
+   * @tags Diagnoses
+   * @name GetDiagnoses
+   * @summary Get a list of diagnoses
+   * @request GET:/diagnoses
    * @secure
    */
-  export namespace GetClinic {
+  export namespace GetDiagnoses {
     export type RequestParams = {};
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      /** Search term */
+      search?: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = GetClinicData;
+    export type ResponseBody = GetDiagnosesData;
   }
 }

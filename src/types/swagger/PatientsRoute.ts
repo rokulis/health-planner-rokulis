@@ -33,7 +33,10 @@ export namespace Patients {
    */
   export namespace GetPatients {
     export type RequestParams = {};
-    export type RequestQuery = {};
+    export type RequestQuery = {
+      /** Name of the patient */
+      name?: string;
+    };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = GetPatientsData;

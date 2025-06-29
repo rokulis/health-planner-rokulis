@@ -23,6 +23,7 @@ export interface FloatingLabelSearchableSelectProps
   name?: string;
   onChange?: (value: string) => void;
   onValueChange?: (value: string) => void;
+  onSearchChange?: (value: string) => void;
 }
 
 const FloatingLabelSearchableSelect = React.forwardRef<
@@ -45,6 +46,7 @@ const FloatingLabelSearchableSelect = React.forwardRef<
       error = false,
       name,
       onValueChange,
+      onSearchChange,
     },
     ref
   ) => {
@@ -109,6 +111,10 @@ const FloatingLabelSearchableSelect = React.forwardRef<
       setSearchValue(newSearchValue);
       setIsOpen(true);
       setHighlightedIndex(-1);
+
+      if (typeof onSearchChange === 'function') {
+        onSearchChange(newSearchValue);
+      }
     };
 
     // Handle option selection

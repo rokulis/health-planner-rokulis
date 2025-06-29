@@ -20,7 +20,7 @@ export const PatientRelatives: React.FC<Props> = ({ patient }) => {
             <div className="text-gray-500">No relatives found.</div>
           )}
           {patient.data?.relatives?.map(relative => (
-            <div className="mb-4" key={relative.id}>
+            <div className="grid gap-4" key={relative.id}>
               <FormValue label="Full name" value={relative.name} />
               <FormValue label="Kinship" value={relative.kinship} />
               <FormValue label="Email address" value={relative.email} />

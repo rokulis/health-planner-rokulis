@@ -35,8 +35,8 @@ export const PatientProfile: React.FC<Props> = ({ patient }) => {
         <div className="grid gap-4">
           <FormValue label="Full name" value={patient.data?.name} />
           <FormValue label="Personal code" value={patient.data?.personal_code} />
-          <FormValue label="Weight" value={patient.data?.weight} />
-          <FormValue label="Height" value={patient.data?.height} />
+          <FormValue label="Weight" value={`${patient.data?.weight}kg`} />
+          <FormValue label="Height" value={`${patient.data?.height}cm`} />
           <FormValue label="Email address" value={patient.data?.email} />
           <FormValue label="Phone" value={patient.data?.phone_number} />
           <FormValue label="Home address" value={patient.data?.address} />

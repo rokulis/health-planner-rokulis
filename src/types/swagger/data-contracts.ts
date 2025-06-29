@@ -93,7 +93,7 @@ export interface UpdatePatientRequest {
 
 export type StoreProtocolRequest = UtilRequiredKeys<
   Protocol,
-  "name" | "cancer_type" | "cycle_duration"
+  "name" | "cycle_duration"
 > & {
   /** List of medicine groups */
   medicine_groups: ProtocolMedicineGroup[];
@@ -276,6 +276,10 @@ export interface TreatmentPlanResource {
   cycles?: number;
   days_between_cycles?: number;
   status?: TreatmentPlanResourceStatusEnum;
+  treatment?: TreatmentMedicineGroupResource[];
+  diagnosis?: Diagnosis;
+  /** @example 1 */
+  diagnosis_id?: number;
   treatment_cycles?: TreatmentCycleResource[];
   patient?: PatientResource;
 }
@@ -377,6 +381,25 @@ export interface Clinic {
    * @format date-time
    */
   updated_at?: string;
+}
+
+export interface Diagnosis {
+  id: number;
+  /**
+   * Name of the diagnosis
+   * @example "Leukemia"
+   */
+  name: string;
+  /**
+   * Description of the diagnosis
+   * @example "Description of the diagnosis 1"
+   */
+  description?: string;
+  /**
+   * Code of the diagnosis
+   * @example "Diagnosis 1"
+   */
+  code: string;
 }
 
 /**
@@ -675,11 +698,7 @@ export interface Protocol {
    * @example "AC-T Protocol"
    */
   name: string;
-  /**
-   * Type of cancer this protocol is designed for
-   * @example "breast_cancer"
-   */
-  cancer_type: ProtocolCancerTypeEnum;
+  diagnosis?: Diagnosis;
   /**
    * Duration of one cycle in days (e.g. 21 days)
    * @example 21
@@ -1136,6 +1155,8 @@ export interface TreatmentPlan {
    * @example 21
    */
   days_between_cycles: number;
+  /** @example 1 */
+  diagnosis_id: number;
   /**
    * Current status of the treatment plan
    * @example "in_progress"
@@ -1438,25 +1459,6 @@ export enum MedicineProcedureEnum {
   OralCapsule = "oral_capsule",
 }
 
-/**
- * Type of cancer this protocol is designed for
- * @example "breast_cancer"
- */
-export enum ProtocolCancerTypeEnum {
-  BreastCancer = "breast_cancer",
-  ProstateCancer = "prostate_cancer",
-  SkinCancer = "skin_cancer",
-  LungCancer = "lung_cancer",
-  ColorectalCancer = "colorectal_cancer",
-  Melanoma = "melanoma",
-  Lymphoma = "lymphoma",
-  Leukemia = "leukemia",
-  MultipleMyeloma = "multiple_myeloma",
-  OvarianCancer = "ovarian_cancer",
-  PancreaticCancer = "pancreatic_cancer",
-  Other = "other",
-}
-
 /** 0=Monday, 1=Tuesday, 2=Wednesday, 3=Thursday, 4=Friday, 5=Saturday, 6=Sunday */
 export enum RoomWorkingDaysEnum {
   Value0 = 0,
@@ -1576,6 +1578,17 @@ export interface GetClinicData {
   data?: ClinicResource;
 }
 
+export interface GetDiagnosesParams {
+  /** Search term */
+  search?: string;
+}
+
+export interface GetDiagnosesData {
+  /** @example true */
+  success?: boolean;
+  data?: Diagnosis[];
+}
+
 export interface GetInvitationsData {
   /** @example true */
   success?: boolean;
@@ -1627,6 +1640,13 @@ export interface ValidateInvitationData {
     /** @example 1 */
     clinic_id?: number;
   };
+}
+
+export interface GetMedicinesParams {
+  /** Name of the medicine */
+  name?: string;
+  /** ATC code of the medicine */
+  code?: string;
 }
 
 export interface GetMedicinesData {
@@ -1701,6 +1721,11 @@ export interface DeleteMedicineData {
   message?: string;
 }
 
+export interface GetPatientsParams {
+  /** Name of the patient */
+  name?: string;
+}
+
 export interface GetPatientsData {
   /** @example true */
   success?: boolean;
@@ -1763,6 +1788,11 @@ export interface UpdateUserProfilePayload {
 }
 
 export type UpdateUserProfileData = ApiResponse;
+
+export interface GetProtocolsParams {
+  /** Name of the protocol */
+  name?: string;
+}
 
 export interface GetProtocolsData {
   /** @example true */

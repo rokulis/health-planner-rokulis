@@ -12,7 +12,6 @@ import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
 import { ProtocolForm } from '@/features/protocols/add-protocol/ProtocolForm';
 import { TableActions } from '@/features/protocols/TableActions';
-import { CANCER_TYPE_NAME } from '@/features/protocols/utils';
 import { ProtocolResource } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
@@ -39,7 +38,7 @@ export const ProtocolsList: React.FC<Props> = ({
     {
       accessorKey: 'cancer_type',
       header: 'Cancer Type',
-      cell: ({ row }) => CANCER_TYPE_NAME[row.original.cancer_type] ?? '-',
+      cell: ({ row }) => row.original.diagnosis?.name ?? '-',
     },
     {
       id: 'medicines',

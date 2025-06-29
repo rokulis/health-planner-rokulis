@@ -5,23 +5,22 @@ import { minutesToSeconds, secondsToMinutes } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import { createProtocol, updateProtocol } from '@/app/protocols/actions';
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
-import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
+import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import { MedicineGroup } from '@/features/protocols/add-protocol/MedicineGroup';
 import { protocolSchema } from '@/features/protocols/add-protocol/validations';
-import {
-  MedicineProcedureEnum,
-  ProtocolCancerTypeEnum,
-} from '@/types/swagger/data-contracts';
+import { MedicineProcedureEnum } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
+import { useDiagnosesQuery } from '@/utils/hooks/useDiagnosesQuery';
 
 interface Props {
   isOpen: boolean;
@@ -52,13 +51,16 @@ export const ProtocolForm: React.FC<Props> = ({
   medicines,
   protocol,
 }) => {
+  const [search, setSearch] = React.useState<string>('');
+  const [searchValue] = useDebounce(search, 500);
+  const { data: diagnoses } = useDiagnosesQuery(searchValue);
+
   const form = useForm({
     resolver: zodResolver(protocolSchema),
     defaultValues: {
       name: protocol?.data?.name ?? '',
       clinic_id: protocol?.data?.clinic_id ?? 1,
-      cancer_type:
-        protocol?.data?.cancer_type ?? ProtocolCancerTypeEnum.BreastCancer,
+      diagnosis_id: protocol?.data?.diagnosis?.id ?? undefined,
       cycle_duration: protocol?.data?.cycle_duration ?? 1,
       medicine_groups: protocol?.data?.protocol_medicine_groups?.map(mg => ({
         ...mg,
@@ -140,16 +142,16 @@ export const ProtocolForm: React.FC<Props> = ({
               </FieldWrapper>
             </div>
             <div className="col-span-4">
-              <FieldWrapper control={form.control} name="cancer_type">
-                <FloatingLabelSelect
-                  label="Cancer type"
-                  options={Object.keys(ProtocolCancerTypeEnum).map(key => ({
-                    value:
-                      ProtocolCancerTypeEnum[
-                        key as keyof typeof ProtocolCancerTypeEnum
-                      ],
-                    label: key.replace(/([A-Z])/g, ' $1').trim(),
-                  }))}
+              <FieldWrapper control={form.control} name="diagnosis_id">
+                <FloatingLabelSearchableSelect
+                  onSearchChange={setSearch}
+                  label="Diagnosis"
+                  options={
+                    (diagnoses?.data ?? []).map(diagnosis => ({
+                      value: String(diagnosis.id),
+                      label: diagnosis.name,
+                    })) ?? []
+                  }
                 />
               </FieldWrapper>
             </div>
@@ -165,7 +167,7 @@ export const ProtocolForm: React.FC<Props> = ({
           </div>
 
           {fields.length > 0
-            ? fields.map((field, index) => (
+            ? fields.map((_field, index) => (
               <div
                 className="p-2 mt-4 border border-black/10 rounded-md"
                 key={index}

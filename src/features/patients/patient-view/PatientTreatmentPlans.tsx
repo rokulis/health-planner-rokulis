@@ -7,15 +7,23 @@ import { Calendar, Clock, Syringe } from 'lucide-react';
 import { Badge } from '@/commons/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import { Patients } from '@/types/swagger/PatientsRoute';
+import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
   patient: Patients.GetPatient.ResponseBody;
+  treatmentPlans: TreatmentPlans.GetPatientTreatmentPlans.ResponseBody;
 }
 
-export const PatientTreatmentPlans: React.FC<Props> = ({ patient }) => {
+export const PatientTreatmentPlans: React.FC<Props> = ({
+  patient,
+  treatmentPlans,
+}) => {
   const treatmentPlan = patient.data?.treatment_plans?.[0];
   const currentCycle =
     patient.data?.treatment_plans?.[0]?.treatment_cycles?.[0];
+
+  // eslint-disable-next-line
+  console.log('Treatment plans', treatmentPlans);
 
   // Flatten all medicines from all groups
   const allMedicines =

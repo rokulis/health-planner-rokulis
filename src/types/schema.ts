@@ -2,6 +2,7 @@ export * from "./swagger/data-contracts";
 export * from "./swagger/AuthRoute";
 //@ts-expect-error TODO: Fix in API
 export * from "./swagger/ClinicRoute";
+export * from "./swagger/DiagnosesRoute";
 export * from "./swagger/InvitationsRoute";
 export * from "./swagger/MedicinesRoute";
 export * from "./swagger/PatientsRoute";
