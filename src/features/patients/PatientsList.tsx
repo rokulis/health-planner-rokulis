@@ -5,6 +5,8 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format } from 'date-fns';
 
+import { useRouter } from 'next/navigation';
+
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { PatientsLayout } from '@/features/patients/layouts/PatientsLayout';
 import { TableActions } from '@/features/patients/TableActions';
@@ -28,6 +30,7 @@ export const PatientsList: React.FC<Props> = ({
   protocols,
   isDefaultOpen,
 }) => {
+  const router = useRouter();
   const columns: ColumnDef<PatientResource>[] = [
     {
       accessorKey: 'name',
@@ -78,7 +81,11 @@ export const PatientsList: React.FC<Props> = ({
       protocols={protocols}
       isDefaultOpen={isDefaultOpen}
     >
-      <DataTable columns={columns} data={patients.data ?? []} />
+      <DataTable
+        columns={columns}
+        data={patients.data ?? []}
+        onRowClick={row => router.push(`/patients/view/${row.original.id}`)}
+      />
     </PatientsLayout>
   );
 };

@@ -27,7 +27,7 @@ export function Tabs({ tabs, className }: TabsProps) {
       <div className="flex h-12 items-center px-4 gap-4">
         {tabs.map(tab => {
           const Icon = tab.icon;
-          const isActive = pathname === tab.href;
+          const isActive = pathname.endsWith(tab.href.split("/").pop() || '');
 
           return (
             <Link

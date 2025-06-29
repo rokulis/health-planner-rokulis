@@ -125,6 +125,8 @@ export interface StoreRoomRequest {
 }
 
 export interface StoreTreatmentPlanRequest {
+  /** @example "custom treatment plan name" */
+  name?: string;
   /** @example 1 */
   patient_id: number;
   /** @example 1 */
@@ -263,6 +265,11 @@ export interface TreatmentMedicineResource {
 
 export interface TreatmentPlanResource {
   id?: number;
+  /**
+   * Name of the treatment plan
+   * @example "Treatment plan 1"
+   */
+  name?: string;
   sector_id?: number;
   patient_id?: number;
   /** Number of cycles */
@@ -288,6 +295,7 @@ export interface VisitResource {
   end_time?: string;
   duration?: number;
   notes?: string;
+  treatment_plan?: TreatmentPlanResource;
   patient?: PatientResource;
   /** Room within a clinic sector */
   room?: Room;
