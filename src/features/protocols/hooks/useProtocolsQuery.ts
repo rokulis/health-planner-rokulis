@@ -7,10 +7,10 @@ export const useProtocolsQuery = () => {
   const apiClient = useApiClient();
 
   const fetchProtocols = async () => {
-    return apiClient.get<Protocols.GetProtocols.ResponseBody>('/protocols');
+    return apiClient.get('/protocols').then(res => res.data);
   };
 
-  return useQuery({
+  return useQuery<Protocols.GetProtocols.ResponseBody>({
     queryKey: ['protocols'],
     queryFn: fetchProtocols,
   });

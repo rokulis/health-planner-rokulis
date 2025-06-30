@@ -3,26 +3,16 @@
 import React from 'react';
 
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
+import { useMedicinesQuery } from '@/features/medicine/hooks/useMedicinesQuery';
+import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
+import { useProtocolsQuery } from '@/features/protocols/hooks/useProtocolsQuery';
 import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/ConfirmVisits';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { SelectPatient } from '@/features/schedule/add-treatment/select-patient/SelectPatient';
 import { SelectTreatment } from '@/features/schedule/add-treatment/select-treatment/SelectTreatment';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
-import { Patients } from '@/types/swagger/PatientsRoute';
-import { Protocols } from '@/types/swagger/ProtocolsRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
-interface Props {
-  patients: Patients.GetPatients.ResponseBody;
-  protocols: Protocols.GetProtocols.ResponseBody;
-  medicines: Medicines.GetMedicines.ResponseBody;
-}
-
-export const AddTreatment: React.FC<Props> = ({
-  patients,
-  protocols,
-  medicines,
-}) => {
+export const AddTreatment: React.FC = () => {
   const [proposedVisits, setProposedVisits] =
     React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const [currentStep, setCurrentStep] = React.useState(1);
@@ -32,6 +22,10 @@ export const AddTreatment: React.FC<Props> = ({
   const [treatmentPlanId, setTreatmentPlanId] = React.useState<
     number | undefined
   >();
+
+  const { data: patients } = usePatientsQuery();
+  const { data: medicines } = useMedicinesQuery();
+  const { data: protocols } = useProtocolsQuery();
 
   // Define your steps with their content
   const steps: Step[] = [

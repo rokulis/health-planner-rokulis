@@ -6,9 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
 import { Button } from '@/commons/components/ui/button';
@@ -17,7 +15,7 @@ import AddPatient from '@/commons/icons/svg/add_patient.svg';
 import { Patients } from '@/types/swagger/PatientsRoute';
 
 interface Props {
-  patients: Patients.GetPatients.ResponseBody;
+  patients?: Patients.GetPatients.ResponseBody;
   onStepSubmit: (patientId: number) => void;
 }
 
@@ -26,17 +24,15 @@ const FormSchema = z.object({
 });
 
 export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
-  const router = useRouter();
+  const { dispatchAction } = useActionContext();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      patientId: patients.data?.[0]?.id ?? -1, // Default to the first patient or -1 if none
+      patientId: patients?.data?.[0]?.id ?? -1, // Default to the first patient or -1 if none
     },
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = data => {
-    router.push(`?patient=${data.patientId}`);
-
     if (typeof onStepSubmit === 'function') {
       onStepSubmit(data.patientId);
     }
@@ -55,7 +51,7 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
               <FloatingLabelSearchableSelect
                 label="Patient"
                 name="patientId"
-                options={(patients.data ?? [])?.map(p => ({
+                options={(patients?.data ?? [])?.map(p => ({
                   value: String(p.id),
                   label: String(p.name),
                 }))}
@@ -63,10 +59,15 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
             </FieldWrapper>
             <span className="text-muted-foreground/80">or</span>
             <div className="flex justify-end mb-2 w-full">
-              <Button asChild={true} className="w-full" size="sm" variant="outline">
-                <Link href="/patients/new">
+              <Button
+                onClick={() => dispatchAction('patient_new')}
+                className="w-full"
+                size="sm"
+                variant="outline"
+              >
+                <div className="flex items-center gap-1">
                   <AddPatient /> Register new patient
-                </Link>
+                </div>
               </Button>
             </div>
           </div>

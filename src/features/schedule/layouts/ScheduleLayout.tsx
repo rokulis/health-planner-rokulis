@@ -1,35 +1,21 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-
 'use client';
 
 import React from 'react';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DateNavigator } from '@/commons/components/date-navigator/DateNavigator';
-import { Drawer } from '@/commons/components/drawer/Drawer';
 import { Tabs } from '@/commons/components/tabs/Tabs';
 import { Button } from '@/commons/components/ui/button';
 import List from '@/commons/icons/svg/list.svg';
 import Plus from '@/commons/icons/svg/plus.svg';
 import Timeline from '@/commons/icons/svg/timeline.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
-import { AddTreatment } from '@/features/schedule/add-treatment/AddTreatment';
-import { VisitForm } from '@/features/schedule/visit/VisitForm';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
-import { Patients } from '@/types/swagger/PatientsRoute';
-import { Protocols } from '@/types/swagger/ProtocolsRoute';
-import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface Props {
   children: React.ReactNode;
-  patients: Patients.GetPatients.ResponseBody;
-  protocols: Protocols.GetProtocols.ResponseBody;
-  medicines: Medicines.GetMedicines.ResponseBody;
-  visit?: Visits.GetVisit.ResponseBody | null;
-  isDefaultOpen?: boolean;
+  visitId?: string;
 }
 
 const TABS = [
@@ -45,26 +31,9 @@ const TABS = [
   },
 ];
 
-export const ScheduleLayout: React.FC<Props> = ({
-  children,
-  patients,
-  protocols,
-  medicines,
-  visit,
-  isDefaultOpen,
-}) => {
+export const ScheduleLayout: React.FC<Props> = ({ children }) => {
   const router = useRouter();
-  const [addNew, setAddNew] = React.useState(isDefaultOpen ?? false);
-  const pathname = usePathname();
-
-  const onClose = () => {
-    setAddNew(false);
-    if (pathname.includes('list')) {
-      return router.push('/schedule/list');
-    }
-
-    return router.push('/schedule');
-  };
+  const { dispatchAction } = useActionContext();
 
   const onDateChange = (date: string) => {
     router.push(`/schedule?date=${date}`);
@@ -72,24 +41,6 @@ export const ScheduleLayout: React.FC<Props> = ({
 
   return (
     <>
-      <Drawer title="Schedule treatment" isOpen={addNew} onClose={onClose}>
-        <AddTreatment
-          medicines={medicines}
-          patients={patients}
-          protocols={protocols}
-        />
-      </Drawer>
-
-      {visit ? (
-        <Drawer
-          title={`${visit.patient?.name}`}
-          isOpen={!!visit?.id}
-          onClose={onClose}
-        >
-          <VisitForm visit={visit} />
-        </Drawer>
-      ) : null}
-
       <PageLayout
         title="Today’s schedule"
         actions={
@@ -98,12 +49,12 @@ export const ScheduleLayout: React.FC<Props> = ({
             <Button
               size="sm"
               className="flex gap-2 items-center"
-              asChild={true}
+              onClick={() => dispatchAction('treatment_new')}
             >
-              <Link href="/schedule/new">
+              <div className="flex gap-1 items-center">
                 <Plus />
                 Schedule Treatment
-              </Link>
+              </div>
             </Button>
           </div>
         }

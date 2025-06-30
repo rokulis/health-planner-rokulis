@@ -2,24 +2,26 @@
 
 import React from 'react';
 
-import { useRouter } from 'next/navigation';
-
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
+import { Drawer } from '@/commons/components/drawer/Drawer';
+import { useVisitQuery } from '@/features/schedule/hooks/useVisitQuery';
 import VisitCard from '@/features/schedule/visit/VisitCard';
-import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface Props {
-  visit: Visits.GetVisit.ResponseBody | null;
+  id: string;
 }
 
-export const VisitForm: React.FC<Props> = ({ visit }) => {
-  const router = useRouter();
+export const VisitForm: React.FC<Props> = ({ id }) => {
+  const { onClose } = useActionContext();
+  const { data: visit } = useVisitQuery(id);
+
   if (!visit) {
     return <div>No visit data available</div>;
   }
 
-  const onClose = () => {
-    router.push('/schedule');
-  };
-
-  return <VisitCard visit={visit} onClose={onClose} />;
+  return (
+    <Drawer title={`${visit.data?.patient?.name}`} isOpen={true}>
+      <VisitCard visit={visit} onClose={onClose} />
+    </Drawer>
+  );
 };

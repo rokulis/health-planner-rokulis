@@ -42,7 +42,7 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
       label: 'Patient',
       content: (
         <PatientForm
-          patient={patient?.data}
+          patient={patient}
           onStepSubmit={userId => {
             setPatientId(userId);
             setCurrentStep(prev => prev + 1);
@@ -52,7 +52,7 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
     },
     {
       id: 2,
-      label: 'Relative',
+      label: 'Relatives',
       content: (
         <RelativesForm
           patientId={patientId}
@@ -67,8 +67,8 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
       content: (
         <SelectTreatment
           patientId={patientId}
-          protocols={protocols?.data}
-          medicines={medicines?.data}
+          protocols={protocols}
+          medicines={medicines}
           onStepSubmit={planId => {
             setTreatmentPlanId(planId);
             setCurrentStep(prev => prev + 1);
@@ -102,14 +102,14 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
     },
   ];
 
-  if (patient?.data?.data?.id) {
+  if (patient?.data?.id) {
     steps = [
       {
         id: 1,
         label: 'Patient',
         content: (
           <PatientForm
-            patient={patient?.data}
+            patient={patient}
             onStepSubmit={userId => {
               setPatientId(userId);
               setCurrentStep(prev => prev + 1);
@@ -119,11 +119,11 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
       },
       {
         id: 2,
-        label: 'Relative',
+        label: 'Relatives',
         content: (
           <RelativesForm
             patientId={patientId}
-            relatives={patient?.data.data.relatives}
+            relatives={patient?.data.relatives}
             onStepSubmit={onClose}
           />
         ),

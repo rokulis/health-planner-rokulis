@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
+import { AddTreatment } from '@/features/schedule/add-treatment/AddTreatment';
+import { VisitForm } from '@/features/schedule/visit/VisitForm';
 
 const ACTIONS = {
   patient_new: (
@@ -20,6 +22,12 @@ const ACTIONS = {
       <PatientEntity id={params?.id} />
     </Drawer>
   ),
+  treatment_new: (
+    <Drawer title="Schedule treatment" isOpen={true}>
+      <AddTreatment />
+    </Drawer>
+  ),
+  visit_view: (params?: Record<string, any>) => <VisitForm id={params?.id} />,
 };
 
 type ActionContextType = {

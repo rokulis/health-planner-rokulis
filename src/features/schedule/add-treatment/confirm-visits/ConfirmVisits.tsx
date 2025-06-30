@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { usePathname, useRouter } from 'next/navigation';
@@ -17,10 +18,15 @@ interface Props {
   treatmentPlanId?: number;
 }
 
-export const ConfirmVisits: React.FC<Props> = ({ visits, onBack, treatmentPlanId }) => {
+export const ConfirmVisits: React.FC<Props> = ({
+  visits,
+  onBack,
+  treatmentPlanId,
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState<number | null>(null);
+  const queryClient = useQueryClient();
 
   const onConfirm = async () => {
     if (!treatmentPlanId) {
@@ -30,6 +36,9 @@ export const ConfirmVisits: React.FC<Props> = ({ visits, onBack, treatmentPlanId
       if (res.message) {
         toast.error(res.message);
       } else {
+        queryClient.invalidateQueries({
+          queryKey: ['schedule'],
+        });
         toast.success('Visits confirmed successfully');
         router.push(pathname);
       }

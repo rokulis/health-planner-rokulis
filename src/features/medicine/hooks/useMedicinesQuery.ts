@@ -7,10 +7,10 @@ export const useMedicinesQuery = () => {
   const apiClient = useApiClient();
 
   const fetchMedicines = async () => {
-    return apiClient.get<Medicines.GetMedicines.ResponseBody>('/medicines');
+    return apiClient.get('/medicines').then(res => res.data);
   };
 
-  return useQuery({
+  return useQuery<Medicines.GetMedicines.ResponseBody>({
     queryKey: ['medicines'],
     queryFn: fetchMedicines,
   });

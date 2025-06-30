@@ -9,35 +9,15 @@ import { useRouter } from 'next/navigation';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
+import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
+import { useScheduleQuery } from '@/features/schedule/hooks/useScheduleQuery';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import { VisitResource } from '@/types/swagger/data-contracts';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
-import { Patients } from '@/types/swagger/PatientsRoute';
-import { Protocols } from '@/types/swagger/ProtocolsRoute';
-import { Schedule } from '@/types/swagger/ScheduleRoute';
-import { Visits } from '@/types/swagger/VisitsRoute';
 
-interface Props {
-  scheduleData: Promise<Schedule.GetSchedule.ResponseBody>;
-  patientsData: Promise<Patients.GetPatients.ResponseBody>;
-  protocolsData: Promise<Protocols.GetProtocols.ResponseBody>;
-  medicinesData: Promise<Medicines.GetMedicines.ResponseBody>;
-  visitData?: Promise<Visits.GetVisit.ResponseBody>;
-}
-
-export const TreatmentPlansList: React.FC<Props> = ({
-  scheduleData,
-  protocolsData,
-  patientsData,
-  medicinesData,
-  visitData = undefined,
-}) => {
+export const TreatmentPlansList = () => {
   const router = useRouter();
-  const schedule = React.use(scheduleData);
-  const patients = React.use(patientsData);
-  const protocols = React.use(protocolsData);
-  const medicines = React.use(medicinesData);
-  const visit = visitData ? React.use(visitData) : null;
+  const { data: schedule } = useScheduleQuery();
+  const { data: patients } = usePatientsQuery();
 
   const columns: ColumnDef<VisitResource>[] = [
     {
@@ -48,7 +28,7 @@ export const TreatmentPlansList: React.FC<Props> = ({
       accessorKey: 'patient',
       header: 'Patient',
       cell: ({ row }) => {
-        const patient = patients.data?.find(
+        const patient = patients?.data?.find(
           p => p.id === row.original.patient_id
         );
         return patient ? `${patient.name}` : 'N/A';
@@ -98,19 +78,12 @@ export const TreatmentPlansList: React.FC<Props> = ({
   ];
 
   return (
-    <ScheduleLayout
-      protocols={protocols}
-      patients={patients}
-      medicines={medicines}
-      visit={visit}
-    >
+    <ScheduleLayout>
       <DataTable
         columns={columns}
-        data={schedule.data ?? []}
+        data={schedule?.data.data ?? []}
         onRowClick={data => {
-          router.push(
-            `/schedule/list/${data.original.id}`
-          );
+          router.push(`/schedule/list/${data.original.id}`);
         }}
       />
     </ScheduleLayout>

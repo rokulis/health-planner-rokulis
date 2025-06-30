@@ -1,49 +1,32 @@
+'use client';
+
 import React from 'react';
 
+import { useSearchParams } from 'next/navigation';
+
+import { useRoomsQuery } from '@/features/rooms/hooks/useRoomsQuery';
+import { useScheduleQuery } from '@/features/schedule/hooks/useScheduleQuery';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import HospitalTimeline from '@/features/schedule/timeline/Timeline';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
-import { Patients } from '@/types/swagger/PatientsRoute';
-import { Protocols } from '@/types/swagger/ProtocolsRoute';
-import { Rooms } from '@/types/swagger/RoomsRoute';
-import { Schedule } from '@/types/swagger/ScheduleRoute';
-import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface Props {
-  roomsData: Promise<Rooms.GetAllRooms.ResponseBody>;
-  scheduleData: Promise<Schedule.GetSchedule.ResponseBody>;
-  patientsData: Promise<Patients.GetPatients.ResponseBody>;
-  protocolsData: Promise<Protocols.GetProtocols.ResponseBody>;
-  medicinesData: Promise<Medicines.GetMedicines.ResponseBody>;
-  visitData?: Promise<Visits.GetVisit.ResponseBody>;
-  isDrawerOpen?: boolean;
+  visitId?: string;
 }
 
-export const TimelinePage: React.FC<Props> = ({
-  roomsData,
-  scheduleData,
-  patientsData,
-  protocolsData,
-  medicinesData,
-  visitData,
-  isDrawerOpen,
-}) => {
-  const rooms = React.use(roomsData);
-  const schedule = React.use(scheduleData);
-  const patients = React.use(patientsData);
-  const protocols = React.use(protocolsData);
-  const medicines = React.use(medicinesData);
-  const visit = visitData ? React.use(visitData) : null;
+export const TimelinePage: React.FC<Props> = ({ visitId }) => {
+  const params = useSearchParams();
+
+  const { data: rooms } = useRoomsQuery();
+  const { data: schedule } = useScheduleQuery(
+    params.get('date') ?? new Date().toISOString().split('T')[0]
+  );
 
   return (
-    <ScheduleLayout
-      isDefaultOpen={isDrawerOpen}
-      patients={patients}
-      protocols={protocols}
-      medicines={medicines}
-      visit={visit}
-    >
-      <HospitalTimeline rooms={rooms.data} schedule={schedule.data} />
+    <ScheduleLayout visitId={visitId}>
+      <HospitalTimeline
+        rooms={rooms?.data}
+        schedule={schedule?.data.data}
+      />
     </ScheduleLayout>
   );
 };

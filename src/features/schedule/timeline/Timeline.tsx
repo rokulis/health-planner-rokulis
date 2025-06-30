@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import {
   Table,
   TableBody,
@@ -35,6 +35,7 @@ interface Props {
 type Appointment = VisitResource & ParsedVisitTime;
 
 export default function HospitalTimeline({ rooms, schedule }: Props) {
+  const { dispatchAction } = useActionContext();
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
@@ -177,9 +178,9 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       const width = span * TIME_CELL_WIDTH - 10;
 
       return (
-        <Link
+        <button
           className={cn(
-            'absolute top-1 left-0  border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40',
+            'absolute top-1 left-0  border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40 cursor-pointer',
             getAppointmentBgColor(appointmentForSlot.status)
           )}
           style={{
@@ -187,7 +188,9 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
             maxWidth: 'none',
             overflow: 'visible',
           }}
-          href={`/schedule/view/${appointmentForSlot.id}`}
+          onClick={() =>
+            dispatchAction('visit_view', { id: appointmentForSlot.id })
+          }
         >
           <span
             className={cn(
@@ -199,7 +202,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
           <span className="whitespace-nowrap overflow-hidden text-ellipsis">
             {appointmentForSlot?.patient?.name}
           </span>
-        </Link>
+        </button>
       );
     }
 
