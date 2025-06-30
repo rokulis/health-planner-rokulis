@@ -44,17 +44,19 @@ export const RelativesForm: React.FC<Props> = ({
   const form = useForm<z.infer<typeof relativesSchema>>({
     resolver: zodResolver(relativesSchema),
     defaultValues: {
-      relatives: relatives ?? [
-        {
-          name: '',
-          kinship: '',
-          email: '',
-          phone_number: '',
-          address: '',
-          id: undefined,
-          patient_id: patientId ?? undefined,
-        },
-      ],
+      relatives: relatives?.length
+        ? relatives
+        : [
+            {
+              name: '',
+              kinship: '',
+              email: '',
+              phone_number: '',
+              address: '',
+              id: undefined,
+              patient_id: patientId ?? undefined,
+            },
+          ],
     },
   });
 
