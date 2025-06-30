@@ -24,9 +24,10 @@ export const PatientProfile: React.FC<Props> = ({ patient }) => {
           variant="ghost"
           className="text-gray-600 hover:text-gray-900"
           asChild={true}
+          size="sm"
         >
           <Link href={`/patients/edit/${patient.data?.id}`}>
-            <Edit className="h-2 w-2 mr-2" />
+            <Edit size={18} />
             Edit
           </Link>
         </Button>

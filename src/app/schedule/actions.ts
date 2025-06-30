@@ -4,6 +4,7 @@ import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
+import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 import { Visits } from '@/types/swagger/VisitsRoute';
 
 export const getSchedule = async (date: string) => {
@@ -25,6 +26,18 @@ export const getOpenSlots = async (date: string) => {
     `/schedule/open-slots?date=${date}`
   );
 };
+
+export const getTreatmentPlan = async (id?: number) => {
+  return apiClient<TreatmentPlans.GetTreatmentPlan.ResponseBody>(
+    `/treatment-plans/${id}`,
+    {
+      next: {
+        tags: [`treatment-plan-${id}`],
+        revalidate: 3600,
+      },
+    }
+  );
+}
 
 export const confirmTreatmentPlan = async (id: number) => {
   const res = await apiClient<Schedule.GetSchedule.ResponseBody>(

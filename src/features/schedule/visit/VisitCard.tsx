@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-
 'use client';
 
 import { Clock, Edit } from 'lucide-react';
@@ -11,7 +8,7 @@ import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface TreatmentCardProps {
-  data: Visits.GetVisit.ResponseBody;
+  visit: Visits.GetVisit.ResponseBody;
   cycleInfo?: string;
   onClose?: () => void;
   onEdit?: () => void;
@@ -20,26 +17,19 @@ interface TreatmentCardProps {
 }
 
 export default function VisitCard({
-  data,
+  visit,
   cycleInfo = 'Cycle 1/1',
   onReschedule,
   onNextProcedure,
   onClose,
 }: TreatmentCardProps) {
-  const getAllMedicines = () => {
-    const medicines =
-      data.visit_treatments[0]?.treatment_medicine_group?.treatment_medicines ||
-      [];
-    return medicines;
-  };
-
   return (
     <div className="flex flex-col h-full justify-between">
       <Card className="w-full mx-auto p-0">
         <CardHeader className="pb-4 px-0">
           <div className="flex gap-2 mt-2">
             <Badge variant="secondary" className="bg-gray-100 text-gray-700">
-              {data.room.name} {data.bed.name}
+              {visit.data?.room?.name} {visit.data?.bed?.name}
             </Badge>
             <Badge variant="secondary" className="bg-gray-100 text-gray-700">
               {cycleInfo}
@@ -81,20 +71,30 @@ export default function VisitCard({
 
           {/* Medicines List */}
           <div className="space-y-3">
-            {getAllMedicines().map(treatmentMedicine => (
+            {visit.data?.visit_treatments?.map(treatment => (
               <div
-                key={treatmentMedicine.id}
+                key={treatment.id}
                 className="flex items-center justify-between p-3 border rounded-lg bg-gray-50"
               >
-                <span className="font-medium">
-                  {treatmentMedicine.medicine.name}
-                </span>
-                <Badge
-                  variant="secondary"
-                  className="bg-purple-100 text-purple-700"
-                >
-                  {treatmentMedicine.medicine.atc_code}
-                </Badge>
+                <div>
+                  {treatment.treatment_medicine_groups?.map(tmg => (
+                    <>
+                      {tmg.treatment_medicines?.map(med => (
+                        <div className="flex justify-between" key={tmg.id}>
+                          <span className="font-medium">
+                            {med?.medicine?.name}
+                          </span>
+                          <Badge
+                            variant="secondary"
+                            className="bg-purple-100 text-purple-700"
+                          >
+                            {med?.medicine?.atc_code}
+                          </Badge>
+                        </div>
+                      ))}
+                    </>
+                  ))}
+                </div>
               </div>
             ))}
           </div>

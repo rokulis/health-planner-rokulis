@@ -149,7 +149,7 @@ export const ProtocolForm: React.FC<Props> = ({
                   options={
                     (diagnoses?.data ?? []).map(diagnosis => ({
                       value: String(diagnosis.id),
-                      label: diagnosis.name,
+                      label: `${diagnosis.code}: ${diagnosis.name}`,
                     })) ?? []
                   }
                 />

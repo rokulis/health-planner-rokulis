@@ -128,6 +128,8 @@ export interface StoreTreatmentPlanRequest {
   /** @example "custom treatment plan name" */
   name?: string;
   /** @example 1 */
+  diagnosis_id: number;
+  /** @example 1 */
   patient_id: number;
   /** @example 1 */
   protocol_id: number;
@@ -313,7 +315,7 @@ export interface VisitTreatmentResource {
   id?: number;
   status?: VisitTreatmentResourceStatusEnum;
   notes?: string;
-  treatment_medicine_groups?: TreatmentMedicineGroupResource[];
+  treatment_medicine_group?: TreatmentMedicineGroupResource;
 }
 
 /**

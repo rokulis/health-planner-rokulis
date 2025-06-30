@@ -6,6 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { secondsToMinutes } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useDebounce } from 'use-debounce';
+import { undefined } from 'zod';
 
 import { useRouter } from 'next/navigation';
 
@@ -22,6 +25,7 @@ import {
 } from '@/features/schedule/add-treatment/select-treatment/validations';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
+import { useDiagnosesQuery } from '@/utils/hooks/useDiagnosesQuery';
 
 import { MedicineGroup } from './medicine-group/MedicineGroup';
 
@@ -38,6 +42,10 @@ export const SelectTreatment: React.FC<Props> = ({
   onStepSubmit,
   patientId,
 }) => {
+  const [search, setSearch] = React.useState<string>('');
+  const [searchValue] = useDebounce(search, 500);
+  const { data: diagnoses } = useDiagnosesQuery(searchValue);
+
   const router = useRouter();
 
   const form = useForm<SelectTreatmentFormValues>({
@@ -48,7 +56,7 @@ export const SelectTreatment: React.FC<Props> = ({
       cycles: 10,
       days_between_cycles: 7,
       sector_id: 1,
-      tlk_code: 'C00-D48',
+      diagnosis_id: undefined as unknown as number, // Diagnosis ID will be set after selection
       medicine_groups: [], // No medicine groups until protocol is selected
     },
   });
@@ -66,6 +74,7 @@ export const SelectTreatment: React.FC<Props> = ({
     if (selectedProtocol) {
       form.setValue('protocol_id', selectedProtocol.id ?? 0);
       form.setValue('days_between_cycles', selectedProtocol.cycle_duration);
+      form.setValue('diagnosis_id', selectedProtocol.diagnosis?.id ?? 1);
 
       // Transform medicine groups to match form structure
       const medicineGroups = selectedProtocol.protocol_medicine_groups?.map(
@@ -102,6 +111,9 @@ export const SelectTreatment: React.FC<Props> = ({
   const onSubmit: SubmitHandler<SelectTreatmentFormValues> = async data => {
     const request = mapTreatmentRequest(data);
     await createTreatmentPlan(request).then(res => {
+      if (res.message) {
+        return toast.error(res.message);
+      }
       if (res.success) {
         router.push(`?patient=${patientId}&treatment=${res.data?.id}`);
         if (typeof onStepSubmit === 'function') {
@@ -136,17 +148,26 @@ export const SelectTreatment: React.FC<Props> = ({
             </FieldWrapper>
           </div>
 
-          <div className="col-span-2">
-            <FieldWrapper control={form.control} name="tlk_code">
-              <FloatingLabelInput label="TLK code" />
+          <div className="col-span-6">
+            <FieldWrapper control={form.control} name="diagnosis_id">
+              <FloatingLabelSearchableSelect
+                onSearchChange={setSearch}
+                label="Diagnosis"
+                options={
+                  (diagnoses?.data ?? []).map(diagnosis => ({
+                    value: String(diagnosis.id),
+                    label: `${diagnosis.code}: ${diagnosis.name}`,
+                  })) ?? []
+                }
+              />
             </FieldWrapper>
           </div>
-          <div className="col-span-2">
+          <div className="col-span-3">
             <FieldWrapper control={form.control} name="cycles">
               <FloatingLabelInput label="Cycles" type="number" />
             </FieldWrapper>
           </div>
-          <div className="col-span-2">
+          <div className="col-span-3">
             <FieldWrapper control={form.control} name="days_between_cycles">
               <FloatingLabelInput label="Days between" type="number" />
             </FieldWrapper>

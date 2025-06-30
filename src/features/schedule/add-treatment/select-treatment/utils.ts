@@ -13,6 +13,7 @@ export function mapTreatmentRequest(
   return {
     patient_id: currentRequest.patient_id,
     protocol_id: currentRequest.protocol_id,
+    diagnosis_id: currentRequest.diagnosis_id,
     sector_id: currentRequest.sector_id,
     cycles: currentRequest.cycles,
     days_between_cycles: currentRequest.days_between_cycles,

@@ -21,5 +21,5 @@ export const VisitForm: React.FC<Props> = ({ visit }) => {
     router.push('/schedule');
   };
 
-  return <VisitCard data={visit} onClose={onClose} />;
+  return <VisitCard visit={visit} onClose={onClose} />;
 };
