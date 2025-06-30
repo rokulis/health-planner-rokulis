@@ -56,6 +56,7 @@ export const ActionContextProvider: React.FC<Props> = ({ children }) => {
   const onClose = React.useCallback(() => {
     const queryString = qs.stringify(
       {
+        ...qs.parse(queryParams.toString()),
         action: null,
       },
       {
@@ -75,6 +76,7 @@ export const ActionContextProvider: React.FC<Props> = ({ children }) => {
   ) => {
     const queryString = qs.stringify(
       {
+        ...qs.parse(queryParams.toString()),
         action: {
           name: action,
           params: actionParams || {},
