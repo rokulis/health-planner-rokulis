@@ -3,6 +3,7 @@
 import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
+import { ChangeVisitStatusStatusEnum } from '@/types/swagger/data-contracts';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 import { Visits } from '@/types/swagger/VisitsRoute';
@@ -37,7 +38,7 @@ export const getTreatmentPlan = async (id?: number) => {
       },
     }
   );
-}
+};
 
 export const confirmTreatmentPlan = async (id: number) => {
   const res = await apiClient<Schedule.GetSchedule.ResponseBody>(
@@ -56,13 +57,33 @@ export const confirmTreatmentPlan = async (id: number) => {
 };
 
 export const getVisit = async (visitId: number) => {
-  return apiClient<Visits.GetVisit.ResponseBody>(
-    `/visits/${visitId}`,
-    {
-      next: {
-        tags: ['schedule', `visit-${visitId}`],
-        revalidate: 3600, // Revalidate every hour
-      },
-    }
-  );
+  return apiClient<Visits.GetVisit.ResponseBody>(`/visits/${visitId}`, {
+    next: {
+      tags: ['schedule', `visit-${visitId}`],
+      revalidate: 3600, // Revalidate every hour
+    },
+  });
+};
+
+export const changeTreatmentStatus = async (
+  visitId: number,
+  treatmentId: number,
+  status: ChangeVisitStatusStatusEnum
+) => {
+  const res = await apiClient<
+    Visits.ChangeVisitTreatmentStatus.ResponseBody,
+    Visits.ChangeVisitStatus.RequestBody
+  >(`/visits/${visitId}/treatments/${treatmentId}/change-status`, {
+    method: 'POST',
+    body: {
+      status,
+    },
+  });
+
+  if (res.success) {
+    revalidateTag(`visit-${visitId}`);
+    revalidateTag('schedule');
+  }
+
+  return res;
 };
