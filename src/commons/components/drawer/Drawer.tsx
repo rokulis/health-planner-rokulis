@@ -28,8 +28,11 @@ export const Drawer: React.FC<Props> = ({
       direction="right"
       open={isOpen}
       onClose={() => {
-        onClose?.();
-        actionOnClose?.();
+        if (typeof onClose !== 'undefined') {
+          onClose();
+        } else {
+          actionOnClose?.();
+        }
       }}
     >
       <DrawerContent className="h-full overflow-y-auto">
