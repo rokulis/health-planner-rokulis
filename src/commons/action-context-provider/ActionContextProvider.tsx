@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
+import { ProtocolEntity } from '@/features/protocols/add-protocol/ProtocolEntity';
 import { AddTreatment } from '@/features/schedule/add-treatment/AddTreatment';
 import { VisitForm } from '@/features/schedule/visit/VisitForm';
 
@@ -28,6 +29,16 @@ const ACTIONS = {
     </Drawer>
   ),
   visit_view: (params?: Record<string, any>) => <VisitForm id={params?.id} />,
+  protocol_new: (
+    <Drawer title="Protocol Form" isOpen={true}>
+      <ProtocolEntity />
+    </Drawer>
+  ),
+  protocol_edit: (params?: Record<string, any>) => (
+    <Drawer title="Protocol Form" isOpen={true}>
+      <ProtocolEntity protocolId={params?.id} />
+    </Drawer>
+  ),
 };
 
 type ActionContextType = {

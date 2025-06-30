@@ -5,8 +5,9 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format, secondsToMinutes } from 'date-fns';
 
-import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
 import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
@@ -15,8 +16,11 @@ import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import { VisitResource } from '@/types/swagger/data-contracts';
 
 export const TreatmentPlansList = () => {
-  const router = useRouter();
-  const { data: schedule } = useScheduleQuery();
+  const { dispatchAction } = useActionContext();
+  const params = useSearchParams();
+  const { data: schedule } = useScheduleQuery(
+    params.get('date') ?? new Date().toISOString().split('T')[0]
+  );
   const { data: patients } = usePatientsQuery();
 
   const columns: ColumnDef<VisitResource>[] = [
@@ -82,9 +86,9 @@ export const TreatmentPlansList = () => {
       <DataTable
         columns={columns}
         data={schedule?.data.data ?? []}
-        onRowClick={data => {
-          router.push(`/schedule/list/${data.original.id}`);
-        }}
+        onRowClick={data =>
+          dispatchAction('visit_view', { id: data.original.id })
+        }
       />
     </ScheduleLayout>
   );

@@ -4,31 +4,21 @@ import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 
-import { useRouter } from 'next/navigation';
-
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { Button } from '@/commons/components/ui/button';
 import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
-import { ProtocolForm } from '@/features/protocols/add-protocol/ProtocolForm';
 import { TableActions } from '@/features/protocols/TableActions';
 import { ProtocolResource } from '@/types/swagger/data-contracts';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
 interface Props {
   protocols: Protocols.GetProtocols.ResponseBody;
-  medicines: Medicines.GetMedicines.ResponseBody;
-  protocol?: Protocols.GetProtocol.ResponseBody;
 }
 
-export const ProtocolsList: React.FC<Props> = ({
-  protocols,
-  medicines,
-  protocol,
-}) => {
-  const router = useRouter();
-  const [addNew, setAddNew] = React.useState(!!protocol?.data?.id || false);
+export const ProtocolsList: React.FC<Props> = ({ protocols }) => {
+  const { dispatchAction } = useActionContext();
 
   const columns: ColumnDef<ProtocolResource>[] = [
     {
@@ -61,11 +51,6 @@ export const ProtocolsList: React.FC<Props> = ({
     },
   ];
 
-  const handleClose = () => {
-    setAddNew(false);
-    router.push('/protocols');
-  };
-
   return (
     <PageLayout
       title="Protocols"
@@ -73,19 +58,15 @@ export const ProtocolsList: React.FC<Props> = ({
         <Button
           size="sm"
           className="flex gap-2 items-center"
-          onClick={() => setAddNew(true)}
+          onClick={() => dispatchAction('protocol_new')}
         >
-          <Plus />
-          Add Protocol
+          <div className="flex gap-2 items-center">
+            <Plus />
+            Add Protocol
+          </div>
         </Button>
       }
     >
-      <ProtocolForm
-        protocol={protocol}
-        medicines={medicines}
-        isOpen={addNew}
-        onClose={handleClose}
-      />
       <DataTable columns={columns} data={protocols.data ?? []} />
     </PageLayout>
   );

@@ -5,9 +5,8 @@ import React from 'react';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 
-import Link from 'next/link';
-
 import { deleteProtocol } from '@/app/protocols/actions';
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { useConfirm } from '@/commons/components/confirm/hooks/useConfirm';
 import {
   DropdownMenu,
@@ -22,6 +21,7 @@ interface Props {
 }
 
 export const TableActions: React.FC<Props> = ({ protocol }) => {
+  const { dispatchAction } = useActionContext();
   const { showConfirmation } = useConfirm();
 
   const handleDelete = async () => {
@@ -44,8 +44,14 @@ export const TableActions: React.FC<Props> = ({ protocol }) => {
         <DotsVerticalIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem asChild={true}>
-          <Link href={`/protocols/edit/${protocol.id}`}>Edit</Link>
+        <DropdownMenuItem
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            dispatchAction('protocol_edit', { id: protocol.id });
+          }}
+        >
+          Edit
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
       </DropdownMenuContent>

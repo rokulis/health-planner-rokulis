@@ -18,7 +18,7 @@ import { Medicines } from '@/types/swagger/MedicinesRoute';
 interface MedicineGroupProps {
   index: number;
   onRemove: () => void;
-  medicines: Medicines.GetMedicines.ResponseBody;
+  medicines?: Medicines.GetMedicines.ResponseBody;
   form: UseFormReturn<z.infer<typeof protocolSchema>>;
 }
 

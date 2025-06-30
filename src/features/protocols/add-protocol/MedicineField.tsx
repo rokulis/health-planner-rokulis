@@ -23,7 +23,7 @@ interface MedicineFieldProps {
   medicineIndex: number;
   form: UseFormReturn<z.infer<typeof protocolSchema>>;
   onRemove: () => void;
-  medicines: Medicines.GetMedicines.ResponseBody;
+  medicines?: Medicines.GetMedicines.ResponseBody;
 }
 
 export function MedicineField({
@@ -40,7 +40,7 @@ export function MedicineField({
 
   React.useEffect(() => {
     if (medicineId) {
-      const selectedMedicine = medicines.data?.find(
+      const selectedMedicine = medicines?.data?.find(
         m => m.id === Number(medicineId)
       );
       if (selectedMedicine) {
@@ -54,7 +54,7 @@ export function MedicineField({
         );
       }
     }
-  }, [medicineId, medicines.data, form, groupIndex, medicineIndex]);
+  }, [medicineId, medicines?.data, form, groupIndex, medicineIndex]);
 
   return (
     <div className="pt-4 mt-2">
@@ -73,7 +73,7 @@ export function MedicineField({
       </div>
 
       <div className="grid grid-cols-6 gap-4">
-        {medicines.data && medicines.data.length > 0 ? (
+        {medicines?.data && medicines.data.length > 0 ? (
           <div className="col-span-6">
             <FieldWrapper
               control={form.control}
