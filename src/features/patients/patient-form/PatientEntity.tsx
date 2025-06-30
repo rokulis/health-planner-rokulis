@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { useMedicinesQuery } from '@/features/medicine/hooks/useMedicinesQuery';
 import { usePatientQuery } from '@/features/patients/hooks/usePatientQuery';
@@ -29,11 +30,13 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
   const { data: protocols } = useProtocolsQuery();
   const { data: medicines } = useMedicinesQuery();
 
+  const { onClose } = useActionContext();
+
   if (id && !patient) {
     return <div>Loading patient data...</div>;
   }
 
-  const steps: Step[] = [
+  let steps: Step[] = [
     {
       id: 1,
       label: 'Patient',
@@ -100,7 +103,32 @@ export const PatientEntity: React.FC<Props> = ({ id }) => {
   ];
 
   if (patient?.data?.data?.id) {
-    return <PatientForm patient={patient.data} />;
+    steps = [
+      {
+        id: 1,
+        label: 'Patient',
+        content: (
+          <PatientForm
+            patient={patient?.data}
+            onStepSubmit={userId => {
+              setPatientId(userId);
+              setCurrentStep(prev => prev + 1);
+            }}
+          />
+        ),
+      },
+      {
+        id: 2,
+        label: 'Relative',
+        content: (
+          <RelativesForm
+            patientId={patientId}
+            relatives={patient?.data.data.relatives}
+            onStepSubmit={onClose}
+          />
+        ),
+      },
+    ];
   }
 
   return (

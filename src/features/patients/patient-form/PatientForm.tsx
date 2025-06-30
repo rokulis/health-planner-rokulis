@@ -48,9 +48,12 @@ export const PatientForm: React.FC<Props> = ({ patient, onStepSubmit }) => {
           if (res.message) {
             toast.error(res.message);
           } else {
-            queryClient.invalidateQueries({
-              queryKey: ['patients'],
-            });
+            if (patient.data?.id && typeof onStepSubmit !== 'undefined') {
+              queryClient.invalidateQueries({
+                queryKey: ['patients'],
+              });
+              onStepSubmit(patient.data.id);
+            }
             toast.success('Patient updated successfully');
           }
         });

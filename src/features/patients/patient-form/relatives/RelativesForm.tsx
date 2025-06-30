@@ -14,12 +14,14 @@ import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import { relativesSchema } from '@/features/patients/patient-form/relatives/validations';
+import { Relative } from '@/types/swagger/data-contracts';
 import { Patients } from '@/types/swagger/PatientsRoute';
 
 interface Props {
   patientId?: number;
   onStepSubmit?: () => void;
   onSkip?: () => void;
+  relatives?: Array<Relative>;
 }
 
 const KINSHIP_OPTIONS = [
@@ -35,13 +37,14 @@ export const RelativesForm: React.FC<Props> = ({
   patientId,
   onStepSubmit,
   onSkip,
+  relatives,
 }) => {
   const [isPending, startTransition] = React.useTransition();
 
   const form = useForm<z.infer<typeof relativesSchema>>({
     resolver: zodResolver(relativesSchema),
     defaultValues: {
-      relatives: [
+      relatives: relatives ?? [
         {
           name: '',
           kinship: '',
@@ -195,9 +198,12 @@ export const RelativesForm: React.FC<Props> = ({
         </div>
 
         <div className="mt-12 flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={onSkip}>
-            Skip
-          </Button>
+          {typeof onSkip !== 'undefined' ? (
+            <Button type="button" variant="ghost" onClick={onSkip}>
+              Skip
+            </Button>
+          ) : null}
+
           <Button type="submit" className="w-1/2">
             Next
           </Button>

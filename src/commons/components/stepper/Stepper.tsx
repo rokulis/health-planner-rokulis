@@ -17,7 +17,7 @@ interface StepperProps {
 export function Stepper({ steps, currentStep }: StepperProps) {
   return (
     <div className="w-full flex flex-col h-full mb-4">
-      <div className="flex items-center justify-center mb-4">
+      <div className="flex items-center justify-start mb-4">
         {steps.map((step, index) => (
           <button type="button" key={step.id} className="flex items-center">
             <div

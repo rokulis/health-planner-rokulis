@@ -1,5 +1,7 @@
 import React from 'react';
 
+import cx from 'classnames';
+
 import { FormValue } from '@/commons/components/form-value/FormValue';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import { Patients } from '@/types/swagger/PatientsRoute';
@@ -19,8 +21,15 @@ export const PatientRelatives: React.FC<Props> = ({ patient }) => {
           {patient.data?.relatives?.length === 0 && (
             <div className="text-gray-500">No relatives found.</div>
           )}
-          {patient.data?.relatives?.map(relative => (
-            <div className="grid gap-4" key={relative.id}>
+          {patient.data?.relatives?.map((relative, idx) => (
+            <div
+              className={cx('grid gap-4 pb-4', {
+                'border-b border-black/10':
+                  patient.data?.relatives &&
+                  idx < patient.data?.relatives?.length - 1,
+              })}
+              key={relative.id}
+            >
               <FormValue label="Full name" value={relative.name} />
               <FormValue label="Kinship" value={relative.kinship} />
               <FormValue label="Email address" value={relative.email} />
