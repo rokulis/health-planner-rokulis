@@ -66,7 +66,7 @@ export const ActionContextProvider: React.FC<Props> = ({ children }) => {
       }
     );
     router.push(`?${queryString}`);
-  }, [router]);
+  }, [queryParams, router]);
 
   const actionData = ACTIONS[actionName as keyof typeof ACTIONS] ?? null;
 
