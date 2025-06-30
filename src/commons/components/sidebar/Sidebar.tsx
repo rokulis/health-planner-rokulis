@@ -24,7 +24,7 @@ import Rooms from '@/commons/icons/svg/rooms.svg';
 import Settings from '@/commons/icons/svg/settings.svg';
 import { Me } from '@/types/swagger/MeRoute';
 
-import { Button } from '../components/ui/button';
+import { Button } from '../ui/button';
 
 const SIDEBAR_LINKS = [
   {

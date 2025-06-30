@@ -1,12 +1,11 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-import { useRouter } from 'next/navigation';
 
 import { addPatient, updatePatient } from '@/app/patients/actions';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
@@ -24,7 +23,7 @@ interface Props {
 
 export const PatientForm: React.FC<Props> = ({ patient, onStepSubmit }) => {
   const [isPending, startTransition] = React.useTransition();
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof patientSchema>>({
     resolver: zodResolver(patientSchema),
@@ -49,8 +48,10 @@ export const PatientForm: React.FC<Props> = ({ patient, onStepSubmit }) => {
           if (res.message) {
             toast.error(res.message);
           } else {
+            queryClient.invalidateQueries({
+              queryKey: ['patients'],
+            });
             toast.success('Patient updated successfully');
-            router.push('/patients');
           }
         });
       }
@@ -60,7 +61,9 @@ export const PatientForm: React.FC<Props> = ({ patient, onStepSubmit }) => {
           toast.error(res.message);
         } else {
           if (res.data?.id && typeof onStepSubmit !== 'undefined') {
-            router.push(`?patient=${res.data?.id}`);
+            queryClient.invalidateQueries({
+              queryKey: ['patients'],
+            });
             onStepSubmit(res.data?.id);
           }
           toast.success('Patient created successfully');

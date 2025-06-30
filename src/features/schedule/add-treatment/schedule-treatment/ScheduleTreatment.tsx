@@ -6,8 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useSearchParams } from 'next/navigation';
-
 import { planVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
@@ -26,11 +24,11 @@ const FormSchema = z.object({
 interface Props {
   onStepSubmit: (visits: TreatmentPlans.PlanVisits.ResponseBody) => void;
   onBack?: () => void;
+  treatmentPlanId?: number;
 }
 
-export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
+export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit, treatmentPlanId }) => {
   const [isPending, startTransition] = React.useTransition();
-  const searchParams = useSearchParams();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
     undefined
@@ -49,14 +47,12 @@ export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit }) => {
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {
-      const treatmentPlanId = searchParams.get('treatment');
-
       if (!treatmentPlanId) {
         return;
       }
 
       await planVisits({
-        id: parseInt(treatmentPlanId, 10),
+        id: treatmentPlanId,
         start_date: values.start_date,
         start_time: values.start_time,
       }).then(res => {

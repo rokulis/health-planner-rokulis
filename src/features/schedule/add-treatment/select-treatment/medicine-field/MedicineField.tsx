@@ -17,7 +17,7 @@ interface MedicineFieldProps {
   medicineIndex: number;
   control: Control<SelectTreatmentFormValues>;
   onRemove: () => void;
-  medicines: Medicines.GetMedicines.ResponseBody;
+  medicines?: Medicines.GetMedicines.ResponseBody;
 }
 
 export function MedicineField({
@@ -51,7 +51,7 @@ export function MedicineField({
           >
             <FloatingLabelSearchableSelect
               label="Select medicine"
-              options={(medicines.data ?? [])?.map(m => ({
+              options={(medicines?.data ?? [])?.map(m => ({
                 value: String(m.id),
                 label: String(m.name),
               }))}

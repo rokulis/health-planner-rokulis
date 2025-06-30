@@ -17,7 +17,7 @@ interface MedicineGroupProps {
   index: number;
   control: Control<SelectTreatmentFormValues>;
   onRemove: () => void;
-  medicines: Medicines.GetMedicines.ResponseBody;
+  medicines?: Medicines.GetMedicines.ResponseBody;
 }
 
 export function MedicineGroup({

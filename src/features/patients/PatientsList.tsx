@@ -11,25 +11,13 @@ import { DataTable } from '@/commons/components/data-table/DataTable';
 import { PatientsLayout } from '@/features/patients/layouts/PatientsLayout';
 import { TableActions } from '@/features/patients/TableActions';
 import { PatientResource } from '@/types/swagger/data-contracts';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Patients } from '@/types/swagger/PatientsRoute';
-import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
 interface Props {
   patients: Patients.GetPatients.ResponseBody;
-  patient?: Patients.GetPatient.ResponseBody;
-  protocols: Protocols.GetProtocols.ResponseBody;
-  medicines: Medicines.GetMedicines.ResponseBody;
-  isDefaultOpen?: boolean;
 }
 
-export const PatientsList: React.FC<Props> = ({
-  patients,
-  patient,
-  medicines,
-  protocols,
-  isDefaultOpen,
-}) => {
+export const PatientsList: React.FC<Props> = ({ patients }) => {
   const router = useRouter();
   const columns: ColumnDef<PatientResource>[] = [
     {
@@ -75,12 +63,7 @@ export const PatientsList: React.FC<Props> = ({
   ];
 
   return (
-    <PatientsLayout
-      patient={patient}
-      medicines={medicines}
-      protocols={protocols}
-      isDefaultOpen={isDefaultOpen}
-    >
+    <PatientsLayout>
       <DataTable
         columns={columns}
         data={patients.data ?? []}

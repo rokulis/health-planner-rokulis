@@ -10,8 +10,6 @@ import { toast } from 'sonner';
 import { useDebounce } from 'use-debounce';
 import { undefined } from 'zod';
 
-import { useRouter } from 'next/navigation';
-
 import { createTreatmentPlan } from '@/app/treatment-plans/actions';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
@@ -30,9 +28,9 @@ import { useDiagnosesQuery } from '@/utils/hooks/useDiagnosesQuery';
 import { MedicineGroup } from './medicine-group/MedicineGroup';
 
 interface Props {
-  protocols: Protocols.GetProtocols.ResponseBody;
-  medicines: Medicines.GetMedicines.ResponseBody;
-  onStepSubmit?: () => void;
+  protocols?: Protocols.GetProtocols.ResponseBody;
+  medicines?: Medicines.GetMedicines.ResponseBody;
+  onStepSubmit?: (treatmentPlanId: number) => void;
   patientId?: number;
 }
 
@@ -45,8 +43,6 @@ export const SelectTreatment: React.FC<Props> = ({
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
   const { data: diagnoses } = useDiagnosesQuery(searchValue);
-
-  const router = useRouter();
 
   const form = useForm<SelectTreatmentFormValues>({
     resolver: zodResolver(SelectTreatmentFormSchema),
@@ -67,7 +63,7 @@ export const SelectTreatment: React.FC<Props> = ({
   });
 
   const handleProtocolSelect = (protocolId: string) => {
-    const selectedProtocol = protocols.data?.find(
+    const selectedProtocol = protocols?.data?.find(
       p => p.id === Number.parseInt(protocolId)
     );
 
@@ -115,9 +111,8 @@ export const SelectTreatment: React.FC<Props> = ({
         return toast.error(res.message);
       }
       if (res.success) {
-        router.push(`?patient=${patientId}&treatment=${res.data?.id}`);
-        if (typeof onStepSubmit === 'function') {
-          onStepSubmit();
+        if (typeof onStepSubmit === 'function' && res.data?.id) {
+          onStepSubmit(res.data.id);
         }
       }
     });
@@ -140,7 +135,7 @@ export const SelectTreatment: React.FC<Props> = ({
               <FloatingLabelSearchableSelect
                 label="Select protocol"
                 onValueChange={handleProtocolSelect}
-                options={(protocols.data ?? [])?.map(p => ({
+                options={(protocols?.data ?? [])?.map(p => ({
                   value: String(p.id),
                   label: String(p.name),
                 }))}

@@ -8,7 +8,7 @@ import { format, secondsToMinutes } from 'date-fns';
 import { useRouter } from 'next/navigation';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
-import { VisitStatusBadge } from '@/commons/visit-status-badge/VisitStatusBadge';
+import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import { VisitResource } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';

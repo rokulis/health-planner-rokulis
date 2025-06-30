@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { CookiesProvider } from 'next-client-cookies/server';
 
+import { ActionContextProvider } from '@/commons/action-context-provider/ActionContextProvider';
 import { Providers } from '@/commons/components/providers/Providers';
 import { Toaster } from '@/commons/components/ui/sonner';
 
@@ -27,10 +28,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${inter.className} antialiased`}>
-        <CookiesProvider>
-          <Providers>{children}</Providers>
-          <Toaster richColors={true} position="top-right" />
-        </CookiesProvider>
+        <Providers>
+          <ActionContextProvider>
+            <CookiesProvider>
+              <Providers>{children}</Providers>
+              <Toaster richColors={true} position="top-right" />
+            </CookiesProvider>
+          </ActionContextProvider>
+        </Providers>
       </body>
     </html>
   );

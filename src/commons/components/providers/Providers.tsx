@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -14,10 +14,12 @@ const queryClient = new QueryClient();
 
 export const Providers: React.FC<Props> = ({ children }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ConfirmationModalContextProvider>
-        {children}
-      </ConfirmationModalContextProvider>
-    </QueryClientProvider>
+    <Suspense>
+      <QueryClientProvider client={queryClient}>
+        <ConfirmationModalContextProvider>
+          {children}
+        </ConfirmationModalContextProvider>
+      </QueryClientProvider>
+    </Suspense>
   );
 };

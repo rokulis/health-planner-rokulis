@@ -5,9 +5,8 @@ import React from 'react';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 
-import Link from 'next/link';
-
 import { deletePatient } from '@/app/patients/actions';
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { useConfirm } from '@/commons/components/confirm/hooks/useConfirm';
 import {
   DropdownMenu,
@@ -22,6 +21,7 @@ interface Props {
 }
 
 export const TableActions: React.FC<Props> = ({ patient }) => {
+  const { dispatchAction } = useActionContext();
   const { showConfirmation } = useConfirm();
 
   const handleDelete = async () => {
@@ -44,10 +44,28 @@ export const TableActions: React.FC<Props> = ({ patient }) => {
         <DotsVerticalIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem asChild={true}>
-          <Link href={`/patients/edit/${patient.id}`}>Edit</Link>
+        <DropdownMenuItem
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            dispatchAction('patient_edit', {
+              id: patient.id,
+            });
+          }}
+        >
+          Edit
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            return handleDelete();
+          }}
+        >
+          Delete
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

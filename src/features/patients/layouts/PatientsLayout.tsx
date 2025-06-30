@@ -2,50 +2,19 @@
 
 import React from 'react';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
-import { Drawer } from '@/commons/components/drawer/Drawer';
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { Button } from '@/commons/components/ui/button';
 import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
-import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
-import { Medicines } from '@/types/swagger/MedicinesRoute';
-import { Patients } from '@/types/swagger/PatientsRoute';
-import { Protocols } from '@/types/swagger/ProtocolsRoute';
 
 interface Props {
   children: React.ReactNode;
-  patient?: Patients.GetPatient.ResponseBody;
-  isDefaultOpen?: boolean;
-  protocols: Protocols.GetProtocols.ResponseBody;
-  medicines: Medicines.GetMedicines.ResponseBody;
 }
 
-export const PatientsLayout: React.FC<Props> = ({
-  children,
-  patient,
-  isDefaultOpen,
-  protocols,
-  medicines,
-}) => {
-  const router = useRouter();
-  const [addNew, setAddNew] = React.useState(isDefaultOpen ?? false);
-
-  const onClose = () => {
-    setAddNew(false);
-    router.push('/patients');
-  };
-
+export const PatientsLayout: React.FC<Props> = ({ children }) => {
+  const { dispatchAction } = useActionContext();
   return (
     <>
-      <Drawer title="Patient Form" isOpen={addNew} onClose={onClose}>
-        <PatientEntity
-          protocols={protocols}
-          medicines={medicines}
-          patient={patient}
-        />
-      </Drawer>
       <PageLayout
         title="Patients"
         actions={
@@ -54,11 +23,12 @@ export const PatientsLayout: React.FC<Props> = ({
               size="sm"
               className="flex gap-2 items-center"
               asChild={true}
+              onClick={() => dispatchAction('patient_new')}
             >
-              <Link href="/patients/new">
+              <div className="flex gap-1 items-center">
                 <Plus />
                 Add Patient
-              </Link>
+              </div>
             </Button>
           </div>
         }

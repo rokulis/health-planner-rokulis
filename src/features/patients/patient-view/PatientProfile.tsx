@@ -1,9 +1,10 @@
+"use client";
+
 import React from 'react';
 
 import { Edit } from 'lucide-react';
 
-import Link from 'next/link';
-
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { FormValue } from '@/commons/components/form-value/FormValue';
 import { Button } from '@/commons/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
@@ -14,6 +15,8 @@ interface Props {
 }
 
 export const PatientProfile: React.FC<Props> = ({ patient }) => {
+  const { dispatchAction } = useActionContext();
+
   return (
     <Card className="border-gray-200 shadow-sm mx-4 my-4">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 px-0">
@@ -23,19 +26,24 @@ export const PatientProfile: React.FC<Props> = ({ patient }) => {
         <Button
           variant="ghost"
           className="text-gray-600 hover:text-gray-900"
-          asChild={true}
           size="sm"
+          onClick={() =>
+            dispatchAction('patient_edit', { id: patient.data?.id })
+          }
         >
-          <Link href={`/patients/edit/${patient.data?.id}`}>
+          <div className="flex items-center gap-1">
             <Edit size={18} />
             Edit
-          </Link>
+          </div>
         </Button>
       </CardHeader>
       <CardContent className="px-0">
         <div className="grid gap-4">
           <FormValue label="Full name" value={patient.data?.name} />
-          <FormValue label="Personal code" value={patient.data?.personal_code} />
+          <FormValue
+            label="Personal code"
+            value={patient.data?.personal_code}
+          />
           <FormValue label="Weight" value={`${patient.data?.weight}kg`} />
           <FormValue label="Height" value={`${patient.data?.height}cm`} />
           <FormValue label="Email address" value={patient.data?.email} />

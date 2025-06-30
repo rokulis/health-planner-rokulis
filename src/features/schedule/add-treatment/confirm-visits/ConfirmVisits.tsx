@@ -4,7 +4,7 @@ import React from 'react';
 
 import { toast } from 'sonner';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { confirmTreatmentPlan } from '@/app/schedule/actions';
 import { Button } from '@/commons/components/ui/button';
@@ -14,24 +14,24 @@ import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 interface Props {
   visits?: TreatmentPlans.PlanVisits.ResponseBody;
   onBack?: () => void;
+  treatmentPlanId?: number;
 }
 
-export const ConfirmVisits: React.FC<Props> = ({ visits, onBack }) => {
-  const searchParams = useSearchParams();
+export const ConfirmVisits: React.FC<Props> = ({ visits, onBack, treatmentPlanId }) => {
+  const pathname = usePathname();
   const router = useRouter();
-  const treatmentPlanId = searchParams.get('treatment');
   const [isOpen, setIsOpen] = React.useState<number | null>(null);
 
   const onConfirm = async () => {
     if (!treatmentPlanId) {
       return;
     }
-    return confirmTreatmentPlan(parseInt(treatmentPlanId, 10)).then(res => {
+    return confirmTreatmentPlan(treatmentPlanId).then(res => {
       if (res.message) {
         toast.error(res.message);
       } else {
         toast.success('Visits confirmed successfully');
-        router.push('/');
+        router.push(pathname);
       }
     });
   };

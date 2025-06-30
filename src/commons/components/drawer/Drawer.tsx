@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import {
   Drawer as BaseDrawer,
@@ -26,7 +26,7 @@ export const Drawer: React.FC<Props> = ({
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
-        {children}
+        <Suspense fallback="Loading...">{children}</Suspense>
       </DrawerContent>
     </BaseDrawer>
   );

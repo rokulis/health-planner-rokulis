@@ -77,23 +77,23 @@ export default function VisitCard({
                 className="flex items-center justify-between p-3 border rounded-lg bg-gray-50"
               >
                 <div>
-                  {treatment.treatment_medicine_groups?.map(tmg => (
-                    <>
-                      {tmg.treatment_medicines?.map(med => (
-                        <div className="flex justify-between" key={tmg.id}>
-                          <span className="font-medium">
-                            {med?.medicine?.name}
-                          </span>
-                          <Badge
-                            variant="secondary"
-                            className="bg-purple-100 text-purple-700"
-                          >
-                            {med?.medicine?.atc_code}
-                          </Badge>
-                        </div>
-                      ))}
-                    </>
-                  ))}
+                  {/*{treatment.treatment_medicine_groups?.map(tmg => (*/}
+                  {/*  <>*/}
+                  {/*    {tmg.treatment_medicines?.map(med => (*/}
+                  {/*      <div className="flex justify-between" key={tmg.id}>*/}
+                  {/*        <span className="font-medium">*/}
+                  {/*          {med?.medicine?.name}*/}
+                  {/*        </span>*/}
+                  {/*        <Badge*/}
+                  {/*          variant="secondary"*/}
+                  {/*          className="bg-purple-100 text-purple-700"*/}
+                  {/*        >*/}
+                  {/*          {med?.medicine?.atc_code}*/}
+                  {/*        </Badge>*/}
+                  {/*      </div>*/}
+                  {/*    ))}*/}
+                  {/*  </>*/}
+                  {/*))}*/}
                 </div>
               </div>
             ))}
