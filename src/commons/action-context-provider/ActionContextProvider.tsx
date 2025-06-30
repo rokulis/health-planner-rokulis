@@ -9,8 +9,25 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
 
+const ACTIONS = {
+  patient_new: () => (
+    <Drawer title="Patient Form" isOpen={true}>
+      <PatientEntity />
+    </Drawer>
+  ),
+  patient_edit: (params?: Record<string, any>) => (
+    <Drawer title="Patient Form" isOpen={true}>
+      <PatientEntity id={params?.id} />
+    </Drawer>
+  ),
+};
+
 type ActionContextType = {
-  dispatchAction: (action: any, params?: Record<string, any>) => void;
+  dispatchAction: (
+    action: keyof typeof ACTIONS,
+    params?: Record<string, any>
+  ) => void;
+  onClose?: () => void;
 };
 
 export const ActionContext = React.createContext<ActionContextType>(
@@ -50,22 +67,6 @@ export const ActionContextProvider: React.FC<Props> = ({ children }) => {
     router.push(`?${queryString}`);
   }, [router]);
 
-  const ACTIONS = React.useMemo(
-    () => ({
-      patient_new: (
-        <Drawer title="Patient Form" isOpen={true} onClose={onClose}>
-          <PatientEntity />
-        </Drawer>
-      ),
-      patient_edit: (
-        <Drawer title="Patient Form" isOpen={true} onClose={onClose}>
-          <PatientEntity id={actionsParams?.id} />
-        </Drawer>
-      ),
-    }),
-    [onClose, actionsParams]
-  );
-
   const actionData = ACTIONS[actionName as keyof typeof ACTIONS] ?? null;
 
   const dispatchAction = (
@@ -90,8 +91,8 @@ export const ActionContextProvider: React.FC<Props> = ({ children }) => {
   };
 
   return (
-    <ActionContext.Provider value={{ dispatchAction }}>
-      {actionData ? <>{actionData}</> : null}
+    <ActionContext.Provider value={{ dispatchAction, onClose }}>
+      {actionData ? <>{actionData(actionsParams)}</> : null}
       {children}
     </ActionContext.Provider>
   );
