@@ -5,10 +5,10 @@ import { useApiClient } from '@/utils/hooks/useApiClient';
 
 export const useScheduleQuery = (date?: string) => {
   const queryParams = new URLSearchParams();
-  queryParams.append('sector_id', '1');
   if (date) {
     queryParams.append('date', date);
   }
+  queryParams.append('sector_id', '1');
   const apiClient = useApiClient();
 
   const fetchSchedule = async () => {
@@ -18,7 +18,7 @@ export const useScheduleQuery = (date?: string) => {
   };
 
   return useQuery({
-    queryKey: ['schedule', date],
+    queryKey: ['schedule', queryParams.toString()],
     queryFn: fetchSchedule,
   });
 };
