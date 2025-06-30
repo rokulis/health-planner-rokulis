@@ -10,7 +10,7 @@ import { Drawer } from '@/commons/components/drawer/Drawer';
 import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
 
 const ACTIONS = {
-  patient_new: () => (
+  patient_new: (
     <Drawer title="Patient Form" isOpen={true}>
       <PatientEntity />
     </Drawer>
@@ -92,7 +92,9 @@ export const ActionContextProvider: React.FC<Props> = ({ children }) => {
 
   return (
     <ActionContext.Provider value={{ dispatchAction, onClose }}>
-      {actionData ? <>{actionData(actionsParams)}</> : null}
+      {typeof actionData === 'function'
+        ? actionData(actionsParams)
+        : actionData}
       {children}
     </ActionContext.Provider>
   );
