@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { minutesToSeconds, secondsToMinutes } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
@@ -9,6 +10,7 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 import { createProtocol, updateProtocol } from '@/app/protocols/actions';
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
 import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
@@ -43,6 +45,9 @@ const transformTreatmentDaysToArrayOfNumber = (
 };
 
 export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
+  const { onClose } = useActionContext();
+  const queryClient = useQueryClient();
+
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
   const { data: diagnoses } = useDiagnosesQuery(searchValue);
@@ -103,8 +108,12 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
         if (res.message) {
           toast.error(res.message);
         } else {
+          queryClient.invalidateQueries({
+            queryKey: ['protocols'],
+          });
           toast.success('Protocol updated successfully');
           form.reset();
+          onClose?.();
         }
       });
     }
@@ -112,8 +121,12 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
       if (res.message) {
         toast.error(res.message);
       } else {
+        queryClient.invalidateQueries({
+          queryKey: ['protocols'],
+        });
         toast.success('Protocol added successfully');
         form.reset();
+        onClose?.();
       }
     });
   };
