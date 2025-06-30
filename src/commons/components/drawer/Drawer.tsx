@@ -12,17 +12,26 @@ interface Props {
   title: string;
   isOpen: boolean;
   children: React.ReactNode;
+  onClose?: () => void;
 }
 
 export const Drawer: React.FC<Props> = ({
   title,
   isOpen,
   children,
+  onClose,
 }) => {
-  const { onClose } = useActionContext();
+  const { onClose: actionOnClose } = useActionContext();
 
   return (
-    <BaseDrawer direction="right" open={isOpen} onClose={onClose}>
+    <BaseDrawer
+      direction="right"
+      open={isOpen}
+      onClose={() => {
+        onClose?.();
+        actionOnClose?.();
+      }}
+    >
       <DrawerContent className="h-full overflow-y-auto">
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
