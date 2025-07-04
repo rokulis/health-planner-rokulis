@@ -17,6 +17,10 @@ export default async function Login(props: NextServerComponentProps) {
   if (!searchParams.token) {
     return redirect('/auth/login');
   }
-
-  return <RegisterPage token={searchParams.token as string} />;
+  return (
+    <RegisterPage
+      token={searchParams.token as string}
+      email={validation.data?.email}
+    />
+  );
 }

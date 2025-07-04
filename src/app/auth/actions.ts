@@ -32,10 +32,9 @@ export async function logout() {
 
 export async function validateInvitationToken(token: string) {
   const res = await apiClient<Invitations.ValidateInvitation.ResponseBody>(
-    '/auth/validate-invitation-token',
+    `/invitations/${token}/validate`,
     {
-      method: 'POST',
-      body: { token },
+      method: 'GET',
       skipAuth: true,
     }
   );

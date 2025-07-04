@@ -29,15 +29,16 @@ const registerSchema = z
 
 interface Props {
   token?: string;
+  email?: string;
 }
 
-export const RegisterPage: React.FC<Props> = ({ token }) => {
+export const RegisterPage: React.FC<Props> = ({ token, email }) => {
   const [error, setError] = React.useState<string | null>(null);
   const [isPending, startTransition] = React.useTransition();
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      email: '',
+      email,
       password: '',
       name: '',
       password_confirmation: '',
@@ -82,7 +83,7 @@ export const RegisterPage: React.FC<Props> = ({ token }) => {
               <Input placeholder="Name" />
             </FieldWrapper>
             <FieldWrapper control={form.control} label="Email" name="email">
-              <Input placeholder="Email" />
+              <Input placeholder="Email" disabled={true} />
             </FieldWrapper>
             <FieldWrapper
               control={form.control}
