@@ -3,18 +3,18 @@
 import React from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { Clock } from 'lucide-react';
+import { Clock, TestTubeDiagonal } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { changeTreatmentStatus } from '@/app/schedule/actions';
-import { FormValue } from '@/commons/components/form-value/FormValue';
-import { TreatmentStatus } from '@/commons/components/treatment-status/TreatmentStatus';
+import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Badge } from '@/commons/components/ui/badge';
 import { Button } from '@/commons/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
+import CheckCircle from '@/commons/icons/svg/check-circle.svg';
 import {
-  ChangeVisitStatusStatusEnum,
   VisitTreatmentResourceStatusEnum,
+  VisitTreatmentStatus,
 } from '@/types/swagger/data-contracts';
 import { Visits } from '@/types/swagger/VisitsRoute';
 
@@ -33,35 +33,45 @@ export default function VisitCard({
   onNextProcedure,
   onClose,
 }: TreatmentCardProps) {
+  const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
   const activeTreatment =
     visit.data?.visit_treatments?.find(
       v => v.status === VisitTreatmentResourceStatusEnum.Pending
     )?.id ?? null;
 
-  const onNext = async (treatmentId?: number) => {
-    if (!visit.data?.id || !treatmentId) {
-      return;
-    }
-    return changeTreatmentStatus(
-      visit.data?.id,
-      treatmentId,
-      ChangeVisitStatusStatusEnum.Completed
-    ).then(res => {
-      if (res.message) {
-        toast.error(res.message);
+  const onNext = async (treatmentId?: number) =>
+    startTransition(() => {
+      if (!visit.data?.id || !treatmentId) {
+        return;
       }
-      if (res.success) {
-        queryClient.invalidateQueries({
-          queryKey: ['visits', visit.data?.id],
-        });
-        onNextProcedure?.();
-      }
+
+      return changeTreatmentStatus(
+        visit.data?.id,
+        treatmentId,
+        VisitTreatmentStatus.Done
+      ).then(res => {
+        if (res.message) {
+          toast.error(res.message);
+        }
+        if (res.success) {
+          queryClient.invalidateQueries({
+            queryKey: ['visits', String(visit.data?.id)],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['visits'],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['schedule'],
+          });
+          onNextProcedure?.();
+        }
+      });
     });
-  };
 
   return (
     <div className="flex flex-col h-full justify-between">
+      {isPending ? <PageTopLoader /> : null}
       <Card className="w-full mx-auto p-0">
         <CardHeader className="px-0">
           <div className="flex gap-2 mt-2">
@@ -94,56 +104,66 @@ export default function VisitCard({
 
           {/* Medicines List */}
           <div className="flex flex-col gap-4">
-            {visit.data?.visit_treatments?.map(treatment => (
+            {visit.data?.visit_treatments?.map((treatment, treatmentIdx) => (
               <div
                 key={treatment.id}
-                className="flex flex-col items-start justify-between p-3 border border-primary/10 rounded-lg bg-gray-50"
+                className="flex flex-col gap-4 items-start justify-between p-3 border border-primary/10 rounded-lg bg-gray-50"
               >
                 {treatment.treatment_medicine_group?.treatment_medicines?.map(
                   medicine => (
-                    <div
-                      key={medicine.id}
-                      className="flex flex-col gap-2 w-full"
-                    >
-                      <div className="flex w-full justify-between items-center">
+                    <div key={medicine.id} className="flex flex-col w-full">
+                      <div className="flex w-full gap-2 items-center">
+                        {treatment.status ===
+                        VisitTreatmentResourceStatusEnum.Done ? (
+                              <CheckCircle />
+                            ) : null}
                         <span className="font-semibold">
                           {medicine.medicine?.name}{' '}
                         </span>
-
-                        {treatment.status ? (
-                          <TreatmentStatus status={treatment.status} />
-                        ) : null}
                       </div>
 
                       {activeTreatment === treatment.id ? (
                         <>
-                          <FormValue
-                            className="text-sm"
-                            label="Dose"
-                            value={medicine.dose}
-                          />
+                          <div className="flex gap-6 text-sm text-gray-600 mt-2">
+                            {medicine.medicine?.default_time ? (
+                              <div className="flex gap-1">
+                                <Clock size={18} />{' '}
+                                {medicine.medicine?.default_time}
+                              </div>
+                            ) : null}
 
+                            {medicine.dose ? (
+                              <div className="flex gap-1">
+                                <TestTubeDiagonal size={18} /> {medicine.dose}
+                              </div>
+                            ) : null}
+                          </div>
                           {medicine.comment ? (
-                            <FormValue
-                              className="text-sm"
-                              label="Comment"
-                              value={medicine.comment}
-                            />
+                            <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm mt-1">
+                              {medicine.comment || '-'}
+                            </div>
                           ) : null}
                         </>
                       ) : null}
                     </div>
                   )
                 )}
-                <div className="flex gap-3 w-full mt-4 justify-end">
-                  <Button
-                    size="sm"
-                    className="bg-purple-600 hover:bg-purple-700"
-                    onClick={() => onNext(treatment.id)}
-                  >
-                    Next Procedure
-                  </Button>
-                </div>
+                {activeTreatment === treatment.id ? (
+                  <div className="flex gap-3 w-full mt-4 justify-center w-full">
+                    <Button
+                      size="sm"
+                      color="primary"
+                      className="w-full"
+                      onClick={() => onNext(treatment.id)}
+                      disabled={isPending}
+                    >
+                      {treatmentIdx ===
+                      (visit.data?.visit_treatments?.length ?? 0) - 1
+                        ? 'Finish cycle'
+                        : 'Next Procedure'}
+                    </Button>
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>

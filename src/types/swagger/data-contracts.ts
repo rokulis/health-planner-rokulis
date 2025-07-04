@@ -12,15 +12,33 @@
 
 type UtilRequiredKeys<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
-/**
- * Status of the visit
- * @example "scheduled"
- */
-export enum VisitStatusEnum {
-  Scheduled = "scheduled",
-  InProgress = "in_progress",
+/** @example "treatment" */
+export enum VisitTreatmentType {
+  Diagnostic = "diagnostic",
+  Treatment = "treatment",
+}
+
+/** @example "upcoming" */
+export enum VisitTreatmentStatus {
+  Pending = "pending",
+  Administering = "administering",
+  Done = "done",
+}
+
+/** @example "upcoming" */
+export enum VisitStatus {
   Completed = "completed",
   Cancelled = "cancelled",
+  Upcoming = "upcoming",
+  Draft = "draft",
+}
+
+/** Possible statuses for a visit */
+export enum VisitStatusEnum {
+  Upcoming = "upcoming",
+  Completed = "completed",
+  Stopped = "stopped",
+  Draft = "draft",
 }
 
 export interface ApiResponse {
@@ -195,6 +213,17 @@ export type ClinicResource = Clinic & {
   users?: User[];
 };
 
+export interface DiagnosticResource {
+  /** @example 1 */
+  id?: number;
+  /** @example "Diabetes" */
+  name?: string;
+  /** @example 30 */
+  duration?: number;
+  /** @example "diabetes" */
+  slug?: string;
+}
+
 export interface PatientResource {
   id?: number;
   name?: string;
@@ -314,8 +343,10 @@ export interface VisitTreatmentResource {
   /** @example 1 */
   id?: number;
   status?: VisitTreatmentResourceStatusEnum;
+  type?: VisitTreatmentType;
   notes?: string;
   treatment_medicine_group?: TreatmentMedicineGroupResource;
+  diagnostic_test?: DiagnosticResource;
 }
 
 /**
@@ -1280,11 +1311,7 @@ export interface Visit {
    * @example "11:00:00"
    */
   time_to: string;
-  /**
-   * Status of the visit
-   * @example "scheduled"
-   */
-  status: VisitStatusEnum;
+  status: VisitStatus;
   /**
    * Creation date
    * @format date-time
@@ -1331,7 +1358,13 @@ export interface VisitTreatment {
    * @format int64
    * @example 1
    */
-  treatment_medicine_id: number;
+  treatment_medicine_id?: number;
+  /**
+   * ID of the diagnostic
+   * @format int64
+   * @example 1
+   */
+  diagnostic_id?: number;
   /**
    * Actual dose administered (can override the planned dose)
    * @example "100mg"
@@ -1343,11 +1376,8 @@ export interface VisitTreatment {
    * @example "2023-06-01 10:00:00"
    */
   administered_at?: string;
-  /**
-   * Status of the treatment
-   * @example "planned"
-   */
-  status: VisitTreatmentStatusEnum;
+  status: VisitTreatmentStatus;
+  type: VisitTreatmentType;
   /**
    * Notes about the treatment administration
    * @example "Patient tolerated well"
@@ -1505,16 +1535,6 @@ export enum UserRoleEnum {
   Receptionist = "receptionist",
 }
 
-/**
- * Status of the treatment
- * @example "planned"
- */
-export enum VisitTreatmentStatusEnum {
-  Planned = "planned",
-  Administered = "administered",
-  Cancelled = "cancelled",
-}
-
 export interface LoginPayload {
   /**
    * @format email
@@ -1572,12 +1592,6 @@ export interface RegisterData {
 export interface LogoutData {
   /** @example true */
   success?: boolean;
-}
-
-export interface GetClinicData {
-  /** @example true */
-  success?: boolean;
-  data?: ClinicResource;
 }
 
 export interface GetDiagnosesParams {
@@ -1978,16 +1992,8 @@ export interface GetVisitData {
   data?: VisitResource;
 }
 
-/** @example "upcoming" */
-export enum ChangeVisitTreatmentStatusStatusEnum {
-  Upcoming = "upcoming",
-  Done = "done",
-  Administering = "administering",
-}
-
 export interface ChangeVisitTreatmentStatusPayload {
-  /** @example "upcoming" */
-  status?: ChangeVisitTreatmentStatusStatusEnum;
+  status?: VisitTreatmentStatus;
 }
 
 export interface ChangeVisitTreatmentStatusData {
@@ -1996,20 +2002,30 @@ export interface ChangeVisitTreatmentStatusData {
   data?: VisitResource;
 }
 
-/** @example "upcoming" */
-export enum ChangeVisitStatusStatusEnum {
-  Upcoming = "upcoming",
-  Cancelled = "cancelled",
-  Completed = "completed",
-}
-
 export interface ChangeVisitStatusPayload {
-  /** @example "upcoming" */
-  status?: ChangeVisitStatusStatusEnum;
+  status?: VisitStatus;
 }
 
 export interface ChangeVisitStatusData {
   /** @example true */
   success?: boolean;
   data?: VisitResource;
+}
+
+export interface RescheduleVisitPayload {
+  /** @example "2022-01-01" */
+  start_date?: string;
+  /** @example "11:00" */
+  start_time?: string;
+}
+
+export interface RescheduleVisitData {
+  /** @example true */
+  success?: boolean;
+}
+
+export interface GetWorkspaceData {
+  /** @example true */
+  success?: boolean;
+  data?: ClinicResource;
 }

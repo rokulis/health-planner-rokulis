@@ -16,6 +16,8 @@ import {
   ChangeVisitTreatmentStatusData,
   ChangeVisitTreatmentStatusPayload,
   GetVisitData,
+  RescheduleVisitData,
+  RescheduleVisitPayload,
 } from "./data-contracts";
 
 export namespace Visits {
@@ -72,5 +74,23 @@ export namespace Visits {
     export type RequestBody = ChangeVisitStatusPayload;
     export type RequestHeaders = {};
     export type ResponseBody = ChangeVisitStatusData;
+  }
+
+  /**
+   * No description
+   * @tags Visits
+   * @name RescheduleVisit
+   * @summary Reschedule visit
+   * @request POST:/visits/{id}/reschedule
+   * @secure
+   */
+  export namespace RescheduleVisit {
+    export type RequestParams = {
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = RescheduleVisitPayload;
+    export type RequestHeaders = {};
+    export type ResponseBody = RescheduleVisitData;
   }
 }

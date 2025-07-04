@@ -3,7 +3,7 @@
 import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
-import { ChangeVisitStatusStatusEnum } from '@/types/swagger/data-contracts';
+import { VisitTreatmentStatus } from '@/types/swagger/data-contracts';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 import { Visits } from '@/types/swagger/VisitsRoute';
@@ -68,11 +68,11 @@ export const getVisit = async (visitId: number) => {
 export const changeTreatmentStatus = async (
   visitId: number,
   treatmentId: number,
-  status: ChangeVisitStatusStatusEnum
+  status: VisitTreatmentStatus
 ) => {
   const res = await apiClient<
     Visits.ChangeVisitTreatmentStatus.ResponseBody,
-    Visits.ChangeVisitStatus.RequestBody
+    Visits.ChangeVisitTreatmentStatus.RequestBody
   >(`/visits/${visitId}/treatments/${treatmentId}/change-status`, {
     method: 'POST',
     body: {
