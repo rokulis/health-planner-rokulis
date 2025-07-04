@@ -4,6 +4,7 @@ import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
 import { Invitations } from '@/types/swagger/InvitationsRoute';
+import { Workspace } from '@/types/swagger/WorkspaceRoute';
 
 export async function getInvitations() {
   return apiClient<Invitations.GetInvitations.ResponseBody>('/invitations', {
@@ -35,4 +36,14 @@ export async function sendInvitation(
   }
 
   return res;
+}
+
+export async function getWorkspace() {
+  return apiClient<Workspace.GetWorkspace.ResponseBody>('/workspace', {
+    method: 'GET',
+    next: {
+      tags: ['workspace'],
+      revalidate: 3600,
+    },
+  });
 }
