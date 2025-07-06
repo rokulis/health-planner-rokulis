@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { secondsToMinutes } from 'date-fns';
 import { Clock, TestTubeDiagonal } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -111,7 +112,14 @@ export default function VisitCard({
                         {activeTreatment === treatment.id ? (
                           <div className="flex items-center text-sm gap-1">
                             <Clock size={15} />
-                            <span>{treatment.diagnostic_test?.duration}min</span>
+                            {treatment.diagnostic_test?.duration ? (
+                              <span>
+                                {secondsToMinutes(
+                                  treatment.diagnostic_test?.duration
+                                )}
+                                min
+                              </span>
+                            ) : null}
                           </div>
                         ) : null}
                       </CardContent>
