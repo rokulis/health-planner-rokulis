@@ -89,83 +89,94 @@ export default function VisitCard({
           <div className="bg-primary/10 py-2 px-4 rounded-lg mb-4 font-semibold text-lg">
             {visit.data?.treatment_plan?.name}
           </div>
-          <Card className="border-purple-200 bg-purple-50 p-0">
-            <CardContent className="py-2 px-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-md">Blood test</h3>
-              </div>
-
-              <div className="flex items-center text-sm gap-1">
-                <Clock size={15} />
-                <span>15min</span>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Medicines List */}
           <div className="flex flex-col gap-4">
-            {visit.data?.visit_treatments?.map((treatment, treatmentIdx) => (
-              <div
-                key={treatment.id}
-                className="flex flex-col gap-4 items-start justify-between p-3 border border-primary/10 rounded-lg bg-gray-50"
-              >
-                {treatment.treatment_medicine_group?.treatment_medicines?.map(
-                  medicine => (
-                    <div key={medicine.id} className="flex flex-col w-full">
-                      <div className="flex w-full gap-2 items-center">
-                        {treatment.status ===
-                        VisitTreatmentResourceStatusEnum.Done ? (
-                              <CheckCircle />
-                            ) : null}
-                        <span className="font-semibold">
-                          {medicine.medicine?.name}{' '}
-                        </span>
-                      </div>
+            {visit.data?.visit_treatments
+              ?.sort(t => (t.type === 'diagnostic' ? -1 : 1))
+              .map((treatment, treatmentIdx) => (
+                <div
+                  key={treatment.id}
+                  className="flex flex-col gap-4 items-start justify-between p-3 border border-primary/10 rounded-lg bg-gray-50"
+                >
+                  {treatment.type === 'diagnostic' ? (
+                    <Card className="border-purple-200 bg-purple-50 p-0">
+                      <CardContent className="py-2 px-0">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="font-semibold text-md">Blood test</h3>
+                        </div>
 
-                      {activeTreatment === treatment.id ? (
-                        <>
-                          <div className="flex gap-6 text-sm text-gray-600 mt-2">
-                            {medicine.medicine?.default_time ? (
-                              <div className="flex gap-1">
-                                <Clock size={18} />{' '}
-                                {medicine.medicine?.default_time}
-                              </div>
-                            ) : null}
+                        <div className="flex items-center text-sm gap-1">
+                          <Clock size={15} />
+                          <span>15min</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <>
+                      {treatment.treatment_medicine_group?.treatment_medicines?.map(
+                        medicine => (
+                          <div
+                            key={medicine.id}
+                            className="flex flex-col w-full"
+                          >
+                            <div className="flex w-full gap-2 items-center">
+                              {treatment.status ===
+                              VisitTreatmentResourceStatusEnum.Done ? (
+                                    <CheckCircle />
+                                  ) : null}
+                              <span className="font-semibold">
+                                {medicine.medicine?.name}{' '}
+                              </span>
+                            </div>
 
-                            {medicine.dose ? (
-                              <div className="flex gap-1">
-                                <TestTubeDiagonal size={18} /> {medicine.dose}
-                              </div>
+                            {activeTreatment === treatment.id ? (
+                              <>
+                                <div className="flex gap-6 text-sm text-gray-600 mt-2">
+                                  {medicine.medicine?.default_time ? (
+                                    <div className="flex gap-1">
+                                      <Clock size={18} />{' '}
+                                      {medicine.medicine?.default_time}
+                                    </div>
+                                  ) : null}
+
+                                  {medicine.dose ? (
+                                    <div className="flex gap-1">
+                                      <TestTubeDiagonal size={18} />{' '}
+                                      {medicine.dose}
+                                    </div>
+                                  ) : null}
+                                </div>
+                                {medicine.comment ? (
+                                  <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm mt-1">
+                                    {medicine.comment || '-'}
+                                  </div>
+                                ) : null}
+                              </>
                             ) : null}
                           </div>
-                          {medicine.comment ? (
-                            <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm mt-1">
-                              {medicine.comment || '-'}
-                            </div>
-                          ) : null}
-                        </>
-                      ) : null}
+                        )
+                      )}
+                    </>
+                  )}
+                  {activeTreatment === treatment.id ? (
+                    <div className="flex gap-3 w-full mt-4 justify-center w-full">
+                      <Button
+                        size="sm"
+                        color="primary"
+                        className="w-full"
+                        onClick={() => onNext(treatment.id)}
+                        disabled={isPending}
+                      >
+                        {treatmentIdx ===
+                        (visit.data?.visit_treatments?.length ?? 0) - 1
+                          ? 'Finish cycle'
+                          : 'Next Procedure'}
+                      </Button>
                     </div>
-                  )
-                )}
-                {activeTreatment === treatment.id ? (
-                  <div className="flex gap-3 w-full mt-4 justify-center w-full">
-                    <Button
-                      size="sm"
-                      color="primary"
-                      className="w-full"
-                      onClick={() => onNext(treatment.id)}
-                      disabled={isPending}
-                    >
-                      {treatmentIdx ===
-                      (visit.data?.visit_treatments?.length ?? 0) - 1
-                        ? 'Finish cycle'
-                        : 'Next Procedure'}
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-            ))}
+                  ) : null}
+                </div>
+              ))}
           </div>
         </CardContent>
       </Card>
