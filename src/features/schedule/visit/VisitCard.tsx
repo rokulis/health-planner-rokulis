@@ -102,14 +102,20 @@ export default function VisitCard({
                   {treatment.type === 'diagnostic' ? (
                     <Card className="border-purple-200 bg-purple-50 p-0">
                       <CardContent className="py-2 px-0">
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-semibold text-md">Blood test</h3>
+                        <div className="flex w-full gap-2 items-center">
+                          {treatment.status ===
+                          VisitTreatmentResourceStatusEnum.Done ? (
+                                <CheckCircle />
+                              ) : null}
+                          <span className="font-semibold">Blood Test</span>
                         </div>
 
-                        <div className="flex items-center text-sm gap-1">
-                          <Clock size={15} />
-                          <span>15min</span>
-                        </div>
+                        {activeTreatment === treatment.id ? (
+                          <div className="flex items-center text-sm gap-1">
+                            <Clock size={15} />
+                            <span>15min</span>
+                          </div>
+                        ) : null}
                       </CardContent>
                     </Card>
                   ) : (
