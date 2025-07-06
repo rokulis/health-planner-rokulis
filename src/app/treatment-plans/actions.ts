@@ -39,7 +39,7 @@ export const planVisits = async ({
   start_date: string;
   start_time: string;
 }) => {
-  return await apiClient<TreatmentPlans.PlanVisits.ResponseBody>(
+  const res = await apiClient<TreatmentPlans.PlanVisits.ResponseBody>(
     `/treatment-plans/${id}/plan-visits`,
     {
       method: 'POST',
@@ -49,4 +49,6 @@ export const planVisits = async ({
       },
     }
   );
+
+  return res;
 };

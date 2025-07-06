@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Calendar, Clock, TestTubeDiagonal } from 'lucide-react';
 
+import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
 import { Badge } from '@/commons/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import { Patients } from '@/types/swagger/PatientsRoute';
@@ -31,55 +32,59 @@ export const PatientTreatmentPlans: React.FC<Props> = ({
           </h3>
         </div>
 
-        {activeTreatmentPlan.data?.treatment?.map(treatment => (
-          <div
-            className="flex flex-col gap-6 w-full mt-4 p-2"
-            key={treatment.id}
-          >
-            {treatment?.treatment_medicines?.map((medicine, idx) => (
-              <div className="flex flex-col gap-2" key={idx}>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">
-                    {medicine.medicine?.name}
-                  </span>
-                  <Badge>{medicine.medicine?.atc_code}</Badge>
-                </div>
-                <div className="flex gap-6 text-sm text-gray-600">
-                  {treatment.treatment_days ? (
-                    <div className="flex items-center gap-1">
-                      <Calendar size={18} />
-                      {treatment.treatment_days.map(day => (
-                        <div
-                          className="rounded-full w-5 h-5 p-1 flex items-center justify-center bg-primary/10 text-xs"
-                          key={`${medicine.id}-${day}`}
-                        >
-                          {day}
+        <div className="flex flex-col gap-12 w-full mt-4 p-2">
+          {activeTreatmentPlan.data?.treatment?.map((treatment, idx) => (
+            <div key={treatment.id}>
+              <NumberedSteps
+                number={idx + 1}
+                className="w-full flex flex-col gap-4"
+              >
+                {treatment?.treatment_medicines?.map((medicine, i) => (
+                  <div className="flex flex-col" key={i}>
+                    <div className="flex justify-between w-full">
+                      <span className="font-semibold text-sm">
+                        {medicine.medicine?.name}
+                      </span>
+                      <Badge>{medicine.medicine?.atc_code}</Badge>
+                    </div>
+                    <div className="flex gap-6 text-sm text-gray-600">
+                      {treatment.treatment_days ? (
+                        <div className="flex items-center gap-1">
+                          <Calendar size={18} />
+                          {treatment.treatment_days.map(day => (
+                            <div
+                              className="rounded-full w-5 h-5 p-1 flex items-center justify-center bg-primary/10 text-xs"
+                              key={`${medicine.id}-${day}`}
+                            >
+                              {day}
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  ) : null}
+                      ) : null}
 
-                  {medicine.medicine?.default_time ? (
-                    <div className="flex gap-1">
-                      <Clock size={18} /> {medicine.medicine?.default_time}
-                    </div>
-                  ) : null}
+                      {medicine.medicine?.default_time ? (
+                        <div className="flex gap-1">
+                          <Clock size={18} /> {medicine.medicine?.default_time}
+                        </div>
+                      ) : null}
 
-                  {medicine.dose ? (
-                    <div className="flex gap-1">
-                      <TestTubeDiagonal size={18} /> {medicine.dose}
+                      {medicine.dose ? (
+                        <div className="flex gap-1">
+                          <TestTubeDiagonal size={18} /> {medicine.dose}
+                        </div>
+                      ) : null}
                     </div>
-                  ) : null}
-                </div>
-                {medicine.comment ? (
-                  <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm">
-                    {medicine.comment || '-'}
+                    {medicine.comment ? (
+                      <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm">
+                        {medicine.comment || '-'}
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        ))}
+                ))}
+              </NumberedSteps>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

@@ -99,12 +99,12 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     switch (status) {
       case VisitStatusEnum.Completed:
         return 'bg-green-100';
-      case VisitStatusEnum.Cancelled:
+      case VisitStatusEnum.Draft:
         return 'bg-yellow-100';
-      case VisitStatusEnum.InProgress:
+      case VisitStatusEnum.Stopped:
         return 'bg-red-100';
-      case VisitStatusEnum.Scheduled:
-        return 'bg-gray-100';
+      case VisitStatusEnum.Upcoming:
+        return 'bg-blue-100';
       default:
         return 'bg-blue-100';
     }
