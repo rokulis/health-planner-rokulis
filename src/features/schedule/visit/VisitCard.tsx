@@ -101,7 +101,7 @@ export default function VisitCard({
                 >
                   {treatment.type === 'diagnostic' ? (
                     <Card className="border-purple-200 bg-purple-50 p-0">
-                      <CardContent className="py-2 px-0">
+                      <CardContent className="py-0 px-0">
                         <div className="flex w-full gap-2 items-center">
                           {treatment.status ===
                           VisitTreatmentResourceStatusEnum.Done ? (
