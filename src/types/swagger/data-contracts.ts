@@ -342,7 +342,7 @@ export interface VisitResource {
 export interface VisitTreatmentResource {
   /** @example 1 */
   id?: number;
-  status?: VisitTreatmentResourceStatusEnum;
+  status?: VisitTreatmentStatus;
   type?: VisitTreatmentType;
   notes?: string;
   treatment_medicine_group?: TreatmentMedicineGroupResource;
@@ -1451,12 +1451,6 @@ export enum TreatmentCycleResourceStatusEnum {
 export enum TreatmentPlanResourceStatusEnum {
   Draft = "draft",
   Confirmed = "confirmed",
-}
-
-export enum VisitTreatmentResourceStatusEnum {
-  Administering = "administering",
-  Pending = "pending",
-  Done = "done",
 }
 
 /**

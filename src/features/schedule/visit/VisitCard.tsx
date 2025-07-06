@@ -12,10 +12,7 @@ import { Badge } from '@/commons/components/ui/badge';
 import { Button } from '@/commons/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import CheckCircle from '@/commons/icons/svg/check-circle.svg';
-import {
-  VisitTreatmentResourceStatusEnum,
-  VisitTreatmentStatus,
-} from '@/types/swagger/data-contracts';
+import { VisitTreatmentStatus } from '@/types/swagger/data-contracts';
 import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface TreatmentCardProps {
@@ -37,7 +34,7 @@ export default function VisitCard({
   const queryClient = useQueryClient();
   const activeTreatment =
     visit.data?.visit_treatments?.find(
-      v => v.status === VisitTreatmentResourceStatusEnum.Pending
+      v => v.status === VisitTreatmentStatus.Pending
     )?.id ?? null;
 
   const onNext = async (treatmentId?: number) =>
@@ -103,17 +100,18 @@ export default function VisitCard({
                     <Card className="border-purple-200 bg-purple-50 p-0">
                       <CardContent className="py-0 px-0">
                         <div className="flex w-full gap-2 items-center">
-                          {treatment.status ===
-                          VisitTreatmentResourceStatusEnum.Done ? (
-                                <CheckCircle />
-                              ) : null}
-                          <span className="font-semibold">Blood Test</span>
+                          {treatment.status === VisitTreatmentStatus.Done ? (
+                            <CheckCircle />
+                          ) : null}
+                          <span className="font-semibold">
+                            {treatment.diagnostic_test?.name}
+                          </span>
                         </div>
 
                         {activeTreatment === treatment.id ? (
                           <div className="flex items-center text-sm gap-1">
                             <Clock size={15} />
-                            <span>15min</span>
+                            <span>{treatment.diagnostic_test?.duration}min</span>
                           </div>
                         ) : null}
                       </CardContent>
@@ -128,7 +126,7 @@ export default function VisitCard({
                           >
                             <div className="flex w-full gap-2 items-center">
                               {treatment.status ===
-                              VisitTreatmentResourceStatusEnum.Done ? (
+                              VisitTreatmentStatus.Done ? (
                                     <CheckCircle />
                                   ) : null}
                               <span className="font-semibold">
