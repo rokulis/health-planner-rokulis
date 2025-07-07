@@ -4,7 +4,6 @@ import React from 'react';
 
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { useMedicinesQuery } from '@/features/medicine/hooks/useMedicinesQuery';
-import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
 import { useProtocolsQuery } from '@/features/protocols/hooks/useProtocolsQuery';
 import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/ConfirmVisits';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
@@ -23,7 +22,6 @@ export const AddTreatment: React.FC = () => {
     number | undefined
   >();
 
-  const { data: patients } = usePatientsQuery();
   const { data: medicines } = useMedicinesQuery();
   const { data: protocols } = useProtocolsQuery();
 
@@ -38,7 +36,6 @@ export const AddTreatment: React.FC = () => {
             setPatientId(data);
             setCurrentStep(prev => prev + 1);
           }}
-          patients={patients}
         />
       ),
     },
