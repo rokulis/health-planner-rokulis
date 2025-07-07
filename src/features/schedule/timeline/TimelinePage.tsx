@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
+import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { useRoomsQuery } from '@/features/rooms/hooks/useRoomsQuery';
 import { useScheduleQuery } from '@/features/schedule/hooks/useScheduleQuery';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
@@ -16,17 +17,18 @@ interface Props {
 export const TimelinePage: React.FC<Props> = ({ visitId }) => {
   const params = useSearchParams();
 
-  const { data: rooms } = useRoomsQuery();
+  const { data: rooms, isLoading } = useRoomsQuery();
   const { data: schedule } = useScheduleQuery(
     params.get('date') ?? new Date().toISOString().split('T')[0]
   );
 
   return (
     <ScheduleLayout visitId={visitId}>
-      <HospitalTimeline
-        rooms={rooms?.data}
-        schedule={schedule?.data.data}
-      />
+      {isLoading ? (
+        <PageTopLoader />
+      ) : (
+        <HospitalTimeline rooms={rooms?.data} schedule={schedule?.data.data} />
+      )}
     </ScheduleLayout>
   );
 };
