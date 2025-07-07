@@ -31,6 +31,10 @@ export const TreatmentPlansList = () => {
       header: 'Patient',
     },
     {
+      accessorKey: "room.name",
+      header: 'Room',
+    },
+    {
       accessorKey: "bed.name",
       header: 'Bed',
     },
