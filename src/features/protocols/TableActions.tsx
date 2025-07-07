@@ -33,8 +33,13 @@ export const TableActions: React.FC<Props> = ({ protocol }) => {
     });
 
     if (confirmed && protocol.id) {
-      toast.success('Protocol deleted successfully');
-      return deleteProtocol(protocol.id);
+      return deleteProtocol(protocol.id).then(res => {
+        if (res.message) {
+          toast.error(res.message);
+        } else {
+          toast.success('Protocol deleted successfully');
+        }
+      });
     }
   };
 
