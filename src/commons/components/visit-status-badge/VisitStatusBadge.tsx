@@ -6,7 +6,6 @@ interface Props {
   status: VisitStatusEnum;
 }
 
-//TODO: Bad statuses from API
 const STATUS_COLORS: Record<VisitStatusEnum, string> = {
   [VisitStatusEnum.Upcoming]: 'bg-yellow-100 text-yellow-800',
   [VisitStatusEnum.Completed]: 'bg-green-100 text-green-800',
@@ -14,12 +13,19 @@ const STATUS_COLORS: Record<VisitStatusEnum, string> = {
   [VisitStatusEnum.Stopped]: 'bg-red-100 text-red-800',
 };
 
+const VISIT_STATUS_LABELS: Record<VisitStatusEnum, string> = {
+  [VisitStatusEnum.Upcoming]: 'Upcoming',
+  [VisitStatusEnum.Completed]: 'Completed',
+  [VisitStatusEnum.Draft]: 'Draft',
+  [VisitStatusEnum.Stopped]: 'Stopped',
+};
+
 export const VisitStatusBadge: React.FC<Props> = ({ status }) => {
   return (
     <span
       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[status]}`}
     >
-      {status}
+      {VISIT_STATUS_LABELS[status]}
     </span>
   );
 };
