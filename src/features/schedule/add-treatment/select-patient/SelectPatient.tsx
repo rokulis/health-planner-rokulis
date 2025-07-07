@@ -32,8 +32,6 @@ export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
     },
   });
 
-  console.log(patients);
-
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = data => {
     if (typeof onStepSubmit === 'function') {
       onStepSubmit(data.patientId);
