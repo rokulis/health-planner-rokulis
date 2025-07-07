@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { deletePatient } from '@/app/patients/actions';
@@ -23,6 +24,7 @@ interface Props {
 export const TableActions: React.FC<Props> = ({ patient }) => {
   const { dispatchAction } = useActionContext();
   const { showConfirmation } = useConfirm();
+  const queryClient = useQueryClient();
 
   const handleDelete = async () => {
     const confirmed = await showConfirmation({
@@ -33,8 +35,16 @@ export const TableActions: React.FC<Props> = ({ patient }) => {
     });
 
     if (confirmed && patient.id) {
-      toast.success(`Patient ${patient.name} deleted successfully!`);
-      return deletePatient(patient.id);
+      return deletePatient(patient.id).then(res => {
+        if (res.message) {
+          toast.error(res.message);
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: ['patients'],
+          });
+          toast.success(`Patient ${patient.name} deleted successfully!`);
+        }
+      });
     }
   };
 

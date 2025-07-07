@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { deleteProtocol } from '@/app/protocols/actions';
@@ -23,6 +24,7 @@ interface Props {
 export const TableActions: React.FC<Props> = ({ protocol }) => {
   const { dispatchAction } = useActionContext();
   const { showConfirmation } = useConfirm();
+  const queryClient = useQueryClient();
 
   const handleDelete = async () => {
     const confirmed = await showConfirmation({
@@ -37,6 +39,9 @@ export const TableActions: React.FC<Props> = ({ protocol }) => {
         if (res.message) {
           toast.error(res.message);
         } else {
+          queryClient.invalidateQueries({
+            queryKey: ['protocols'],
+          });
           toast.success('Protocol deleted successfully');
         }
       });
