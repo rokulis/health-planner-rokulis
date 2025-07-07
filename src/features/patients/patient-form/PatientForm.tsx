@@ -2,7 +2,7 @@ import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -31,7 +31,11 @@ export const PatientForm: React.FC<Props> = ({ patient, onStepSubmit }) => {
       name: patient?.data?.name ?? '',
       personal_code: patient?.data?.personal_code ?? '',
       date_of_birth: patient?.data?.date_of_birth
-        ? format(new Date(patient.data.date_of_birth), 'yyyy-MM-dd')
+        ? formatInTimeZone(
+          new Date(patient.data.date_of_birth),
+          'UTC',
+          'yyyy-MM-dd'
+        )
         : '',
       email: patient?.data?.email ?? '',
       phone_number: patient?.data?.phone_number ?? '',

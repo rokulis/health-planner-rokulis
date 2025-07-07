@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { Invitation } from '@/types/swagger/data-contracts';
@@ -33,7 +33,11 @@ export const ActiveInvitations: React.FC<Props> = ({ invitations }) => {
       cell: info => (
         <>
           {info.row.original.expires_at
-            ? format(new Date(info.row.original.expires_at), 'yyyy-MM-dd')
+            ? formatInTimeZone(
+              new Date(info.row.original.expires_at),
+              'UTC',
+              'yyyy-MM-dd'
+            )
             : '-'}
         </>
       ),

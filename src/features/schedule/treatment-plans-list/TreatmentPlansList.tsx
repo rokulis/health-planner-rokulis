@@ -3,7 +3,8 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
-import { format, secondsToMinutes } from 'date-fns';
+import { secondsToMinutes } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -31,11 +32,11 @@ export const TreatmentPlansList = () => {
       header: 'Patient',
     },
     {
-      accessorKey: "room.name",
+      accessorKey: 'room.name',
       header: 'Room',
     },
     {
-      accessorKey: "bed.name",
+      accessorKey: 'bed.name',
       header: 'Bed',
     },
     {
@@ -44,7 +45,11 @@ export const TreatmentPlansList = () => {
       cell: info => (
         <>
           {info.row.original.date_time
-            ? format(new Date(info.row.original.date_time), 'yyyy-MM-dd HH:mm')
+            ? formatInTimeZone(
+              new Date(info.row.original.date_time),
+              'UTC',
+              'yyyy-MM-dd HH:mm'
+            )
             : '-'}
         </>
       ),

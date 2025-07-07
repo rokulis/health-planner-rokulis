@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -23,7 +23,7 @@ interface Props {
   medicine?: Medicines.GetMedicine.ResponseBody;
 }
 
-export const MedicineList: React.FC<Props> = ({  medicine }) => {
+export const MedicineList: React.FC<Props> = ({ medicine }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get('search') || '';
@@ -55,8 +55,9 @@ export const MedicineList: React.FC<Props> = ({  medicine }) => {
       cell: info => (
         <>
           {info.row.original.created_at
-            ? format(
+            ? formatInTimeZone(
               new Date(info.row.original.created_at),
+              'UTC',
               'yyyy-MM-dd HH:mm:ss'
             )
             : '-'}

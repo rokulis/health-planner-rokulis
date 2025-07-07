@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import {
@@ -78,7 +78,7 @@ export const VisitPreview: React.FC<Props> = ({ visit }) => {
             <div className="text-gray-600">Start date:</div>
             <div className="font-medium">
               {visit.data?.date_time
-                ? format(visit.data?.date_time, 'yyyy-MM-dd')
+                ? formatInTimeZone(visit.data?.date_time, 'UTC', 'yyyy-MM-dd')
                 : '-'}
             </div>
           </div>

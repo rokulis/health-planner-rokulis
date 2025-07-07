@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
-import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -39,7 +39,11 @@ export const PatientsList: React.FC<Props> = () => {
       cell: info => (
         <>
           {info.row.original.date_of_birth
-            ? format(new Date(info.row.original.date_of_birth), 'yyyy-MM-dd')
+            ? formatInTimeZone(
+              new Date(info.row.original.date_of_birth),
+              'UTC',
+              'yyyy-MM-dd'
+            )
             : '-'}
         </>
       ),
