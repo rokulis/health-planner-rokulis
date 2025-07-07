@@ -53,7 +53,15 @@ export const TableActions: React.FC<Props> = ({ protocol }) => {
         >
           Edit
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            return handleDelete();
+          }}
+        >
+          Delete
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
