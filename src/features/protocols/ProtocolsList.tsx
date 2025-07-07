@@ -4,11 +4,14 @@ import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 
+import { useSearchParams } from 'next/navigation';
+
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { Button } from '@/commons/components/ui/button';
 import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
+import { useProtocolsQuery } from '@/features/protocols/hooks/useProtocolsQuery';
 import { TableActions } from '@/features/protocols/TableActions';
 import { ProtocolResource } from '@/types/swagger/data-contracts';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
@@ -17,7 +20,10 @@ interface Props {
   protocols: Protocols.GetProtocols.ResponseBody;
 }
 
-export const ProtocolsList: React.FC<Props> = ({ protocols }) => {
+export const ProtocolsList: React.FC<Props> = () => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get('search') || '';
+  const { data: protocols } = useProtocolsQuery(search);
   const { dispatchAction } = useActionContext();
 
   const columns: ColumnDef<ProtocolResource>[] = [
@@ -54,6 +60,7 @@ export const ProtocolsList: React.FC<Props> = ({ protocols }) => {
   return (
     <PageLayout
       title="Protocols"
+      searchEnabled={true}
       actions={
         <Button
           size="sm"
@@ -67,7 +74,7 @@ export const ProtocolsList: React.FC<Props> = ({ protocols }) => {
         </Button>
       }
     >
-      <DataTable columns={columns} data={protocols.data ?? []} />
+      <DataTable columns={columns} data={protocols?.data ?? []} />
     </PageLayout>
   );
 };

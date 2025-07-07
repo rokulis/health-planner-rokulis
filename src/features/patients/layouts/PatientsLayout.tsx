@@ -17,6 +17,7 @@ export const PatientsLayout: React.FC<Props> = ({ children }) => {
     <>
       <PageLayout
         title="Patients"
+        searchEnabled={true}
         actions={
           <div className="flex items-center gap-2">
             <Button

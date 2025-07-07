@@ -5,12 +5,13 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format } from 'date-fns';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { Button } from '@/commons/components/ui/button';
 import Plus from '@/commons/icons/svg/plus.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
+import { useMedicinesQuery } from '@/features/medicine/hooks/useMedicinesQuery';
 import { MedicineForm } from '@/features/medicine/medicine-form/MedicineForm';
 import { TableActions } from '@/features/medicine/TableActions';
 import { Medicine } from '@/types/swagger/data-contracts';
@@ -22,8 +23,11 @@ interface Props {
   medicine?: Medicines.GetMedicine.ResponseBody;
 }
 
-export const MedicineList: React.FC<Props> = ({ medicines, medicine }) => {
+export const MedicineList: React.FC<Props> = ({  medicine }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const search = searchParams.get('search') || '';
+  const { data: medicines } = useMedicinesQuery(search);
   const [addMedicineOpen, setAddMedicineOpen] = React.useState(
     !!medicine?.data?.id || false
   );
@@ -82,6 +86,7 @@ export const MedicineList: React.FC<Props> = ({ medicines, medicine }) => {
       ) : null}
 
       <PageLayout
+        searchEnabled={true}
         title="Medicine"
         actions={
           <Button
@@ -94,7 +99,7 @@ export const MedicineList: React.FC<Props> = ({ medicines, medicine }) => {
           </Button>
         }
       >
-        <DataTable columns={columns} data={medicines.data ?? []} />
+        <DataTable columns={columns} data={medicines?.data ?? []} />
       </PageLayout>
     </>
   );

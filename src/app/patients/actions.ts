@@ -6,8 +6,12 @@ import { apiClient } from '@/app/actions';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
-export const getPatients = async () => {
-  return await apiClient<Patients.GetPatients.ResponseBody>('/patients', {
+export const getPatients = async (search?: string) => {
+  const queryParams = new URLSearchParams();
+  if (search) {
+    queryParams.append('name', search);
+  }
+  return await apiClient<Patients.GetPatients.ResponseBody>(`/patients`, {
     next: {
       tags: ['patients'],
       revalidate: 3600,

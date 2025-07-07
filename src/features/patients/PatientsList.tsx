@@ -5,9 +5,10 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/table-core';
 import { format } from 'date-fns';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
+import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
 import { PatientsLayout } from '@/features/patients/layouts/PatientsLayout';
 import { TableActions } from '@/features/patients/TableActions';
 import { PatientResource } from '@/types/swagger/data-contracts';
@@ -17,8 +18,12 @@ interface Props {
   patients: Patients.GetPatients.ResponseBody;
 }
 
-export const PatientsList: React.FC<Props> = ({ patients }) => {
+export const PatientsList: React.FC<Props> = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const search = searchParams.get('search') || '';
+  const { data: patients } = usePatientsQuery(search);
+
   const columns: ColumnDef<PatientResource>[] = [
     {
       accessorKey: 'name',
@@ -66,7 +71,7 @@ export const PatientsList: React.FC<Props> = ({ patients }) => {
     <PatientsLayout>
       <DataTable
         columns={columns}
-        data={patients.data ?? []}
+        data={patients?.data ?? []}
         onRowClick={row => router.push(`/patients/view/${row.original.id}`)}
       />
     </PatientsLayout>
