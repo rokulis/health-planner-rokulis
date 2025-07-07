@@ -16,13 +16,15 @@ interface Props {
 export const VisitForm: React.FC<Props> = ({ id }) => {
   const { onClose } = useActionContext();
   const { data: visit, isLoading } = useVisitQuery(id);
-  const [showPreview, setShowPreview] = React.useState(
-    isLoading
-      ? true
-      : !!visit?.data?.visit_treatments?.every(
-          t => t.status === VisitTreatmentStatus.Pending
-        )
-  );
+  const [showPreview, setShowPreview] = React.useState(false);
+
+  React.useEffect(() => {
+    setShowPreview(
+      !!visit?.data?.visit_treatments?.every(
+        t => t.status === VisitTreatmentStatus.Pending
+      )
+    );
+  }, [visit]);
 
   if (!visit) {
     return <div>No visit data available</div>;
