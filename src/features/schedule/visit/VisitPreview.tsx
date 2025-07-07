@@ -71,7 +71,7 @@ export const VisitPreview: React.FC<Props> = ({ visit, onClose, onStart }) => {
             ))}
         </div>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between pb-8">
         <Button variant="outline" onClick={onClose}>
           Close
         </Button>

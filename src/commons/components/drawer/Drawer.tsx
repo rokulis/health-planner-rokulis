@@ -35,7 +35,7 @@ export const Drawer: React.FC<Props> = ({
         }
       }}
     >
-      <DrawerContent className="h-full overflow-y-auto">
+      <DrawerContent className="h-full overflow-y-auto overflow-x-hidden">
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
