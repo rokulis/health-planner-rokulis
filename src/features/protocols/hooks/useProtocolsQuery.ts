@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 import { useApiClient } from '@/utils/hooks/useApiClient';
 
-export const useProtocolsQuery = (search?: string) => {
+export const useProtocolsQuery = (search: string = "") => {
   const apiClient = useApiClient();
   const queryParams = new URLSearchParams();
   if (search) {

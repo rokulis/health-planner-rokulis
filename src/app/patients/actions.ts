@@ -6,7 +6,7 @@ import { apiClient } from '@/app/actions';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
-export const getPatients = async (search?: string) => {
+export const getPatients = async (search: string = "") => {
   const queryParams = new URLSearchParams();
   if (search) {
     queryParams.append('name', search);

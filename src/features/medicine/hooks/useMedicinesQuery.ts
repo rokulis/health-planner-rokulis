@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { useApiClient } from '@/utils/hooks/useApiClient';
 
-export const useMedicinesQuery = (search?: string) => {
+export const useMedicinesQuery = (search: string = "") => {
   const apiClient = useApiClient();
   const queryParams = new URLSearchParams();
   if (search) {

@@ -12,10 +12,9 @@ import { FloatingLabelSearchableSelect } from '@/commons/components/form/Floatin
 import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import AddPatient from '@/commons/icons/svg/add_patient.svg';
-import { Patients } from '@/types/swagger/PatientsRoute';
+import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
 
 interface Props {
-  patients?: Patients.GetPatients.ResponseBody;
   onStepSubmit: (patientId: number) => void;
 }
 
@@ -23,7 +22,8 @@ const FormSchema = z.object({
   patientId: z.coerce.number(),
 });
 
-export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
+export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
+  const { data: patients } = usePatientsQuery();
   const { dispatchAction } = useActionContext();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -31,6 +31,8 @@ export const SelectPatient: React.FC<Props> = ({ patients, onStepSubmit }) => {
       patientId: patients?.data?.[0]?.id ?? -1, // Default to the first patient or -1 if none
     },
   });
+
+  console.log(patients);
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = data => {
     if (typeof onStepSubmit === 'function') {
