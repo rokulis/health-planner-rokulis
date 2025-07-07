@@ -134,14 +134,19 @@ export default function VisitCard({
                             key={medicine.id}
                             className="flex flex-col w-full"
                           >
-                            <div className="flex w-full gap-2 items-center">
-                              {treatment.status ===
-                              VisitTreatmentStatus.Done ? (
-                                    <CheckCircle />
-                                  ) : null}
-                              <span className="font-semibold">
-                                {medicine.medicine?.name}{' '}
-                              </span>
+                            <div className="flex justify-between items-center">
+                              <div className="flex w-full gap-2 items-center">
+                                {treatment.status ===
+                                VisitTreatmentStatus.Done ? (
+                                      <CheckCircle />
+                                    ) : null}
+                                <span className="font-semibold">
+                                  {medicine.medicine?.name}{' '}
+                                </span>
+                              </div>
+                              <div className="bg-primary/10 rounded-full px-2 py-1 text-xs text-primary font-semibold">
+                                {medicine.medicine?.atc_code ?? '-'}
+                              </div>
                             </div>
 
                             {activeTreatment === treatment.id ? (
@@ -211,9 +216,11 @@ export default function VisitCard({
           </div>
         </CardContent>
       </Card>
-      <Button variant="outline" onClick={onClose}>
-        Close
-      </Button>
+      <div className="pb-4 pt-8 w-full">
+        <Button variant="outline" onClick={onClose} className="w-full">
+          Close
+        </Button>
+      </div>
     </div>
   );
 }
