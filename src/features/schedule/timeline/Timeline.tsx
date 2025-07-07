@@ -98,15 +98,10 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
   const getAppointmentBgColor = (status?: VisitStatusEnum) => {
     switch (status) {
       case VisitStatusEnum.Completed:
-        return 'bg-green-100';
-      case VisitStatusEnum.Draft:
-        return 'bg-yellow-100';
-      case VisitStatusEnum.Stopped:
-        return 'bg-red-100';
-      case VisitStatusEnum.Upcoming:
-        return 'bg-blue-100';
+        return 'bg-[#22ADD0] text-white';
+
       default:
-        return 'bg-blue-100';
+        return 'bg-[#190B45] text-white';
     }
   };
 
@@ -194,7 +189,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
         >
           <span
             className={cn(
-              'inline-flex items-center justify-center bg-indigo-900 text-white rounded-full w-6 h-6 mr-2 flex-shrink-0'
+              'inline-flex items-center justify-center bg-[#E4E7EC] text-primary rounded-full w-6 h-6 mr-2 flex-shrink-0'
             )}
           >
             {appointmentForSlot?.patient?.name?.[0].toUpperCase()}
