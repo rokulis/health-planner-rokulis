@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { rescheduleVisit } from '@/app/schedule/actions';
 import { planVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
@@ -25,9 +26,16 @@ interface Props {
   onStepSubmit: (visits: TreatmentPlans.PlanVisits.ResponseBody) => void;
   onBack?: () => void;
   treatmentPlanId?: number;
+  visitId?: string;
+  buttonText?: string;
 }
 
-export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit, treatmentPlanId }) => {
+export const ScheduleTreatment: React.FC<Props> = ({
+  onStepSubmit,
+  treatmentPlanId,
+  visitId,
+  buttonText
+}) => {
   const [isPending, startTransition] = React.useTransition();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
@@ -49,6 +57,17 @@ export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit, treatmentPlan
     return startTransition(async () => {
       if (!treatmentPlanId) {
         return;
+      }
+
+      if (visitId) {
+        return rescheduleVisit(visitId, {
+          start_date: values.start_date,
+          start_time: values.start_time,
+        }).then(res => {
+          if (res.success) {
+            onStepSubmit(res);
+          }
+        });
       }
 
       await planVisits({
@@ -103,7 +122,7 @@ export const ScheduleTreatment: React.FC<Props> = ({ onStepSubmit, treatmentPlan
 
           <div className="flex justify-end mt-8 gap-2">
             <Button disabled={!!form.formState.errors.start_time}>
-              Schedule all
+              {buttonText ?? "Schedule all"}
             </Button>
           </div>
         </form>

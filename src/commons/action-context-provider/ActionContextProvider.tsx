@@ -10,6 +10,7 @@ import { Drawer } from '@/commons/components/drawer/Drawer';
 import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
 import { ProtocolEntity } from '@/features/protocols/add-protocol/ProtocolEntity';
 import { AddTreatment } from '@/features/schedule/add-treatment/AddTreatment';
+import { UpdateTreatment } from '@/features/schedule/update-treatment/UpdateTreatment';
 import { VisitForm } from '@/features/schedule/visit/VisitForm';
 
 const ACTIONS = {
@@ -26,6 +27,11 @@ const ACTIONS = {
   treatment_new: (
     <Drawer title="Schedule treatment" isOpen={true}>
       <AddTreatment />
+    </Drawer>
+  ),
+  treatment_update: (params?: Record<string, any>) => (
+    <Drawer title="Re-Schedule treatment" isOpen={true}>
+      <UpdateTreatment treatmentPlanId={params?.id} visitId={params?.visitId} />
     </Drawer>
   ),
   visit_view: (params?: Record<string, any>) => <VisitForm id={params?.id} />,

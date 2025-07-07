@@ -8,6 +8,7 @@ import { Clock, TestTubeDiagonal } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { changeTreatmentStatus } from '@/app/schedule/actions';
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Badge } from '@/commons/components/ui/badge';
 import { Button } from '@/commons/components/ui/button';
@@ -31,6 +32,7 @@ export default function VisitCard({
   onNextProcedure,
   onClose,
 }: TreatmentCardProps) {
+  const { dispatchAction } = useActionContext();
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
   const activeTreatment =
@@ -172,11 +174,28 @@ export default function VisitCard({
                     </>
                   )}
                   {activeTreatment === treatment.id ? (
-                    <div className="flex gap-3 w-full mt-4 justify-center w-full">
+                    <div className="flex gap-3 w-full mt-4 justify-between w-full">
+                      {treatment.type === 'diagnostic' ? (
+                        <Button
+                          size="sm"
+                          color="primary"
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() =>
+                            dispatchAction('treatment_update', {
+                              id: treatment.id,
+                              visitId: visit.data?.id,
+                            })
+                          }
+                          disabled={isPending}
+                        >
+                          Reschedule
+                        </Button>
+                      ) : null}
                       <Button
                         size="sm"
                         color="primary"
-                        className="w-full"
+                        className="flex-1"
                         onClick={() => onNext(treatment.id)}
                         disabled={isPending}
                       >

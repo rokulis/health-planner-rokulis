@@ -39,6 +39,10 @@ export const TreatmentPlansList = () => {
       },
     },
     {
+      accessorKey: "bed.name",
+      header: 'Bed',
+    },
+    {
       accessorKey: 'date_time',
       header: 'Date & Time',
       cell: info => (
