@@ -18,6 +18,8 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
   const { onClose, dispatchAction } = useActionContext();
   const { data: protocol } = useProtocolQuery(id);
 
+  console.log(protocol);
+
   return (
     <div className="w-full h-full flex flex-col justify-between mx-auto p-0 space-y-8">
       <div className="p-0">
@@ -67,6 +69,9 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
 
                     <div className="text-gray-600">Dose:</div>
                     <div className="font-medium">{m.dose}</div>
+
+                    <div className="text-gray-600">Comment:</div>
+                    <div className="font-medium">{m.comments ?? "-"}</div>
                   </div>
                 </div>
               ))}
