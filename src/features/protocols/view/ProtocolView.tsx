@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { Pencil } from 'lucide-react';
+
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
 import { Button } from '@/commons/components/ui/button';
@@ -13,14 +15,22 @@ interface Props {
 }
 
 export const ProtocolView: React.FC<Props> = ({ id }) => {
-  const { onClose } = useActionContext();
+  const { onClose, dispatchAction } = useActionContext();
   const { data: protocol } = useProtocolQuery(id);
 
   return (
     <div className="w-full h-full flex flex-col justify-between mx-auto p-0 space-y-8">
       <div className="p-0">
-        <div className="bg-primary/20 p-2 px-4 rounded-tl-lg rounded-tr-lg">
+        <div className="bg-primary/20 p-2 px-4 rounded-tl-lg rounded-tr-lg flex justify-between items-center">
           <div>Protocol information</div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-5"
+            onClick={() => dispatchAction('protocol_edit', { id })}
+          >
+            <Pencil size={15} /> Edit
+          </Button>
         </div>
         <div className="space-y-4 p-0 p-4 bg-primary/5 rounded-bl-lg rounded-br-lg text-sm">
           <div className="grid grid-cols-[140px_1fr] gap-4 border-b border-gray-200 pb-4">
