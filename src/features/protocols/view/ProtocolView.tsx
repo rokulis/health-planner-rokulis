@@ -34,12 +34,12 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
           </div>
           {protocol?.data?.protocol_medicine_groups?.map((mg, i) => (
             <NumberedSteps number={i + 1} key={i}>
-              <React.Fragment>
-                {mg.protocol_medicines?.map((m, j) => (
-                  <div
-                    key={j}
-                    className="grid grid-cols-[140px_1fr] gap-4 border-b border-gray-200 pb-4"
-                  >
+              {mg.protocol_medicines?.map((m, j) => (
+                <div
+                  key={j}
+                  className="border-b mb-4 w-full border-gray-200 pb-4 w-full"
+                >
+                  <div className="grid grid-cols-[140px_1fr] gap-4">
                     <div className="text-gray-600">Medicine name:</div>
                     <div className="font-medium">{m.medicine?.name}</div>
 
@@ -58,8 +58,8 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
                     <div className="text-gray-600">Dose:</div>
                     <div className="font-medium">{m.dose}</div>
                   </div>
-                ))}
-              </React.Fragment>
+                </div>
+              ))}
             </NumberedSteps>
           ))}
         </div>
