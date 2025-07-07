@@ -7,9 +7,10 @@ export const useRoomsQuery = () => {
   const apiClient = useApiClient();
   const queryParams = new URLSearchParams();
   queryParams.append('sector_id', '1');
+  const url = `/rooms?${queryParams.toString()}`;
 
   const fetchRooms = async () => {
-    return await apiClient.get(`/rooms`).then(res => res.data);
+    return await apiClient.get(url).then(res => res.data);
   };
 
   return useQuery<Rooms.GetAllRooms.ResponseBody>({
