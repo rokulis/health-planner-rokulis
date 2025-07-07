@@ -14,12 +14,13 @@ import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
   id?: string;
+  defaultStep?: number;
 }
 
-export const PatientEntity: React.FC<Props> = ({ id }) => {
+export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
   const [proposedVisits, setProposedVisits] =
     React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
-  const [currentStep, setCurrentStep] = React.useState(1);
+  const [currentStep, setCurrentStep] = React.useState(defaultStep);
   const [patientId, setPatientId] = React.useState<number | undefined>(
     undefined
   );

@@ -25,6 +25,11 @@ const ACTIONS = {
       <PatientEntity id={params?.id} />
     </Drawer>
   ),
+  patient_relatives_edit: (params?: Record<string, any>) => (
+    <Drawer title="Patient Form" isOpen={true}>
+      <PatientEntity id={params?.id} defaultStep={2} />
+    </Drawer>
+  ),
   treatment_new: (
     <Drawer title="Schedule treatment" isOpen={true}>
       <AddTreatment />

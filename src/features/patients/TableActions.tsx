@@ -61,6 +61,18 @@ export const TableActions: React.FC<Props> = ({ patient }) => {
             e.preventDefault();
             e.stopPropagation();
 
+            dispatchAction('patient_relatives_edit', {
+              id: patient.id,
+            });
+          }}
+        >
+          Edit Relatives
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+
             return handleDelete();
           }}
         >
