@@ -15,11 +15,13 @@ interface Props {
 
 export const VisitForm: React.FC<Props> = ({ id }) => {
   const { onClose } = useActionContext();
-  const { data: visit } = useVisitQuery(id);
+  const { data: visit, isLoading } = useVisitQuery(id);
   const [showPreview, setShowPreview] = React.useState(
-    !!visit?.data?.visit_treatments?.every(
-      t => t.status === VisitTreatmentStatus.Pending
-    )
+    isLoading
+      ? true
+      : !!visit?.data?.visit_treatments?.every(
+          t => t.status === VisitTreatmentStatus.Pending
+        )
   );
 
   if (!visit) {
@@ -28,14 +30,20 @@ export const VisitForm: React.FC<Props> = ({ id }) => {
 
   return (
     <Drawer title={`${visit.data?.patient?.name}`} isOpen={true}>
-      {showPreview ? (
-        <VisitPreview
-          onClose={onClose}
-          onStart={() => setShowPreview(false)}
-          visit={visit}
-        />
+      {isLoading ? (
+        <span>Loading...</span>
       ) : (
-        <VisitCard visit={visit} onClose={onClose} />
+        <>
+          {showPreview ? (
+            <VisitPreview
+              onClose={onClose}
+              onStart={() => setShowPreview(false)}
+              visit={visit}
+            />
+          ) : (
+            <VisitCard visit={visit} onClose={onClose} />
+          )}
+        </>
       )}
     </Drawer>
   );
