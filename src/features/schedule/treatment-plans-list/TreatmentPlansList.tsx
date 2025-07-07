@@ -10,7 +10,6 @@ import { useSearchParams } from 'next/navigation';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
-import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
 import { useScheduleQuery } from '@/features/schedule/hooks/useScheduleQuery';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import { VisitResource } from '@/types/swagger/data-contracts';
@@ -21,7 +20,6 @@ export const TreatmentPlansList = () => {
   const { data: schedule } = useScheduleQuery(
     params.get('date') ?? new Date().toISOString().split('T')[0]
   );
-  const { data: patients } = usePatientsQuery();
 
   const columns: ColumnDef<VisitResource>[] = [
     {
@@ -29,14 +27,8 @@ export const TreatmentPlansList = () => {
       header: '#',
     },
     {
-      accessorKey: 'patient',
+      accessorKey: 'patient.name',
       header: 'Patient',
-      cell: ({ row }) => {
-        const patient = patients?.data?.find(
-          p => p.id === row.original.patient_id
-        );
-        return patient ? `${patient.name}` : 'N/A';
-      },
     },
     {
       accessorKey: "bed.name",
