@@ -74,7 +74,11 @@ export const ProtocolsList: React.FC<Props> = () => {
         </Button>
       }
     >
-      <DataTable columns={columns} data={protocols?.data ?? []} />
+      <DataTable
+        columns={columns}
+        data={protocols?.data ?? []}
+        onRowClick={r => dispatchAction('protocol_view', { id: r.original.id })}
+      />
     </PageLayout>
   );
 };
