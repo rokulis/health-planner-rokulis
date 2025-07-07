@@ -45,7 +45,7 @@ const transformTreatmentDaysToArrayOfNumber = (
 };
 
 export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
-  const { onClose } = useActionContext();
+  const { onClose, dispatchAction } = useActionContext();
   const queryClient = useQueryClient();
 
   const [search, setSearch] = React.useState<string>('');
@@ -126,7 +126,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
         });
         toast.success('Protocol added successfully');
         form.reset();
-        onClose?.();
+        dispatchAction('protocol_view', { id: res.data?.id });
       }
     });
   };
