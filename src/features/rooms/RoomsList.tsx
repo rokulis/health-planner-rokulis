@@ -30,7 +30,7 @@ export const RoomsList: React.FC<Props> = ({ rooms, sectors, room }) => {
   const columns: ColumnDef<RoomResource>[] = [
     {
       accessorKey: 'name',
-      header: 'Protocol',
+      header: 'Name',
     },
     {
       accessorKey: 'work_start_time',

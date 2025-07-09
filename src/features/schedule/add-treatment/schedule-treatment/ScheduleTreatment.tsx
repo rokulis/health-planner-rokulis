@@ -25,23 +25,29 @@ const FormSchema = z.object({
 interface Props {
   onStepSubmit: (visits: TreatmentPlans.PlanVisits.ResponseBody) => void;
   onBack?: () => void;
-  treatmentPlanId?: number;
+  treatmentPlan?: TreatmentPlans.CreateTreatmentPlan.ResponseBody;
   visitId?: string;
   buttonText?: string;
 }
 
 export const ScheduleTreatment: React.FC<Props> = ({
   onStepSubmit,
-  treatmentPlanId,
+  treatmentPlan,
   visitId,
-  buttonText
+  buttonText,
 }) => {
   const [isPending, startTransition] = React.useTransition();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
     undefined
   );
-  const { data } = useOpenSlotsQuery(date?.toISOString().split('T')[0] ?? '');
+  const firstTreatmentDuration =
+    treatmentPlan?.data?.treatment_cycles?.[0].visits?.[0].duration ?? 1800;
+
+  const { data } = useOpenSlotsQuery({
+    date: date?.toISOString().split('T')[0] ?? '',
+    duration: firstTreatmentDuration,
+  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -55,7 +61,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {
-      if (!treatmentPlanId) {
+      if (!treatmentPlan?.data?.id) {
         return;
       }
 
@@ -71,7 +77,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
       }
 
       await planVisits({
-        id: treatmentPlanId,
+        id: treatmentPlan.data.id,
         start_date: values.start_date,
         start_time: values.start_time,
       }).then(res => {
@@ -122,7 +128,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
 
           <div className="flex justify-end mt-8 gap-2">
             <Button disabled={!!form.formState.errors.start_time}>
-              {buttonText ?? "Schedule all"}
+              {buttonText ?? 'Schedule all'}
             </Button>
           </div>
         </form>

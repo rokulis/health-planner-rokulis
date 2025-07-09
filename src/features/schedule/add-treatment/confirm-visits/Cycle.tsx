@@ -95,7 +95,7 @@ export default function Cycle({ cycle, isOpen, index, onToggle }: CycleProps) {
 
                         <div className="flex items-center gap-1">
                           <MapPin size={20} className="h-4 w-4" />
-                          Bed {visit.bed_id}
+                          {visit.bed?.name}
                         </div>
                       </div>
                     </div>

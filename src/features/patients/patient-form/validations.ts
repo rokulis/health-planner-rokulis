@@ -20,8 +20,8 @@ export const patientSchema = z.object({
   personal_code: z.string().min(1, 'Personal code is required'),
   date_of_birth: dateSchema,
   email: z.string().email('Invalid email format'),
-  phone_number: z.string().min(1, 'Phone number is required'),
+  phone_number: z.string().optional(),
   weight: z.coerce.number().min(0, 'Weight must be a positive number'),
   height: z.coerce.number().min(0, 'Height must be a positive number'),
-  address: z.string().min(1, 'Address is required'),
+  address: z.string().optional(),
 });

@@ -23,6 +23,7 @@ import {
 } from '@/features/schedule/add-treatment/select-treatment/validations';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
+import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 import { useDiagnosesQuery } from '@/utils/hooks/useDiagnosesQuery';
 
 import { MedicineGroup } from './medicine-group/MedicineGroup';
@@ -30,7 +31,9 @@ import { MedicineGroup } from './medicine-group/MedicineGroup';
 interface Props {
   protocols?: Protocols.GetProtocols.ResponseBody;
   medicines?: Medicines.GetMedicines.ResponseBody;
-  onStepSubmit?: (treatmentPlanId: number) => void;
+  onStepSubmit?: (
+    treatmentPlan: TreatmentPlans.CreateTreatmentPlan.ResponseBody
+  ) => void;
   patientId?: number;
 }
 
@@ -112,7 +115,7 @@ export const SelectTreatment: React.FC<Props> = ({
       }
       if (res.success) {
         if (typeof onStepSubmit === 'function' && res.data?.id) {
-          onStepSubmit(res.data.id);
+          onStepSubmit(res);
         }
       }
     });

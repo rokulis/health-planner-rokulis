@@ -47,6 +47,7 @@ export namespace Schedule {
       /** @format date */
       date: string;
       sector_id?: number;
+      duration?: number;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};

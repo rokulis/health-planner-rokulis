@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
+import { useTreatmentPlanQuery } from '@/features/schedule/hooks/useTreatmentPlanQuery';
 
 interface Props {
   treatmentPlanId?: number;
@@ -19,6 +20,8 @@ export const UpdateTreatment: React.FC<Props> = ({
 }) => {
   const { onClose } = useActionContext();
   const [currentStep, setCurrentStep] = React.useState(1);
+  const { data: treatmentPlan, isLoading } =
+    useTreatmentPlanQuery(treatmentPlanId);
 
   const steps: Step[] = [
     {
@@ -27,7 +30,7 @@ export const UpdateTreatment: React.FC<Props> = ({
       content: (
         <ScheduleTreatment
           buttonText="Reschedule Visits"
-          treatmentPlanId={treatmentPlanId}
+          treatmentPlan={treatmentPlan}
           visitId={visitId}
           onStepSubmit={() => {
             toast.success('Visits rescheduled successfully');
@@ -37,6 +40,10 @@ export const UpdateTreatment: React.FC<Props> = ({
       ),
     },
   ];
+
+  if (isLoading) {
+    return <div>Loading treatment plan...</div>;
+  }
 
   return (
     <Stepper

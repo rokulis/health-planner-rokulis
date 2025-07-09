@@ -18,9 +18,8 @@ export const AddTreatment: React.FC = () => {
   const [patientId, setPatientId] = React.useState<number | undefined>(
     undefined
   );
-  const [treatmentPlanId, setTreatmentPlanId] = React.useState<
-    number | undefined
-  >();
+  const [treatmentPlan, setTreatmentPlan] =
+    React.useState<TreatmentPlans.CreateTreatmentPlan.ResponseBody>();
 
   const { data: medicines } = useMedicinesQuery();
   const { data: protocols } = useProtocolsQuery();
@@ -47,8 +46,8 @@ export const AddTreatment: React.FC = () => {
           patientId={patientId}
           protocols={protocols}
           medicines={medicines}
-          onStepSubmit={planId => {
-            setTreatmentPlanId(planId);
+          onStepSubmit={plan => {
+            setTreatmentPlan(plan);
             setCurrentStep(prev => prev + 1);
           }}
         />
@@ -59,7 +58,7 @@ export const AddTreatment: React.FC = () => {
       label: 'Schedule',
       content: (
         <ScheduleTreatment
-          treatmentPlanId={treatmentPlanId}
+          treatmentPlan={treatmentPlan}
           onStepSubmit={data => {
             setProposedVisits(data);
             setCurrentStep(prev => prev + 1);
@@ -72,7 +71,7 @@ export const AddTreatment: React.FC = () => {
       label: 'Confirm',
       content: (
         <ConfirmVisits
-          treatmentPlanId={treatmentPlanId}
+          treatmentPlanId={treatmentPlan?.data?.id}
           visits={proposedVisits}
           onBack={() => setCurrentStep(prev => prev - 1)}
         />

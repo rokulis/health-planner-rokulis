@@ -75,7 +75,7 @@ export interface StorePatientRequest {
    */
   email: string;
   /** @maxLength 255 */
-  phone_number: string;
+  phone_number?: string;
   /** @maxLength 255 */
   personal_code: string;
   /** @min 1 */
@@ -83,7 +83,7 @@ export interface StorePatientRequest {
   /** @min 1 */
   height: number;
   /** @maxLength 255 */
-  address: string;
+  address?: string;
   relatives?: BaseRelative[];
 }
 
@@ -1895,6 +1895,7 @@ export interface GetOpenSlotsParams {
   /** @format date */
   date: string;
   sector_id?: number;
+  duration?: number;
 }
 
 export interface GetOpenSlotsData {

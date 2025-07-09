@@ -24,9 +24,9 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
   const [patientId, setPatientId] = React.useState<number | undefined>(
     undefined
   );
-  const [treatmentPlanId, setTreatmentPlanId] = React.useState<
-    number | undefined
-  >();
+  const [treatmentPlan, setTreatmentPlan] =
+    React.useState<TreatmentPlans.CreateTreatmentPlan.ResponseBody>();
+
   const { data: patient } = usePatientQuery(id);
   const { data: protocols } = useProtocolsQuery();
   const { data: medicines } = useMedicinesQuery();
@@ -70,8 +70,8 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
           patientId={patientId}
           protocols={protocols}
           medicines={medicines}
-          onStepSubmit={planId => {
-            setTreatmentPlanId(planId);
+          onStepSubmit={plan => {
+            setTreatmentPlan(plan);
             setCurrentStep(prev => prev + 1);
           }}
         />
@@ -82,7 +82,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
       label: 'Schedule',
       content: (
         <ScheduleTreatment
-          treatmentPlanId={treatmentPlanId}
+          treatmentPlan={treatmentPlan}
           onStepSubmit={data => {
             setProposedVisits(data);
             setCurrentStep(prev => prev + 1);
@@ -96,7 +96,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
       content: (
         <ConfirmVisits
           onBack={() => setCurrentStep(prev => prev - 1)}
-          treatmentPlanId={treatmentPlanId}
+          treatmentPlanId={treatmentPlan?.data?.id}
           visits={proposedVisits}
         />
       ),

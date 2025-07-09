@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DateNavigator } from '@/commons/components/date-navigator/DateNavigator';
@@ -18,26 +18,31 @@ interface Props {
   visitId?: string;
 }
 
-const TABS = [
-  {
-    label: 'Timeline',
-    icon: <Timeline />,
-    href: '/schedule',
-  },
-  {
-    label: 'List',
-    icon: <List />,
-    href: '/schedule/list',
-  },
-];
-
 export const ScheduleLayout: React.FC<Props> = ({ children }) => {
   const router = useRouter();
   const { dispatchAction } = useActionContext();
+  const searchParams = useSearchParams();
+  const selectedDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
   const onDateChange = (date: string) => {
     router.push(`/schedule?date=${date}`);
   };
+
+  const TABS = React.useMemo(
+    () => [
+      {
+        label: 'Timeline',
+        icon: <Timeline />,
+        href: `/schedule?date=${selectedDate}`,
+      },
+      {
+        label: 'List',
+        icon: <List />,
+        href: `/schedule/list?date=${selectedDate}`,
+      },
+    ],
+    [selectedDate]
+  );
 
   return (
     <>
