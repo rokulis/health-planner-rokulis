@@ -28,7 +28,7 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
   const currentUrl = `${pathname}?${searchParams.toString()}`;
 
   const onDateChange = (date: string) => {
-    router.push(`/schedule?date=${date}`);
+    router.push(`${pathname}?date=${date}`);
   };
 
   const TABS = React.useMemo(
