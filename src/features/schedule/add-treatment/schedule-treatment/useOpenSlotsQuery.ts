@@ -5,7 +5,7 @@ export const useOpenSlotsQuery = ({
   date,
   duration,
 }: {
-  date: string;
+  date?: string;
   duration: number;
 }) => {
   const cookies = useCookies();

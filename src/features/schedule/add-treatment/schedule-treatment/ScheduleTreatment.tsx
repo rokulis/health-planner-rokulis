@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -44,15 +45,20 @@ export const ScheduleTreatment: React.FC<Props> = ({
   const firstTreatmentDuration =
     treatmentPlan?.data?.treatment_cycles?.[0].visits?.[0].duration ?? 1800;
 
+  const selectedDate = React.useMemo(
+    () => format(date?.toString() as string, 'yyyy-MM-dd'),
+    [date]
+  );
+
   const { data } = useOpenSlotsQuery({
-    date: date?.toISOString().split('T')[0] ?? '',
+    date: selectedDate,
     duration: firstTreatmentDuration,
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      start_date: date?.toISOString().split('T')[0] ?? '',
+      start_date: selectedDate,
       start_time: '',
     },
   });
@@ -67,7 +73,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
 
       if (visitId) {
         return rescheduleVisit(visitId, {
-          start_date: values.start_date,
+          start_date: selectedDate,
           start_time: values.start_time,
         }).then(res => {
           if (res.success) {
@@ -78,7 +84,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
 
       await planVisits({
         id: treatmentPlan.data.id,
-        start_date: values.start_date,
+        start_date: selectedDate,
         start_time: values.start_time,
       }).then(res => {
         if (res.success) {
