@@ -188,7 +188,7 @@ export default function VisitCard({
                           className="flex-1"
                           onClick={() =>
                             dispatchAction('treatment_update', {
-                              id: treatment.id,
+                              id: visit.data?.treatment_plan_id,
                               visitId: visit.data?.id,
                             })
                           }
