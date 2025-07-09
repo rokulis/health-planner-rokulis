@@ -1,5 +1,6 @@
 'use client';
 
+import { formatInTimeZone } from 'date-fns-tz';
 import { ChevronDown, ChevronUp, Clock, MapPin, Calendar } from 'lucide-react';
 
 import {
@@ -20,17 +21,6 @@ interface CycleProps {
   index: number;
   isOpen: boolean;
   onToggle: () => void;
-}
-
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 }
 
 function formatDuration(seconds: number) {
@@ -83,7 +73,11 @@ export default function Cycle({ cycle, isOpen, index, onToggle }: CycleProps) {
                         {visit.date_time ? (
                           <div className="flex items-center gap-1">
                             <Calendar size={20} className="h-4 w-4" />
-                            {formatDate(visit.date_time)}
+                            {formatInTimeZone(
+                              new Date(visit.date_time),
+                              'UTC',
+                              'yyyy-MM-dd HH:mm'
+                            )}
                           </div>
                         ) : null}
                         {visit.duration ? (
