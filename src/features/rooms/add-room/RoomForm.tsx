@@ -50,7 +50,10 @@ export const RoomForm: React.FC<Props> = ({
         : '17:00',
       working_days: room?.data?.working_days ?? [],
       beds: room?.data?.beds ?? [
-        { name: '', category: StoreRoomRequestCategoryEnum.ShortTerm },
+        {
+          name: '',
+          category: StoreRoomRequestCategoryEnum.ShortTerm,
+        },
       ],
     },
   });

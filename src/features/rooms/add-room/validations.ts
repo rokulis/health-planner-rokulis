@@ -6,6 +6,13 @@ import {
 } from '@/types/swagger/data-contracts';
 
 const bedSchema = z.object({
+  id: z
+    .number()
+    .nullish()
+    .transform(val => {
+      if (val === 0 || val === null) return undefined;
+      return val;
+    }),
   name: z.string().min(1, 'Bed name is required'),
   category: z.nativeEnum(StoreRoomRequestCategoryEnum),
 });

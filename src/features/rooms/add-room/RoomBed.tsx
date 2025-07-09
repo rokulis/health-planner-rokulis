@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 import cx from 'classnames';
 import { X } from 'lucide-react';
 import { useController, UseFormReturn } from 'react-hook-form';
@@ -34,9 +36,14 @@ export function RoomBed({ index, form, onRemove }: SpotCardProps) {
     name: `beds.${index}.category`,
     control: form.control,
   });
+  const bedId = form.getValues(`beds.${index}.id`);
 
   return (
     <Card className="rounded-2xl bg-primary/5 p-2">
+      {bedId ? (
+        <input type="hidden" {...form.register(`beds.${index}.id`)} />
+      ) : null}
+
       <CardHeader className="px-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl font-semibold text-gray-900">
@@ -69,7 +76,9 @@ export function RoomBed({ index, form, onRemove }: SpotCardProps) {
             <Label className="text-base font-medium text-gray-700">
               Time Limit
             </Label>
-            <span className="text-sm text-black/50">{BedTimeLimit[categoryField.value]}</span>
+            <span className="text-sm text-black/50">
+              {BedTimeLimit[categoryField.value]}
+            </span>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
