@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DateNavigator } from '@/commons/components/date-navigator/DateNavigator';
@@ -22,7 +22,10 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
   const router = useRouter();
   const { dispatchAction } = useActionContext();
   const searchParams = useSearchParams();
-  const selectedDate = searchParams.get('date') || new Date().toISOString().split('T')[0];
+  const selectedDate =
+    searchParams.get('date') || new Date().toISOString().split('T')[0];
+  const pathname = usePathname();
+  const currentUrl = `${pathname}?${searchParams.toString()}`;
 
   const onDateChange = (date: string) => {
     router.push(`/schedule?date=${date}`);
@@ -43,6 +46,9 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
     ],
     [selectedDate]
   );
+
+  const activeTab =
+    TABS.find(tab => tab.href === currentUrl)?.label || 'Timeline';
 
   return (
     <>
@@ -65,7 +71,7 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
         }
       >
         <div className="flex flex-col">
-          <Tabs tabs={TABS} />
+          <Tabs tabs={TABS} activeTab={activeTab} />
           {children}
         </div>
       </PageLayout>

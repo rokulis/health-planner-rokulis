@@ -17,9 +17,10 @@ interface Tab {
 interface TabsProps {
   tabs: Tab[];
   className?: string;
+  activeTab?: string;
 }
 
-export function Tabs({ tabs, className }: TabsProps) {
+export function Tabs({ tabs, className, activeTab }: TabsProps) {
   const pathname = usePathname();
 
   return (
@@ -27,7 +28,9 @@ export function Tabs({ tabs, className }: TabsProps) {
       <div className="flex h-12 items-center px-4 gap-4">
         {tabs.map(tab => {
           const Icon = tab.icon;
-          const isActive = pathname.endsWith(tab.href.split("/").pop() || '');
+          const isActive =
+            activeTab === tab.label ||
+            pathname.endsWith(tab.href.split('/').pop() || '');
 
           return (
             <Link
@@ -37,8 +40,8 @@ export function Tabs({ tabs, className }: TabsProps) {
                 'flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors relative',
                 tab.disabled && 'pointer-events-none opacity-50',
                 {
-                  "text-black": isActive,
-                  "text-black/50": !isActive,
+                  'text-black': isActive,
+                  'text-black/50': !isActive,
                 }
               )}
             >
