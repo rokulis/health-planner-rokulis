@@ -75,7 +75,7 @@ export const PatientTreatmentPlans: React.FC<Props> = ({
                       ) : null}
                     </div>
                     {medicine.comment ? (
-                      <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm">
+                      <div className="border border-gray-200 text-gray-600 rounded-lg p-1 mt-2 text-sm">
                         {medicine.comment || '-'}
                       </div>
                     ) : null}
