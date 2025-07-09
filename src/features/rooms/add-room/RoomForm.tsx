@@ -40,16 +40,16 @@ export const RoomForm: React.FC<Props> = ({
   const form = useForm<z.infer<typeof roomSchema>>({
     resolver: zodResolver(roomSchema),
     defaultValues: {
-      name: room?.data.name ?? '',
-      sector_id: room?.data.sector_id ?? sectors.data?.[0]?.id ?? 1,
-      work_start_time: room?.data.work_start_time
+      name: room?.data?.name ?? '',
+      sector_id: room?.data?.sector_id ?? sectors.data?.[0]?.id ?? 1,
+      work_start_time: room?.data?.work_start_time
         ? formatTimeToHHMM(room.data.work_start_time)
         : '09:00',
-      work_end_time: room?.data.work_end_time
+      work_end_time: room?.data?.work_end_time
         ? formatTimeToHHMM(room.data.work_end_time)
         : '17:00',
-      working_days: room?.data.working_days ?? [],
-      beds: room?.data.beds ?? [
+      working_days: room?.data?.working_days ?? [],
+      beds: room?.data?.beds ?? [
         { name: '', category: StoreRoomRequestCategoryEnum.ShortTerm },
       ],
     },
@@ -61,8 +61,8 @@ export const RoomForm: React.FC<Props> = ({
   });
 
   const onSubmit: SubmitHandler<Rooms.CreateRoom.RequestBody> = async data => {
-    if (room?.id) {
-      return updateRoom(room.id, data).then(res => {
+    if (room?.data?.id) {
+      return updateRoom(room.data.id, data).then(res => {
         if (res.message) {
           toast.error(res.message);
         } else {
@@ -152,7 +152,7 @@ export const RoomForm: React.FC<Props> = ({
           </div>
           <div className="col-span-6 mt-12 flex justify-end">
             <Button type="submit" className="w-1/2">
-              {room?.id ? 'Update Room' : 'Create Room'}
+              {room?.data?.id ? 'Update Room' : 'Create Room'}
             </Button>
           </div>
         </form>
