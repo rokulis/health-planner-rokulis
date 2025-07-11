@@ -92,127 +92,122 @@ export default function VisitCard({
 
           {/* Medicines List */}
           <div className="flex flex-col gap-4">
-            {visit.data?.visit_treatments
-              ?.sort(t => (t.type === 'diagnostic' ? -1 : 1))
-              .map((treatment, treatmentIdx) => (
-                <div
-                  key={treatment.id}
-                  className="flex flex-col gap-4 items-start justify-between p-3 border border-primary/10 rounded-lg bg-gray-50"
-                >
-                  {treatment.type === 'diagnostic' ? (
-                    <Card className="border-purple-200 bg-purple-50 p-0">
-                      <CardContent className="py-0 px-0">
-                        <div className="flex w-full gap-2 items-center">
-                          {treatment.status === VisitTreatmentStatus.Done ? (
-                            <CheckCircle />
-                          ) : null}
-                          <span className="font-semibold">
-                            {treatment.diagnostic_test?.name}
-                          </span>
-                        </div>
-
-                        {activeTreatment === treatment.id ? (
-                          <div className="flex items-center text-sm gap-1">
-                            <Clock size={15} />
-                            {treatment.diagnostic_test?.duration ? (
-                              <span>
-                                {secondsToMinutes(
-                                  treatment.diagnostic_test?.duration
-                                )}
-                                min
-                              </span>
-                            ) : null}
-                          </div>
+            {visit.data?.visit_treatments?.map((treatment, treatmentIdx) => (
+              <div
+                key={treatment.id}
+                className="flex flex-col gap-4 items-start justify-between p-3 border border-primary/10 rounded-lg bg-gray-50"
+              >
+                {treatment.type === 'diagnostic' ? (
+                  <Card className="border-purple-200 bg-purple-50 p-0">
+                    <CardContent className="py-0 px-0">
+                      <div className="flex w-full gap-2 items-center">
+                        {treatment.status === VisitTreatmentStatus.Done ? (
+                          <CheckCircle />
                         ) : null}
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <>
-                      {treatment.treatment_medicine_group?.treatment_medicines?.map(
-                        medicine => (
-                          <div
-                            key={medicine.id}
-                            className="flex flex-col w-full"
-                          >
-                            <div className="flex justify-between items-center">
-                              <div className="flex w-full gap-2 items-center">
-                                {treatment.status ===
-                                VisitTreatmentStatus.Done ? (
-                                      <CheckCircle />
-                                    ) : null}
-                                <span className="font-semibold">
-                                  {medicine.medicine?.name}{' '}
-                                </span>
-                              </div>
-                              <div className="bg-primary/10 rounded-full px-2 py-1 text-xs text-primary font-semibold">
-                                {medicine.medicine?.atc_code ?? '-'}
-                              </div>
+                        <span className="font-semibold">
+                          {treatment.diagnostic_test?.name}
+                        </span>
+                      </div>
+
+                      {activeTreatment === treatment.id ? (
+                        <div className="flex items-center text-sm gap-1">
+                          <Clock size={15} />
+                          {treatment.diagnostic_test?.duration ? (
+                            <span>
+                              {secondsToMinutes(
+                                treatment.diagnostic_test?.duration
+                              )}
+                              min
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <>
+                    {treatment.treatment_medicine_group?.treatment_medicines?.map(
+                      medicine => (
+                        <div key={medicine.id} className="flex flex-col w-full">
+                          <div className="flex justify-between items-center">
+                            <div className="flex w-full gap-2 items-center">
+                              {treatment.status ===
+                              VisitTreatmentStatus.Done ? (
+                                    <CheckCircle />
+                                  ) : null}
+                              <span className="font-semibold">
+                                {medicine.medicine?.name}{' '}
+                              </span>
                             </div>
+                            <div className="bg-primary/10 rounded-full px-2 py-1 text-xs text-primary font-semibold">
+                              {medicine.medicine?.atc_code ?? '-'}
+                            </div>
+                          </div>
 
-                            {activeTreatment === treatment.id ? (
-                              <>
-                                <div className="flex gap-6 text-sm text-gray-600 mt-2">
-                                  {medicine.medicine?.default_time ? (
-                                    <div className="flex gap-1">
-                                      <Clock size={18} />{' '}
-                                      {medicine.medicine?.default_time}
-                                    </div>
-                                  ) : null}
-
-                                  {medicine.dose ? (
-                                    <div className="flex gap-1">
-                                      <TestTubeDiagonal size={18} />{' '}
-                                      {medicine.dose}
-                                    </div>
-                                  ) : null}
-                                </div>
-                                {medicine.comment ? (
-                                  <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm mt-1">
-                                    {medicine.comment || '-'}
+                          {activeTreatment === treatment.id ? (
+                            <>
+                              <div className="flex gap-6 text-sm text-gray-600 mt-2">
+                                {medicine.medicine?.default_time ? (
+                                  <div className="flex gap-1">
+                                    <Clock size={18} />{' '}
+                                    {medicine.medicine?.default_time}
                                   </div>
                                 ) : null}
-                              </>
-                            ) : null}
-                          </div>
-                        )
-                      )}
-                    </>
-                  )}
-                  {activeTreatment === treatment.id ? (
-                    <div className="flex gap-3 w-full mt-4 justify-between w-full">
-                      {treatment.type === 'diagnostic' ? (
-                        <Button
-                          size="sm"
-                          color="primary"
-                          variant="outline"
-                          className="flex-1"
-                          onClick={() =>
-                            dispatchAction('treatment_update', {
-                              id: visit.data?.treatment_plan_id,
-                              visitId: visit.data?.id,
-                            })
-                          }
-                          disabled={isPending}
-                        >
-                          Reschedule
-                        </Button>
-                      ) : null}
+
+                                {medicine.dose ? (
+                                  <div className="flex gap-1">
+                                    <TestTubeDiagonal size={18} />{' '}
+                                    {medicine.dose}
+                                  </div>
+                                ) : null}
+                              </div>
+                              {medicine.comment ? (
+                                <div className="border border-gray-200 text-gray-600 rounded-lg p-1 text-sm mt-1">
+                                  {medicine.comment || '-'}
+                                </div>
+                              ) : null}
+                            </>
+                          ) : null}
+                        </div>
+                      )
+                    )}
+                  </>
+                )}
+                {activeTreatment === treatment.id ? (
+                  <div className="flex gap-3 w-full mt-4 justify-between w-full">
+                    {treatment.type === 'diagnostic' ? (
                       <Button
                         size="sm"
                         color="primary"
+                        variant="outline"
                         className="flex-1"
-                        onClick={() => onNext(treatment.id)}
+                        onClick={() =>
+                          dispatchAction('treatment_update', {
+                            id: visit.data?.treatment_plan_id,
+                            visitId: visit.data?.id,
+                          })
+                        }
                         disabled={isPending}
                       >
-                        {treatmentIdx ===
-                        (visit.data?.visit_treatments?.length ?? 0) - 1
-                          ? 'Finish cycle'
-                          : 'Next Procedure'}
+                        Reschedule
                       </Button>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+                    ) : null}
+                    <Button
+                      size="sm"
+                      color="primary"
+                      className="flex-1"
+                      onClick={() => onNext(treatment.id)}
+                      disabled={isPending}
+                    >
+                      {treatmentIdx ===
+                      (visit.data?.visit_treatments?.length ?? 0) - 1
+                        ? 'Finish cycle'
+                        : 'Next Procedure'}
+                    </Button>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
