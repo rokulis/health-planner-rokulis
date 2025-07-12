@@ -43,7 +43,7 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
         const allDays = row.original.treatment?.flatMap(
           item => item.treatment_days || []
         );
-        const uniqueDays = [...new Set(allDays)];
+        const uniqueDays = [...new Set(allDays)].sort((a, b) => a - b);
 
         return uniqueDays && uniqueDays.length > 0
           ? uniqueDays.join(', ')
