@@ -3,10 +3,16 @@
 import React from 'react';
 
 import { Calendar, Clock, TestTubeDiagonal } from 'lucide-react';
+import { toast } from 'sonner';
 
+import { finishTreatmentPlan } from '@/app/schedule/actions';
+import { useConfirm } from '@/commons/components/confirm/hooks/useConfirm';
+import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
 import { Badge } from '@/commons/components/ui/badge';
+import { Button } from '@/commons/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
+import { HistoryTable } from '@/features/patients/patient-view/treatment-plans/HistoryTable';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
@@ -18,74 +24,117 @@ interface Props {
 
 export const PatientTreatmentPlans: React.FC<Props> = ({
   activeTreatmentPlan,
+  treatmentPlans,
 }) => {
+  const [isPending, startTransition] = React.useTransition();
+  const { showConfirmation } = useConfirm();
+
+  const handleFinish = async (id?: number) => {
+    const confirmed = await showConfirmation({
+      title: 'Finish Treatment Plan',
+      message: `Are you sure you want to finish this treatment plan? This action cannot be undone.`,
+      proceedText: 'Finish',
+      cancelText: 'Cancel',
+    });
+
+    return startTransition(() => {
+      if (!id) {
+        return;
+      }
+      if (confirmed) {
+        return finishTreatmentPlan(id).then(res => {
+          if (res.message) {
+            toast.error(res.message);
+          } else {
+            toast.success('Treatment plan finished successfully');
+          }
+        });
+      }
+    });
+  };
+
   return (
-    <Card className="border-gray-200 shadow-sm mx-4 my-4 p-4">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 px-0">
-        <h2 className="text-xl font-semibold text-gray-900">Treatment plan</h2>
-      </CardHeader>
+    <>
+      {isPending ? <PageTopLoader /> : null}
+      <Card className="border-gray-200 shadow-sm mx-4 my-4 p-4">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 px-0">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Treatment plan
+          </h2>
+        </CardHeader>
 
-      <CardContent className="px-0">
-        <div className="flex items-center justify-between bg-primary/5 p-2 rounded-md">
-          <h3 className="text-md font-medium">
-            {activeTreatmentPlan.data?.name || 'Treatment Protocol'}
-          </h3>
-        </div>
+        <CardContent className="px-0">
+          <div className="flex items-center justify-between bg-primary/5 p-2 rounded-md">
+            <h3 className="text-md font-medium">
+              {activeTreatmentPlan.data?.name || 'Treatment Protocol'}
+            </h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-5"
+              onClick={() => handleFinish(activeTreatmentPlan.data?.id)}
+            >
+              Finish Plan
+            </Button>
+          </div>
 
-        <div className="flex flex-col gap-12 w-full mt-4 p-2">
-          {activeTreatmentPlan.data?.treatment?.map((treatment, idx) => (
-            <div key={treatment.id}>
-              <NumberedSteps
-                number={idx + 1}
-                className="w-full flex flex-col gap-4"
-              >
-                {treatment?.treatment_medicines?.map((medicine, i) => (
-                  <div className="flex flex-col" key={i}>
-                    <div className="flex justify-between w-full">
-                      <span className="font-semibold text-sm">
-                        {medicine.medicine?.name}
-                      </span>
-                      <Badge>{medicine.medicine?.atc_code}</Badge>
-                    </div>
-                    <div className="flex gap-6 text-sm text-gray-600">
-                      {treatment.treatment_days ? (
-                        <div className="flex items-center gap-1">
-                          <Calendar size={18} />
-                          {treatment.treatment_days.map(day => (
-                            <div
-                              className="rounded-full w-5 h-5 p-1 flex items-center justify-center bg-primary/10 text-xs"
-                              key={`${medicine.id}-${day}`}
-                            >
-                              {day}
-                            </div>
-                          ))}
-                        </div>
-                      ) : null}
-
-                      {medicine.medicine?.default_time ? (
-                        <div className="flex gap-1">
-                          <Clock size={18} /> {medicine.medicine?.default_time}
-                        </div>
-                      ) : null}
-
-                      {medicine.dose ? (
-                        <div className="flex gap-1">
-                          <TestTubeDiagonal size={18} /> {medicine.dose}
-                        </div>
-                      ) : null}
-                    </div>
-                    {medicine.comment ? (
-                      <div className="border border-gray-200 text-gray-600 rounded-lg p-1 mt-2 text-sm">
-                        {medicine.comment || '-'}
+          <div className="flex flex-col gap-12 w-full mt-4 p-2">
+            {activeTreatmentPlan.data?.treatment?.map((treatment, idx) => (
+              <div key={treatment.id}>
+                <NumberedSteps
+                  number={idx + 1}
+                  className="w-full flex flex-col gap-4"
+                >
+                  {treatment?.treatment_medicines?.map((medicine, i) => (
+                    <div className="flex flex-col" key={i}>
+                      <div className="flex justify-between w-full">
+                        <span className="font-semibold text-sm">
+                          {medicine.medicine?.name}
+                        </span>
+                        <Badge>{medicine.medicine?.atc_code}</Badge>
                       </div>
-                    ) : null}
-                  </div>
-                ))}
-              </NumberedSteps>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+                      <div className="flex gap-6 text-sm text-gray-600">
+                        {treatment.treatment_days ? (
+                          <div className="flex items-center gap-1">
+                            <Calendar size={18} />
+                            {treatment.treatment_days.map(day => (
+                              <div
+                                className="rounded-full w-5 h-5 p-1 flex items-center justify-center bg-primary/10 text-xs"
+                                key={`${medicine.id}-${day}`}
+                              >
+                                {day}
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+
+                        {medicine.medicine?.default_time ? (
+                          <div className="flex gap-1">
+                            <Clock size={18} />{' '}
+                            {medicine.medicine?.default_time}
+                          </div>
+                        ) : null}
+
+                        {medicine.dose ? (
+                          <div className="flex gap-1">
+                            <TestTubeDiagonal size={18} /> {medicine.dose}
+                          </div>
+                        ) : null}
+                      </div>
+                      {medicine.comment ? (
+                        <div className="border border-gray-200 text-gray-600 rounded-lg p-1 mt-2 text-sm">
+                          {medicine.comment || '-'}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </NumberedSteps>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      <HistoryTable treatmentPlans={treatmentPlans} />
+    </>
   );
 };

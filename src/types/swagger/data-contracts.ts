@@ -248,11 +248,18 @@ export type ProtocolResource = Protocol & {
 };
 
 export type RoomResource = Room & {
-  beds?: Bed[];
+  /** @example false */
+  can_be_deleted?: boolean;
+  sector?: SectorResource;
+} & {
+  beds?: (Bed & {
+    /** @example false */
+    can_be_deleted?: boolean;
+  })[];
 };
 
 export interface SectorResource {
-  /** @example "1" */
+  /** @example 1 */
   id?: number;
   /** @example "Oncology" */
   name?: string;
@@ -1977,6 +1984,11 @@ export interface DeleteTreatmentPlanData {
 }
 
 export interface CancelTreatmentPlanData {
+  /** @example true */
+  success?: boolean;
+}
+
+export interface FinishTreatmentPlanData {
   /** @example true */
   success?: boolean;
 }

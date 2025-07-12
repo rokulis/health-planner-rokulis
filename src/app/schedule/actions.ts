@@ -107,3 +107,20 @@ export const rescheduleVisit = async (
 
   return res;
 };
+
+export const finishTreatmentPlan = async (id: number) => {
+  const res = await apiClient<TreatmentPlans.FinishTreatmentPlan.ResponseBody>(
+    `/treatment-plans/${id}/finish`,
+    {
+      method: 'POST',
+    }
+  );
+
+  if (res.success) {
+    revalidateTag('schedule');
+    revalidateTag('treatment-plans');
+    revalidateTag(`treatment-plan-${id}`);
+  }
+
+  return res;
+};

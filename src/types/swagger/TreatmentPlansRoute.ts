@@ -15,6 +15,7 @@ import {
   ConfirmTreatmentPlanData,
   CreateTreatmentPlanData,
   DeleteTreatmentPlanData,
+  FinishTreatmentPlanData,
   GetPatientTreatmentPlansData,
   GetTreatmentPlanData,
   GetTreatmentPlansData,
@@ -188,5 +189,23 @@ export namespace TreatmentPlans {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = CancelTreatmentPlanData;
+  }
+
+  /**
+   * No description
+   * @tags Treatment Plans
+   * @name FinishTreatmentPlan
+   * @request POST:/treatment-plans/{id}/finish
+   * @secure
+   */
+  export namespace FinishTreatmentPlan {
+    export type RequestParams = {
+      /** Treatment Plan ID */
+      id: number;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = FinishTreatmentPlanData;
   }
 }
