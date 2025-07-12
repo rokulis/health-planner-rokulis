@@ -64,14 +64,14 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
   ];
 
   return (
-    <>
-      <h2 className="text-xl font-semibold text-gray-900 mx-4 my-8">History</h2>
+    <div className="my-8">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4 mx-4">History</h2>
       <DataTable
         columns={columns}
         data={
           treatmentPlans.data?.filter(tp => tp.status === 'completed') ?? []
         }
       />
-    </>
+    </div>
   );
 };
