@@ -45,9 +45,20 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
         );
         const uniqueDays = [...new Set(allDays)].sort((a, b) => a - b);
 
-        return uniqueDays && uniqueDays.length > 0
-          ? uniqueDays.join(', ')
-          : '-';
+        return (
+          <div className="flex">
+            {uniqueDays && uniqueDays.length > 0
+              ? uniqueDays.map(d => (
+                <div
+                  key={d}
+                  className="rounded-full w-5 h-5 p-1 flex items-center justify-center bg-primary/10 text-xs"
+                >
+                  {d}
+                </div>
+              ))
+              : '-'}
+          </div>
+        );
       },
     },
   ];
