@@ -69,7 +69,9 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
       <DataTable
         columns={columns}
         data={
-          treatmentPlans.data?.filter(tp => tp.status === 'completed') ?? []
+          treatmentPlans.data?.filter(
+            tp => tp.status !== 'confirmed' && tp.status !== 'draft'
+          ) ?? []
         }
       />
     </div>

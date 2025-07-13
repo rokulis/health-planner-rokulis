@@ -201,7 +201,7 @@ export namespace TreatmentPlans {
   export namespace FinishTreatmentPlan {
     export type RequestParams = {
       /** Treatment Plan ID */
-      id: number;
+      id: any;
     };
     export type RequestQuery = {};
     export type RequestBody = never;

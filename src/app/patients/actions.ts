@@ -105,7 +105,7 @@ export const getPatientTreatmentPlans = async (patientId: string) => {
     `/treatment-plans/patient/${patientId}`,
     {
       next: {
-        tags: [`patient-treatment-plans-${patientId}`],
+        tags: ["patient-treatment-plans", patientId],
         revalidate: 3600,
       },
     }

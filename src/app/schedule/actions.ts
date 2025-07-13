@@ -51,6 +51,7 @@ export const confirmTreatmentPlan = async (id: number) => {
   if (res.success) {
     revalidateTag('schedule');
     revalidateTag('treatment-plans');
+    revalidateTag("patient-treatment-plans");
   }
 
   return res;
@@ -83,6 +84,7 @@ export const changeTreatmentStatus = async (
   if (res.success) {
     revalidateTag(`visit-${visitId}`);
     revalidateTag('schedule');
+    revalidateTag("patient-treatment-plans");
   }
 
   return res;
@@ -103,6 +105,7 @@ export const rescheduleVisit = async (
   if (res.success) {
     revalidateTag('schedule');
     revalidateTag(`visit-${id}`);
+    revalidateTag("patient-treatment-plans");
   }
 
   return res;
@@ -120,6 +123,7 @@ export const finishTreatmentPlan = async (id: number) => {
     revalidateTag('schedule');
     revalidateTag('treatment-plans');
     revalidateTag(`treatment-plan-${id}`);
+    revalidateTag("patient-treatment-plans");
   }
 
   return res;
