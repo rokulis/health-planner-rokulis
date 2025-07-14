@@ -37,7 +37,7 @@ export default function Cycle({ cycle, index }: CycleProps) {
   const [isOpen, setIsOpen] = React.useState<boolean>(true);
 
   return (
-    <Card className="overflow-hidden bg-primary/10 py-2 px-0 border-0 shadow-none rounded-none border-b border-primary/20">
+    <Card className="overflow-hidden bg-primary/10 py-0 px-0 border-0 shadow-none rounded-none border-b border-primary/20">
       <Collapsible open={isOpen} onOpenChange={() => setIsOpen(prev => !prev)}>
         <CollapsibleTrigger
           asChild={true}
@@ -61,11 +61,11 @@ export default function Cycle({ cycle, index }: CycleProps) {
           </CardHeader>
         </CollapsibleTrigger>
 
-        <CollapsibleContent>
+        <CollapsibleContent className="bg-primary/5">
           <CardContent className="bg-white px-0">
             <div className="space-y-2 px-5 bg-primary/5">
               {cycle.visits?.map((visit, idx) => (
-                <div key={visit.id} className="p-2 border-b border-primary/10">
+                <div key={visit.id} className="p-2 border-b border-primary/10 py-2">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
                       <h4 className="font-medium text-black text-sm">

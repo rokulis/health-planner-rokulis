@@ -194,7 +194,7 @@ export const SelectTreatment: React.FC<Props> = ({
           </div>
         )}
 
-        <div className="flex justify-end space-x-4 my-6">
+        <div className="p-2 border border-dashed border-black/10 rounded-md">
           <Button
             type="button"
             variant="ghost"
@@ -210,7 +210,9 @@ export const SelectTreatment: React.FC<Props> = ({
           >
             <Plus /> Add Medicine Group
           </Button>
+        </div>
 
+        <div className="flex justify-end space-x-4 my-6">
           <div className="mt-8 flex justify-end gap-2">
             {typeof onSkip !== 'undefined' ? (
               <Button type="button" variant="ghost" onClick={onSkip}>
