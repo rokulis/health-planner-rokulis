@@ -47,10 +47,11 @@ export const ScheduleTreatment: React.FC<Props> = ({
   const firstTreatmentDuration =
     treatmentPlan?.data?.treatment_cycles?.[0].visits?.[0].duration ?? 1800;
 
-  const selectedDate = React.useMemo(
-    () => format(date?.toString() as string, 'yyyy-MM-dd'),
-    [date]
-  );
+  const selectedDate = React.useMemo(() => {
+    if (!date) return format(new Date().toString(), 'yyyy-MM-dd');
+
+    return format(date?.toString() as string, 'yyyy-MM-dd');
+  }, [date]);
 
   const { data } = useOpenSlotsQuery({
     date: selectedDate,
