@@ -42,11 +42,11 @@ export async function apiClient<TResponse, TRequest extends object = object>(
 
   if (!res.ok) {
     try {
-      const { message, errors } = await res.json();
+      const { message, errors, data } = await res.json();
 
       return {
         ok: res.ok,
-        message: message,
+        message: data?.message ?? message,
         errors: errors,
       } as ApiErrorResponse & TResponse;
     } catch (e) {
