@@ -22,7 +22,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
     React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const [currentStep, setCurrentStep] = React.useState(defaultStep);
   const [patientId, setPatientId] = React.useState<number | undefined>(
-    undefined
+    id ? parseInt(id, 10) : undefined
   );
   const [treatmentPlan, setTreatmentPlan] =
     React.useState<TreatmentPlans.CreateTreatmentPlan.ResponseBody>();
@@ -31,7 +31,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
   const { data: protocols } = useProtocolsQuery();
   const { data: medicines } = useMedicinesQuery();
 
-  const { onClose } = useActionContext();
+  const { onClose, dispatchAction } = useActionContext();
 
   if (id && !patient) {
     return <div>Loading patient data...</div>;
@@ -74,6 +74,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
             setTreatmentPlan(plan);
             setCurrentStep(prev => prev + 1);
           }}
+          onSkip={() => dispatchAction('patient_quick_view', { id: patientId })}
         />
       ),
     },

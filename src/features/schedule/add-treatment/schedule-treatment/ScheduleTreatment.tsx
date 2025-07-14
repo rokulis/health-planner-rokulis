@@ -111,6 +111,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
         selected={date}
         onSelect={setDate}
         className="rounded-md border"
+        weekStartsOn={1}
       />
 
       <Form {...form}>

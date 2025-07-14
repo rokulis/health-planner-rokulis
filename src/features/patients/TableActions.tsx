@@ -59,6 +59,18 @@ export const TableActions: React.FC<Props> = ({ patient }) => {
             e.preventDefault();
             e.stopPropagation();
 
+            dispatchAction('patient_quick_view', {
+              id: patient.id,
+            });
+          }}
+        >
+          Quick view
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+
             dispatchAction('patient_edit', {
               id: patient.id,
             });

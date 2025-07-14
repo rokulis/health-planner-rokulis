@@ -35,6 +35,7 @@ interface Props {
     treatmentPlan: TreatmentPlans.CreateTreatmentPlan.ResponseBody
   ) => void;
   patientId?: number;
+  onSkip?: () => void;
 }
 
 export const SelectTreatment: React.FC<Props> = ({
@@ -42,6 +43,7 @@ export const SelectTreatment: React.FC<Props> = ({
   medicines,
   onStepSubmit,
   patientId,
+  onSkip,
 }) => {
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
@@ -208,7 +210,16 @@ export const SelectTreatment: React.FC<Props> = ({
           >
             <Plus /> Add Medicine Group
           </Button>
-          <Button type="submit">Save Procedure</Button>
+
+          <div className="mt-8 flex justify-end gap-2">
+            {typeof onSkip !== 'undefined' ? (
+              <Button type="button" variant="ghost" onClick={onSkip}>
+                Skip
+              </Button>
+            ) : null}
+
+            <Button type="submit">Save Procedure</Button>
+          </div>
         </div>
       </form>
     </Form>

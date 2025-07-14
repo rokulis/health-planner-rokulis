@@ -52,6 +52,7 @@ export const confirmTreatmentPlan = async (id: number) => {
     revalidateTag('schedule');
     revalidateTag('treatment-plans');
     revalidateTag('patient-treatment-plans');
+    revalidateTag(`treatment-plan-${id}`);
   }
 
   return res;
