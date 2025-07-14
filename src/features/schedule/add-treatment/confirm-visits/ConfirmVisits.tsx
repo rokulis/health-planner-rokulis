@@ -25,7 +25,6 @@ export const ConfirmVisits: React.FC<Props> = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const [isOpen, setIsOpen] = React.useState<number | null>(null);
   const queryClient = useQueryClient();
 
   const onConfirm = async () => {
@@ -53,8 +52,6 @@ export const ConfirmVisits: React.FC<Props> = ({
             key={idx}
             cycle={cycle}
             index={idx}
-            isOpen={isOpen === idx}
-            onToggle={() => setIsOpen(isOpen === idx ? null : idx)}
           />
         ))}
       </div>

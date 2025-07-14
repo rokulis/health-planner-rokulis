@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 import { formatInTimeZone } from 'date-fns-tz';
 import { ChevronDown, ChevronUp, Clock, MapPin, Calendar } from 'lucide-react';
 
@@ -19,8 +21,6 @@ import { TreatmentCycleResource } from '@/types/swagger/data-contracts';
 interface CycleProps {
   cycle: TreatmentCycleResource;
   index: number;
-  isOpen: boolean;
-  onToggle: () => void;
 }
 
 function formatDuration(seconds: number) {
@@ -33,10 +33,12 @@ function formatDuration(seconds: number) {
   return `${minutes}min`;
 }
 
-export default function Cycle({ cycle, isOpen, index, onToggle }: CycleProps) {
+export default function Cycle({ cycle, index }: CycleProps) {
+  const [isOpen, setIsOpen] = React.useState<boolean>(true);
+
   return (
     <Card className="overflow-hidden bg-primary/10 py-2 px-0 border-0 shadow-none rounded-none border-b border-primary/20">
-      <Collapsible open={isOpen} onOpenChange={onToggle}>
+      <Collapsible open={isOpen} onOpenChange={() => setIsOpen(prev => !prev)}>
         <CollapsibleTrigger
           asChild={true}
           className="flex items-center justify-between w-full"
