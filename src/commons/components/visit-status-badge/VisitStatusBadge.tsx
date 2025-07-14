@@ -10,7 +10,7 @@ const STATUS_COLORS: Record<VisitStatusEnum, string> = {
   [VisitStatusEnum.Upcoming]: 'bg-[#190B45] text-white',
   [VisitStatusEnum.Completed]: 'bg-[#22ADD0] text-white',
   [VisitStatusEnum.Draft]: 'bg-gray-100 text-gray-800',
-  [VisitStatusEnum.Stopped]: 'bg-red-100 text-red-800',
+  [VisitStatusEnum.Stopped]: 'bg-danger text-white',
 };
 
 const VISIT_STATUS_LABELS: Record<VisitStatusEnum, string> = {

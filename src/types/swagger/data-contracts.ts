@@ -33,6 +33,17 @@ export enum VisitStatus {
   Draft = "draft",
 }
 
+/**
+ * Possible statuses for a treatment plan
+ * @example "confirmed"
+ */
+export enum TreatmentPlanStatus {
+  Draft = "draft",
+  Confirmed = "confirmed",
+  Stopped = "stopped",
+  Completed = "completed",
+}
+
 /** Possible statuses for a visit */
 export enum VisitStatusEnum {
   Upcoming = "upcoming",
@@ -313,7 +324,8 @@ export interface TreatmentPlanResource {
   /** Number of cycles */
   cycles?: number;
   days_between_cycles?: number;
-  status?: TreatmentPlanResourceStatusEnum;
+  /** Possible statuses for a treatment plan */
+  status?: TreatmentPlanStatus;
   treatment?: TreatmentMedicineGroupResource[];
   diagnosis?: Diagnosis;
   /** @example 1 */
@@ -1197,11 +1209,8 @@ export interface TreatmentPlan {
   days_between_cycles: number;
   /** @example 1 */
   diagnosis_id: number;
-  /**
-   * Current status of the treatment plan
-   * @example "in_progress"
-   */
-  status: TreatmentPlanStatusEnum;
+  /** Possible statuses for a treatment plan */
+  status: TreatmentPlanStatus;
   /**
    * Creation date
    * @format date-time
@@ -1455,11 +1464,6 @@ export enum TreatmentCycleResourceStatusEnum {
   Paused = "paused",
 }
 
-export enum TreatmentPlanResourceStatusEnum {
-  Draft = "draft",
-  Confirmed = "confirmed",
-}
-
 /**
  * Bed category: short_term (1-2h), mid_term (3-4h), long-term (5-7h)
  * @example "short_term"
@@ -1508,17 +1512,6 @@ export enum RoomWorkingDaysEnum {
  * @example "in_progress"
  */
 export enum TreatmentCycleStatusEnum {
-  Completed = "completed",
-  InProgress = "in_progress",
-  Stopped = "stopped",
-  Paused = "paused",
-}
-
-/**
- * Current status of the treatment plan
- * @example "in_progress"
- */
-export enum TreatmentPlanStatusEnum {
   Completed = "completed",
   InProgress = "in_progress",
   Stopped = "stopped",

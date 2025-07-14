@@ -1,11 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-
 import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 
 import { DataTable } from '@/commons/components/data-table/DataTable';
+import { TreatmentPlanStatus } from '@/commons/components/treatment-plan-status/TreatmentPlanStatus';
 import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
@@ -59,6 +57,17 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
               : '-'}
           </div>
         );
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        if (!row.original.status) {
+          return <span className="text-gray-500">-</span>;
+        }
+
+        return <TreatmentPlanStatus status={row.original.status} />;
       },
     },
   ];

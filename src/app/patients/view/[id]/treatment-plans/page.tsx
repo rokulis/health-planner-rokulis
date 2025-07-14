@@ -5,7 +5,7 @@ import { getTreatmentPlan } from '@/app/schedule/actions';
 import { DashboardLayout } from '@/commons/layouts/DashboardLayout';
 import { PatientViewLayout } from '@/features/patients/layouts/PatientViewLayout';
 import { PatientTreatmentPlans } from '@/features/patients/patient-view/PatientTreatmentPlans';
-import { TreatmentPlanResourceStatusEnum } from '@/types/swagger/data-contracts';
+import { TreatmentPlanStatus } from '@/types/swagger/data-contracts';
 import { NextServerComponentProps } from '@/utils/ts-utils';
 
 export default async function Patients(props: NextServerComponentProps) {
@@ -19,7 +19,7 @@ export default async function Patients(props: NextServerComponentProps) {
   const treatmentPlans = await getPatientTreatmentPlans(params.id);
 
   const activeTreatmentPlanId = treatmentPlans.data?.find(
-    p => p.status === TreatmentPlanResourceStatusEnum.Confirmed
+    p => p.status === TreatmentPlanStatus.Confirmed
   )?.id;
   const activeTreatmentPlan = await getTreatmentPlan(activeTreatmentPlanId);
 

@@ -5,6 +5,7 @@ import React from 'react';
 import { Calendar, Clock, TestTubeDiagonal } from 'lucide-react';
 
 import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
+import { TreatmentPlanStatus } from '@/commons/components/treatment-plan-status/TreatmentPlanStatus';
 import { Badge } from '@/commons/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import { HistoryTable } from '@/features/patients/patient-view/treatment-plans/HistoryTable';
@@ -22,22 +23,29 @@ export const PatientTreatmentPlans: React.FC<Props> = ({
   activeTreatmentPlan,
   treatmentPlans,
 }) => {
-
   return (
     <>
       <Card className="border-gray-200 shadow-sm mx-4 my-4 p-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 px-0">
           <h2 className="text-xl font-semibold text-gray-900">
-            Treatment plan
+            Active treatment plan
           </h2>
         </CardHeader>
 
         {!!activeTreatmentPlan.data?.id ? (
           <CardContent className="px-0">
             <div className="flex items-center justify-between bg-primary/5 p-2 rounded-md">
-              <h3 className="text-md font-medium">
-                {activeTreatmentPlan.data?.name || 'Treatment Protocol'}
-              </h3>
+              <div className="flex items-center gap-4">
+                <h3 className="text-md font-medium">
+                  {activeTreatmentPlan.data?.name || 'Treatment Protocol'}
+                </h3>
+                {activeTreatmentPlan.data.status ? (
+                  <TreatmentPlanStatus
+                    status={activeTreatmentPlan.data.status}
+                  />
+                ) : null}
+              </div>
+
               <PlanActions activeTreatmentPlan={activeTreatmentPlan} />
             </div>
 
