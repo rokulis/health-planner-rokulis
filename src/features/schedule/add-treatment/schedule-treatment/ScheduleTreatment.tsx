@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -38,6 +39,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
   buttonText,
 }) => {
   const [isPending, startTransition] = React.useTransition();
+  const queryClient = useQueryClient();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
     undefined
@@ -77,6 +79,9 @@ export const ScheduleTreatment: React.FC<Props> = ({
           start_time: values.start_time,
         }).then(res => {
           if (res.success) {
+            queryClient.invalidateQueries({
+              queryKey: ['schedule'],
+            });
             onStepSubmit(res);
           }
         });
@@ -88,6 +93,9 @@ export const ScheduleTreatment: React.FC<Props> = ({
         start_time: values.start_time,
       }).then(res => {
         if (res.success) {
+          queryClient.invalidateQueries({
+            queryKey: ['schedule'],
+          });
           onStepSubmit(res);
         }
       });

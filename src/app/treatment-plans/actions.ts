@@ -50,5 +50,11 @@ export const planVisits = async ({
     }
   );
 
+  if (res.success) {
+    revalidateTag('schedule');
+    revalidateTag('treatment-plans');
+    revalidateTag("patient-treatment-plans");
+  }
+
   return res;
 };
