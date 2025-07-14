@@ -3,16 +3,12 @@
 import React from 'react';
 
 import { Calendar, Clock, TestTubeDiagonal } from 'lucide-react';
-import { toast } from 'sonner';
 
-import { finishTreatmentPlan } from '@/app/schedule/actions';
-import { useConfirm } from '@/commons/components/confirm/hooks/useConfirm';
-import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
 import { Badge } from '@/commons/components/ui/badge';
-import { Button } from '@/commons/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import { HistoryTable } from '@/features/patients/patient-view/treatment-plans/HistoryTable';
+import { PlanActions } from '@/features/patients/patient-view/treatment-plans/PlanActions';
 import { Patients } from '@/types/swagger/PatientsRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
@@ -26,36 +22,9 @@ export const PatientTreatmentPlans: React.FC<Props> = ({
   activeTreatmentPlan,
   treatmentPlans,
 }) => {
-  const [isPending, startTransition] = React.useTransition();
-  const { showConfirmation } = useConfirm();
-
-  const handleFinish = async (id?: number) => {
-    const confirmed = await showConfirmation({
-      title: 'Finish Treatment Plan',
-      message: `Are you sure you want to finish this treatment plan? This action cannot be undone.`,
-      proceedText: 'Finish',
-      cancelText: 'Cancel',
-    });
-
-    return startTransition(() => {
-      if (!id) {
-        return;
-      }
-      if (confirmed) {
-        return finishTreatmentPlan(id).then(res => {
-          if (res.message) {
-            toast.error(res.message);
-          } else {
-            toast.success('Treatment plan finished successfully');
-          }
-        });
-      }
-    });
-  };
 
   return (
     <>
-      {isPending ? <PageTopLoader /> : null}
       <Card className="border-gray-200 shadow-sm mx-4 my-4 p-4">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 px-0">
           <h2 className="text-xl font-semibold text-gray-900">
@@ -69,14 +38,7 @@ export const PatientTreatmentPlans: React.FC<Props> = ({
               <h3 className="text-md font-medium">
                 {activeTreatmentPlan.data?.name || 'Treatment Protocol'}
               </h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-5"
-                onClick={() => handleFinish(activeTreatmentPlan.data?.id)}
-              >
-                Finish Plan
-              </Button>
+              <PlanActions activeTreatmentPlan={activeTreatmentPlan} />
             </div>
 
             <div className="flex flex-col gap-12 w-full mt-4 p-2">
