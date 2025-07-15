@@ -97,6 +97,7 @@ export function DateNavigator({ className, onDateChange }: DateNavigatorProps) {
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="center">
           <Calendar
+            weekStartsOn={1} // Start week on Monday
             mode="single"
             selected={currentDate}
             onSelect={date => {
