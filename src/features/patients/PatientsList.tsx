@@ -11,7 +11,10 @@ import { DataTable } from '@/commons/components/data-table/DataTable';
 import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
 import { PatientsLayout } from '@/features/patients/layouts/PatientsLayout';
 import { TableActions } from '@/features/patients/TableActions';
-import { PatientResource } from '@/types/swagger/data-contracts';
+import {
+  PatientResource,
+  TreatmentPlanStatus as TreatmentPlanStatusEnum,
+} from '@/types/swagger/data-contracts';
 import { Patients } from '@/types/swagger/PatientsRoute';
 
 interface Props {
@@ -57,12 +60,14 @@ export const PatientsList: React.FC<Props> = () => {
       header: 'Phone number',
     },
     {
-      accessorKey: 'weight',
-      header: 'Weight',
-    },
-    {
-      accessorKey: 'height',
-      header: 'Height',
+      header: 'Active treatment plan',
+      cell: info => {
+        const activePlan = info.row.original.treatment_plans?.find(
+          plan => plan.status === TreatmentPlanStatusEnum.Confirmed
+        );
+
+        return activePlan ? activePlan.name : '-';
+      },
     },
     {
       id: 'actions',

@@ -19,7 +19,6 @@ import { Visits } from '@/types/swagger/VisitsRoute';
 
 interface TreatmentCardProps {
   visit: Visits.GetVisit.ResponseBody;
-  cycleInfo?: string;
   onClose?: () => void;
   onEdit?: () => void;
   onReschedule?: () => void;
@@ -28,7 +27,6 @@ interface TreatmentCardProps {
 
 export default function VisitCard({
   visit,
-  cycleInfo = 'Cycle 1/1',
   onNextProcedure,
   onClose,
 }: TreatmentCardProps) {
@@ -76,10 +74,10 @@ export default function VisitCard({
         <CardHeader className="px-0">
           <div className="flex gap-2 mt-2">
             <Badge variant="secondary" className="bg-gray-100 text-gray-700">
-              {visit.data?.room?.name} {visit.data?.bed?.name}
+              {visit.data?.room?.name} - {visit.data?.bed?.name}
             </Badge>
             <Badge variant="secondary" className="bg-gray-100 text-gray-700">
-              {cycleInfo}
+              {`Cycle ${visit.data?.treatment_cycle?.cycle_number}/${visit.data?.treatment_plan?.cycles}`}
             </Badge>
           </div>
         </CardHeader>

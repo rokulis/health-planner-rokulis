@@ -130,6 +130,7 @@ export const RoomForm: React.FC<Props> = ({
             {fields.length > 0
               ? fields.map((_field, index) => (
                 <RoomBed
+                  room={room}
                   key={index}
                   index={index}
                   form={form}

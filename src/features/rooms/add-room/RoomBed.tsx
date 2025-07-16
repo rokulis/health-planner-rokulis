@@ -19,11 +19,13 @@ import { Label } from '@/commons/components/ui/label';
 import { roomSchema } from '@/features/rooms/add-room/validations';
 import { BedTimeLimit } from '@/features/rooms/utils';
 import { StoreRoomRequestCategoryEnum } from '@/types/swagger/data-contracts';
+import { Rooms } from '@/types/swagger/RoomsRoute';
 
 interface SpotCardProps {
   index: number;
   form: UseFormReturn<z.infer<typeof roomSchema>>;
   onRemove: () => void;
+  room?: Rooms.GetRoom.ResponseBody;
 }
 
 export function RoomBed({ index, form, onRemove }: SpotCardProps) {

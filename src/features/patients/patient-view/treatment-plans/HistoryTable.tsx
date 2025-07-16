@@ -74,15 +74,8 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
 
   return (
     <div className="my-8">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4 mx-4">History</h2>
-      <DataTable
-        columns={columns}
-        data={
-          treatmentPlans.data?.filter(
-            tp => tp.status !== 'confirmed' && tp.status !== 'draft'
-          ) ?? []
-        }
-      />
+      <h2 className="text-xl font-semibold text-gray-900 mb-4 mx-4">Treatment plans</h2>
+      <DataTable columns={columns} data={treatmentPlans.data ?? []} />
     </div>
   );
 };

@@ -72,7 +72,7 @@ export function DateNavigator({ className, onDateChange }: DateNavigatorProps) {
   return (
     <div
       className={cn(
-        'flex items-center justify-between gap-4 rounded-lg px-4 py-3 max-w-sm mx-auto',
+        'flex items-center justify-between gap-4 rounded-lg px-4 py-1.5 lg:py-3 max-w-sm mx-auto',
         className
       )}
     >
@@ -90,7 +90,7 @@ export function DateNavigator({ className, onDateChange }: DateNavigatorProps) {
         <PopoverTrigger asChild={true}>
           <Button
             variant="ghost"
-            className="text-lg font-medium bg-muted-foreground/5 h-auto py-2 px-4"
+            className="text-base lg:text-lg font-medium bg-muted-foreground/5 h-auto py-2 px-4"
           >
             {formatDisplayDate(currentDate)}
           </Button>

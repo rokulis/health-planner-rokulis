@@ -349,6 +349,7 @@ export interface VisitResource {
   end_time?: string;
   duration?: number;
   notes?: string;
+  treatment_cycle?: TreatmentCycleResource;
   treatment_plan?: TreatmentPlanResource;
   patient?: PatientResource;
   /** Room within a clinic sector */
@@ -1859,8 +1860,7 @@ export interface CreateRoomData {
 export interface GetRoomData {
   /** @example true */
   success?: boolean;
-  /** Room within a clinic sector */
-  data?: Room;
+  data?: RoomResource;
 }
 
 export type UpdateRoomPayload = Room & {

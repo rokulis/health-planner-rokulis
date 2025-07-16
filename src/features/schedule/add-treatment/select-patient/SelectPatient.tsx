@@ -19,7 +19,7 @@ interface Props {
 }
 
 const FormSchema = z.object({
-  patientId: z.coerce.number(),
+  patientId: z.coerce.number().positive(),
 });
 
 export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {

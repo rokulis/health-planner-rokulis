@@ -38,7 +38,7 @@ export const Drawer: React.FC<Props> = ({
         }
       }}
     >
-      <DrawerContent className="h-full overflow-y-auto overflow-x-hidden">
+      <DrawerContent className="h-full overflow-y-auto overflow-x-hidden mb-8">
         <DrawerHeader>
           <DrawerTitle className="flex justify-between items-center">
             {title}

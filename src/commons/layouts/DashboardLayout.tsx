@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { getMe } from '@/app/profile/actions';
+import { MobileNavigation } from '@/commons/components/sidebar/MobileNavigation';
 import { Sidebar } from '@/commons/components/sidebar/Sidebar';
 
 interface Props {
@@ -13,7 +14,8 @@ export const DashboardLayout: React.FC<Props> = async ({ children }) => {
   return (
     <>
       <Sidebar me={me} />
-      <main className="ml-[320px]">{children}</main>
+      <MobileNavigation me={me} />
+      <main className="lg:ml-[320px]">{children}</main>
     </>
   );
 };

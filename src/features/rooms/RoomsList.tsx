@@ -29,23 +29,22 @@ export const RoomsList: React.FC<Props> = ({ rooms, sectors, room }) => {
 
   const columns: ColumnDef<RoomResource>[] = [
     {
+      accessorKey: 'sector.name',
+      header: 'Sector',
+    },
+    {
       accessorKey: 'name',
       header: 'Name',
     },
     {
-      accessorKey: 'work_start_time',
-      header: 'Work Start Time',
+      header: 'Working Hours',
       cell: info => {
-        const time = info.row.original.work_start_time;
-        return time ? formatTimeToHHMM(time) : 'Not set';
-      },
-    },
-    {
-      accessorKey: 'work_end_time',
-      header: 'Work End Time',
-      cell: info => {
-        const time = info.row.original.work_end_time;
-        return time ? formatTimeToHHMM(time) : 'Not set';
+        const start = info.row.original.work_start_time;
+        const end = info.row.original.work_end_time;
+        if (start && end) {
+          return `${formatTimeToHHMM(start)} - ${formatTimeToHHMM(end)}`;
+        }
+        return '-';
       },
     },
     {
@@ -60,7 +59,7 @@ export const RoomsList: React.FC<Props> = ({ rooms, sectors, room }) => {
     },
     {
       accessorKey: 'beds',
-      header: 'Beds count',
+      header: 'Total Spots',
       cell: info => {
         const beds = info.row.original.beds || [];
         return beds.length > 0 ? beds.length : 'No beds';

@@ -21,6 +21,23 @@ interface RoomRowProps {
   expandedByDefault?: boolean;
 }
 
+export function timeToMinutes(timeString?: string): number {
+  if (!timeString) return 0;
+  const [hours, minutes] = timeString?.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+
+function isTimeWithinWorkingHours(
+  room: RoomResource,
+  timeSlot: string
+): boolean {
+  const slotMinutes = timeToMinutes(timeSlot);
+  const startMinutes = timeToMinutes(room.work_start_time);
+  const endMinutes = timeToMinutes(room.work_end_time);
+
+  return slotMinutes >= startMinutes && slotMinutes < endMinutes;
+}
+
 export function RoomRow({
   room,
   timeSlots,
@@ -70,6 +87,14 @@ export function RoomRow({
             key={`room-${room.id}-${slot}`}
             className={cx({
               'bg-primary/5 border-primary/20': isCurrentHour(slot),
+              'bg-danger/10 cursor-not-allowed': !isTimeWithinWorkingHours(
+                room,
+                slot
+              ),
+              'cursor-pointer hover:bg-gray-50': isTimeWithinWorkingHours(
+                room,
+                slot
+              ),
             })}
             style={{
               borderRight:
@@ -80,7 +105,7 @@ export function RoomRow({
               padding: 0,
             }}
           >
-            <div className="h-12 relative cursor-pointer hover:bg-gray-50" />
+            <div className="h-12 relative" />
           </TableCell>
         ))}
       </TableRow>
@@ -111,6 +136,14 @@ export function RoomRow({
                 key={`bed-${bed.id}-${slot}`}
                 className={cx({
                   'bg-primary/5 border-primary/20': isCurrentHour(slot),
+                  'bg-danger/10 cursor-not-allowed': !isTimeWithinWorkingHours(
+                    room,
+                    slot
+                  ),
+                  'cursor-pointer hover:bg-gray-50': isTimeWithinWorkingHours(
+                    room,
+                    slot
+                  ),
                 })}
                 style={{
                   position: 'relative',
@@ -122,7 +155,7 @@ export function RoomRow({
                   padding: 0,
                 }}
               >
-                <div className="h-12 cursor-pointer hover:bg-gray-50">
+                <div className="h-12">
                   {renderAppointment(room.id ?? 1, bed.id ?? 1, slot)}
                 </div>
               </TableCell>

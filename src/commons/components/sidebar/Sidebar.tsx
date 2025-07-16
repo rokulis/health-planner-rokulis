@@ -26,29 +26,34 @@ import { Me } from '@/types/swagger/MeRoute';
 
 import { Button } from '../ui/button';
 
-const SIDEBAR_LINKS = [
+export const SIDEBAR_LINKS = [
   {
     name: 'Schedule',
+    shortName: 'Schedule',
     url: '/schedule',
     icon: <Hospital />,
   },
   {
     name: 'Patients',
+    shortName: 'Patients',
     url: '/patients',
     icon: <Patient />,
   },
   {
     name: 'Protocols',
+    shortName: 'Protocols',
     url: '/protocols',
     icon: <Protocols />,
   },
   {
     name: 'Medicine',
+    shortName: 'Medicine',
     url: '/medicine',
     icon: <Medicine />,
   },
   {
     name: 'Rooms and Beds',
+    shortName: 'Rooms',
     url: '/rooms',
     icon: <Rooms />,
   },
@@ -62,7 +67,7 @@ export const Sidebar: React.FC<Props> = ({ me }) => {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed top-0 left-0 bottom-0 w-[320px] h-screen border-r p-4 border-gray">
+    <aside className="hidden lg:block fixed top-0 left-0 bottom-0 w-[320px] h-screen border-r p-4 border-gray">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 justify-between items-center">
           <Image

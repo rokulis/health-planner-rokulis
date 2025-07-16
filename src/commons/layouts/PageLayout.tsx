@@ -17,10 +17,10 @@ export const PageLayout: React.FC<Props> = ({
   searchEnabled = false,
 }) => {
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center justify-between p-6">
-        <h1 className="text-2xl font-bold font-light">{title}</h1>
-        <div className="flex gap-8">
+    <div className="flex flex-col pb-20 lg:pb-0">
+      <div className="flex items-center justify-between p-3 lg:p-6">
+        <h1 className="text-lg lg:text-2xl font-bold font-light">{title}</h1>
+        <div className="flex gap-4 lg:gap-8 items-center justify-end">
           {searchEnabled ? <SearchInput /> : null}
           {actions}
         </div>

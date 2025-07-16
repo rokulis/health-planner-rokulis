@@ -25,7 +25,8 @@ import {
 } from '@/types/swagger/data-contracts';
 
 // Fixed cell width for time slots
-const TIME_CELL_WIDTH = 80;
+const TIME_CELL_WIDTH = 60;
+const TIME_INTERVAL = 15; // minutes
 
 interface Props {
   rooms?: Array<RoomResource>;
@@ -57,13 +58,38 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     return () => clearInterval(interval);
   }, []);
 
-  // Generate time slots from 9:00 to 17:30 in 30-minute intervals
   const generateTimeSlots = () => {
+    let minHour = 8;
+    let maxHour = 17;
+
+    rooms?.forEach(room => {
+      if (room.work_start_time) {
+        const startHour = parseInt(room.work_start_time.split(':')[0], 10);
+        if (startHour < minHour) {
+          minHour = startHour;
+        }
+      }
+      if (room.work_end_time) {
+        const timeParts = room.work_end_time.split(':');
+        const endHour = parseInt(room.work_end_time.split(':')[0], 10);
+        if (endHour > maxHour) {
+          if (timeParts[1] === '00') {
+            maxHour = endHour;
+          } else {
+            maxHour = endHour + 1;
+          }
+        }
+      }
+    });
+
     const slots = [];
-    for (let hour = 8; hour <= 17; hour++) {
+    for (let hour = minHour; hour <= maxHour; hour++) {
       slots.push(`${hour.toString().padStart(2, '0')}:00`);
-      if (hour < 17) {
+
+      if (hour < maxHour) {
+        slots.push(`${hour.toString().padStart(2, '0')}:15`);
         slots.push(`${hour.toString().padStart(2, '0')}:30`);
+        slots.push(`${hour.toString().padStart(2, '0')}:45`);
       }
     }
     return slots;
@@ -76,18 +102,25 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     const now = currentTime;
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
-
     const [slotHour, slotMinute] = timeSlot.split(':').map(Number);
 
     // Check if the slot matches the current hour
     if (slotHour === currentHour) {
-      // For XX:00 slots, it's current if minutes are 0-29
+      // For XX:00 slots, it's current if minutes are 0-14
       if (slotMinute === 0) {
-        return currentMinute < 30;
+        return currentMinute >= 0 && currentMinute < 15;
       }
-      // For XX:30 slots, it's current if minutes are 30-59
+      // For XX:15 slots, it's current if minutes are 15-29
+      else if (slotMinute === 15) {
+        return currentMinute >= 15 && currentMinute < 30;
+      }
+      // For XX:30 slots, it's current if minutes are 30-44
       else if (slotMinute === 30) {
-        return currentMinute >= 30;
+        return currentMinute >= 30 && currentMinute < 45;
+      }
+      // For XX:45 slots, it's current if minutes are 45-59
+      else if (slotMinute === 45) {
+        return currentMinute >= 45 && currentMinute < 60;
       }
     }
 
@@ -132,7 +165,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     appointment: Appointment
   ) => {
     const slotStartMinutes = timeToMinutes(timeSlot);
-    const slotEndMinutes = slotStartMinutes + 30;
+    const slotEndMinutes = slotStartMinutes + TIME_INTERVAL;
     const apptStartMinutes = timeToMinutes(appointment.start_time);
 
     return (
@@ -145,7 +178,8 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     const startIndex = timeSlots.findIndex(
       slot =>
         timeToMinutes(slot) <= timeToMinutes(appointment.start_time) &&
-        timeToMinutes(appointment.start_time) < timeToMinutes(slot) + 30
+        timeToMinutes(appointment.start_time) <
+          timeToMinutes(slot) + TIME_INTERVAL
     );
     let endIndex = timeSlots.findIndex(
       slot => timeToMinutes(slot) >= timeToMinutes(appointment.end_time)
@@ -170,7 +204,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
 
     if (appointmentForSlot) {
       const span = calculateAppointmentWidth(appointmentForSlot);
-      const width = span * TIME_CELL_WIDTH - 10;
+      const width = span * TIME_CELL_WIDTH - 2;
 
       return (
         <button
@@ -206,7 +240,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       const apptStartMinutes = timeToMinutes(appt.start_time);
       const apptEndMinutes = timeToMinutes(appt.end_time);
       const slotStartMinutes = timeToMinutes(timeSlot);
-      const slotEndMinutes = slotStartMinutes + 30;
+      const slotEndMinutes = slotStartMinutes + TIME_INTERVAL;
 
       // Check if this slot is within the appointment time range but not the starting slot
       return (
@@ -241,9 +275,9 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                 <TableRow className="bg-white">
                   <TableHead
                     style={{
-                      width: 300,
-                      minWidth: 300,
-                      maxWidth: 300,
+                      width: 220,
+                      minWidth: 220,
+                      maxWidth: 220,
                       position: 'sticky',
                       left: 0,
                       zIndex: 50,
@@ -276,7 +310,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                       }}
                       className="h-[40px] text-center font-normal"
                     >
-                      <div className="h-[40px] flex items-center justify-center text-sm font-normal">
+                      <div className="h-[40px] flex items-center justify-center text-xs font-normal">
                         {slot}
                       </div>
                     </TableHead>
