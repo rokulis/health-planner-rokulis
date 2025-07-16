@@ -27,7 +27,7 @@ export const VisitForm: React.FC<Props> = ({ id }) => {
   }, [visit]);
 
   if (!visit) {
-    return <div>No visit data available</div>;
+    return null;
   }
 
   return (
