@@ -23,7 +23,7 @@ const ACTIONS = {
     </Drawer>
   ),
   view_patient_treatment_plan: (params?: Record<string, any>) => (
-    <Drawer title="Patient" isOpen={true}>
+    <Drawer title="Patient treatment plan" isOpen={true}>
       <ViewPatientTreatmentPlan id={params?.id} />
     </Drawer>
   ),

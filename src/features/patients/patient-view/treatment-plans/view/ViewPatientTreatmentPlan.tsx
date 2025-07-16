@@ -22,7 +22,7 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
           <div>Treatment plan information</div>
         </div>
         <div className="space-y-4 p-0 p-4 bg-primary/5 rounded-bl-lg rounded-br-lg text-sm">
-          <div className="grid grid-cols-[140px_1fr] gap-4">
+          <div className="grid grid-cols-[150px_1fr] gap-4">
             <div className="text-gray-600">Protocol name:</div>
             <div className="font-medium">{plan?.data?.name}</div>
 
@@ -39,6 +39,11 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
                 </div>
               </>
             ) : null}
+
+            <div className="text-gray-600">Days between cycles:</div>
+            <div className="font-medium">
+              {plan?.data?.days_between_cycles ?? '-'}
+            </div>
           </div>
         </div>
       </div>
