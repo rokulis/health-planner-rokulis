@@ -115,9 +115,14 @@ export const VisitPreview: React.FC<Props> = ({ visit }) => {
                       Visit {index + 1}:
                     </span>
                     <span className="font-mono">{cycleVisit.date_time}</span>
-                    <span className="text-gray-600">
-                      {cycleVisit.bed?.name}
-                    </span>
+                    {cycleVisit.bed?.name ? (
+                      <span className="text-gray-600">
+                        {cycleVisit.bed?.name}
+                      </span>
+                    ) : (
+                      <span className="text-danger">No Spot</span>
+                    )}
+
                     <span className="text-gray-600">
                       {cycleVisit.duration}min
                     </span>
