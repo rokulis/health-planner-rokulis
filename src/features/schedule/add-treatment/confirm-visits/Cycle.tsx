@@ -91,7 +91,7 @@ export default function Cycle({ cycle, index }: CycleProps) {
 
                         <div className="flex items-center gap-1">
                           <MapPin size={20} className="h-4 w-4" />
-                          {visit.bed?.name}
+                          {visit.bed?.name ?? <span className="text-danger">No Spot</span>}
                         </div>
                       </div>
                     </div>
