@@ -2,9 +2,10 @@ import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 
+import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DataTable } from '@/commons/components/data-table/DataTable';
 import { TreatmentPlanStatus } from '@/commons/components/treatment-plan-status/TreatmentPlanStatus';
-import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
+import { TreatmentPlanResource, TreatmentPlanStatus as TreatmentPlanStatusEnum } from '@/types/swagger/data-contracts';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
+  const { dispatchAction } = useActionContext();
+
   const columns: ColumnDef<TreatmentPlanResource>[] = [
     {
       accessorKey: 'name',
@@ -74,8 +77,16 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
 
   return (
     <div className="my-8">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4 mx-4">Treatment plans</h2>
-      <DataTable columns={columns} data={treatmentPlans.data ?? []} />
+      <h2 className="text-xl font-semibold text-gray-900 mb-4 mx-4">
+        Treatment plans
+      </h2>
+      <DataTable
+        columns={columns}
+        data={treatmentPlans.data?.filter(p => p.status !== TreatmentPlanStatusEnum.Draft) ?? []}
+        onRowClick={row =>
+          dispatchAction('view_patient_treatment_plan', { id: row.original.id })
+        }
+      />
     </div>
   );
 };

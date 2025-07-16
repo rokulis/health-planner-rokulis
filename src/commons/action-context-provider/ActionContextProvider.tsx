@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Drawer } from '@/commons/components/drawer/Drawer';
 import { PatientEntity } from '@/features/patients/patient-form/PatientEntity';
+import { ViewPatientTreatmentPlan } from '@/features/patients/patient-view/treatment-plans/view/ViewPatientTreatmentPlan';
 import { PatientQuickView } from '@/features/patients/quick-view/PatientQuickView';
 import { ProtocolEntity } from '@/features/protocols/add-protocol/ProtocolEntity';
 import { ProtocolView } from '@/features/protocols/view/ProtocolView';
@@ -19,6 +20,11 @@ const ACTIONS = {
   patient_new: (
     <Drawer title="Patient Form" isOpen={true}>
       <PatientEntity />
+    </Drawer>
+  ),
+  view_patient_treatment_plan: (params?: Record<string, any>) => (
+    <Drawer title="Patient" isOpen={true}>
+      <ViewPatientTreatmentPlan id={params?.id} />
     </Drawer>
   ),
   patient_quick_view: (params?: Record<string, any>) => (

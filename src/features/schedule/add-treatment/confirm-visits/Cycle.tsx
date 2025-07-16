@@ -16,10 +16,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/commons/components/ui/collapsible';
+import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
 import { TreatmentCycleResource } from '@/types/swagger/data-contracts';
 
 interface CycleProps {
   cycle: TreatmentCycleResource;
+  showFUllDetails?: boolean;
   index: number;
 }
 
@@ -33,7 +35,7 @@ function formatDuration(seconds: number) {
   return `${minutes}min`;
 }
 
-export default function Cycle({ cycle, index }: CycleProps) {
+export default function Cycle({ cycle, index, showFUllDetails }: CycleProps) {
   const [isOpen, setIsOpen] = React.useState<boolean>(true);
 
   return (
@@ -65,12 +67,21 @@ export default function Cycle({ cycle, index }: CycleProps) {
           <CardContent className="bg-white px-0">
             <div className="space-y-2 px-5 bg-primary/5">
               {cycle.visits?.map((visit, idx) => (
-                <div key={visit.id} className="p-2 border-b border-primary/10 py-2">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <h4 className="font-medium text-black text-sm">
-                        Visit {idx + 1}
-                      </h4>
+                <div
+                  key={visit.id}
+                  className="p-2 border-b border-primary/10 py-2"
+                >
+                  <div className="flex items-start w-full justify-between">
+                    <div className="space-y-1 w-full">
+                      <div className="flex justify-between w-full items-center">
+                        <h4 className="font-medium text-black text-sm">
+                          Visit {idx + 1}{' '}
+                        </h4>
+                        {showFUllDetails && visit.status ? (
+                          <VisitStatusBadge status={visit.status} />
+                        ) : null}
+                      </div>
+
                       <div className="flex items-center gap-4 text-xs text-gray-600">
                         {visit.date_time ? (
                           <div className="flex items-center gap-1">
@@ -91,7 +102,11 @@ export default function Cycle({ cycle, index }: CycleProps) {
 
                         <div className="flex items-center gap-1">
                           <MapPin size={20} className="h-4 w-4" />
-                          {visit.bed?.name ?? <span className="text-danger">No Spot</span>}
+                          {visit.bed?.name ? (
+                            visit.bed.name
+                          ) : (
+                            <span className="text-danger">No Spot</span>
+                          )}
                         </div>
                       </div>
                     </div>
