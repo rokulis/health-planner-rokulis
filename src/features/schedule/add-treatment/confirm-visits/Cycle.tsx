@@ -16,15 +16,24 @@ import {
   CollapsibleTrigger,
 } from '@/commons/components/ui/collapsible';
 import { Visit } from '@/features/schedule/add-treatment/confirm-visits/Visit';
-import { TreatmentCycleResource } from '@/types/swagger/data-contracts';
+import {
+  TreatmentCycleResource,
+  TreatmentPlanResource,
+} from '@/types/swagger/data-contracts';
 
 interface CycleProps {
   cycle: TreatmentCycleResource;
   showFUllDetails?: boolean;
+  onReschedule?: (data: TreatmentPlanResource) => void;
   index: number;
 }
 
-export default function Cycle({ cycle, index, showFUllDetails }: CycleProps) {
+export default function Cycle({
+  cycle,
+  index,
+  showFUllDetails,
+  onReschedule,
+}: CycleProps) {
   const [isOpen, setIsOpen] = React.useState<boolean>(true);
 
   return (
@@ -64,6 +73,7 @@ export default function Cycle({ cycle, index, showFUllDetails }: CycleProps) {
                     visit={visit}
                     no={idx + 1}
                     showFUllDetails={showFUllDetails}
+                    onReschedule={onReschedule}
                   />
                 </div>
               ))}

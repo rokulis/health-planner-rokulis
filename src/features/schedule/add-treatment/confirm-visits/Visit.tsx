@@ -5,11 +5,15 @@ import { Calendar, Clock, MapPin, Pencil } from 'lucide-react';
 
 import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
 import { VisitReschedule } from '@/features/schedule/add-treatment/confirm-visits/VisitReschedule';
-import { VisitResource } from '@/types/swagger/data-contracts';
+import {
+  TreatmentPlanResource,
+  VisitResource,
+} from '@/types/swagger/data-contracts';
 
 interface Props {
   visit: VisitResource;
   showFUllDetails?: boolean;
+  onReschedule?: (data: TreatmentPlanResource) => void;
   no: number;
 }
 
@@ -23,7 +27,12 @@ function formatDuration(seconds: number) {
   return `${minutes}min`;
 }
 
-export const Visit: React.FC<Props> = ({ showFUllDetails, visit, no }) => {
+export const Visit: React.FC<Props> = ({
+  showFUllDetails,
+  visit,
+  no,
+  onReschedule,
+}) => {
   const [editMode, setEditMode] = React.useState<boolean>(false);
 
   if (!visit) {
@@ -40,7 +49,10 @@ export const Visit: React.FC<Props> = ({ showFUllDetails, visit, no }) => {
             </div>
             <VisitReschedule
               visit={visit}
-              onFinish={() => setEditMode(false)}
+              onFinish={data => {
+                onReschedule?.(data);
+                setEditMode(false);
+              }}
               onCancel={() => setEditMode(false)}
             />
           </div>
@@ -61,7 +73,7 @@ export const Visit: React.FC<Props> = ({ showFUllDetails, visit, no }) => {
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-4 text-xs text-gray-600">
+              <div className="flex items-center flex-wrap space-x-4 space-y-2 text-xs text-gray-600">
                 {visit.date_time ? (
                   <div className="flex items-center gap-1">
                     <Calendar size={20} className="h-4 w-4" />

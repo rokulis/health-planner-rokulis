@@ -14,11 +14,14 @@ import { Form, FormLabel } from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
-import { VisitResource } from '@/types/swagger/data-contracts';
+import {
+  TreatmentPlanResource,
+  VisitResource,
+} from '@/types/swagger/data-contracts';
 
 interface Props {
   visit: VisitResource;
-  onFinish?: () => void;
+  onFinish?: (data: TreatmentPlanResource) => void;
   onCancel?: () => void;
 }
 
@@ -32,6 +35,7 @@ export const VisitReschedule: React.FC<Props> = ({
   onFinish,
   onCancel,
 }) => {
+  console.log(visit);
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
   const [date, setDate] = React.useState<Date | undefined>(
@@ -75,8 +79,12 @@ export const VisitReschedule: React.FC<Props> = ({
           start_time: values.start_time,
           recursive: false,
         }).then(res => {
+          console.log(res);
           if (res.success) {
-            onFinish?.();
+            if (res.data) {
+              onFinish?.(res.data);
+            }
+
             queryClient.invalidateQueries({
               queryKey: ['schedule'],
             });

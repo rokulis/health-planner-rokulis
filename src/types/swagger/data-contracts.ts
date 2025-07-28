@@ -2030,6 +2030,7 @@ export interface RescheduleVisitPayload {
 export interface RescheduleVisitData {
   /** @example true */
   success?: boolean;
+  data?: TreatmentPlanResource;
 }
 
 export interface GetWorkspaceData {

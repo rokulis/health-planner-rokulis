@@ -23,6 +23,7 @@ export const ConfirmVisits: React.FC<Props> = ({
   onBack,
   treatmentPlanId,
 }) => {
+  const [visitsData, setVisitsData] = React.useState(visits?.data);
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -44,16 +45,29 @@ export const ConfirmVisits: React.FC<Props> = ({
     });
   };
 
+  const activeCycle = visitsData?.treatment_cycles?.filter(
+    cycle => cycle.visits && cycle.visits.length > 0
+  );
+  const totalCycles = visitsData?.treatment_cycles?.length || 0;
+
   return (
     <div className="flex flex-col h-full justify-between py-6">
       <div className="flex flex-col h-full rounded-md">
-        {visits?.data?.treatment_cycles?.map((cycle, idx) => (
+        {activeCycle?.map((cycle, idx) => (
           <Cycle
             key={idx}
             cycle={cycle}
             index={idx}
+            onReschedule={data => setVisitsData(data)}
           />
         ))}
+        {totalCycles > 0 ? (
+          <div className="text-sm text-gray-600 mt-4 px-2 border border-gray-200 rounded-md p-2">
+            Total Cycles: <b>{totalCycles}</b>
+            <br />
+            Next cycle will be planned after first one is completed.
+          </div>
+        ) : null}
       </div>
       <div className="col-span-6 mt-12 flex justify-between">
         {onBack ? (
