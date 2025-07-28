@@ -47,7 +47,7 @@ export default function Cycle({
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3 bg-white rounded-lg px-1.5 py-1 text-sm">
                 <CardTitle className="text-md font-semibold text-primary">
-                  Cycle {index + 1}
+                  Cycle {index}
                 </CardTitle>
               </div>
               <div className="flex items-center gap-2">

@@ -10,6 +10,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { confirmTreatmentPlan } from '@/app/schedule/actions';
 import { Button } from '@/commons/components/ui/button';
 import Cycle from '@/features/schedule/add-treatment/confirm-visits/Cycle';
+import { TreatmentCycleResourceStatusEnum } from '@/types/swagger/data-contracts';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
@@ -45,22 +46,31 @@ export const ConfirmVisits: React.FC<Props> = ({
     });
   };
 
-  const activeCycle = visitsData?.treatment_cycles?.filter(
-    cycle => cycle.visits && cycle.visits.length > 0
-  );
+  const activeCycle = React.useMemo(() => {
+    const cycleInProgress = visitsData?.treatment_cycles?.find(
+      cycle =>
+        cycle.visits &&
+        cycle.visits.length > 0 &&
+        cycle.status === TreatmentCycleResourceStatusEnum.InProgress
+    );
+    if (!cycleInProgress) {
+      return visitsData?.treatment_cycles?.[0];
+    }
+
+    return cycleInProgress;
+  }, [visitsData]);
   const totalCycles = visitsData?.treatment_cycles?.length || 0;
 
   return (
     <div className="flex flex-col h-full justify-between py-6">
       <div className="flex flex-col h-full rounded-md">
-        {activeCycle?.map((cycle, idx) => (
+        {activeCycle ? (
           <Cycle
-            key={idx}
-            cycle={cycle}
-            index={idx}
+            cycle={activeCycle}
+            index={activeCycle.cycle_number ?? 1}
             onReschedule={data => setVisitsData(data)}
           />
-        ))}
+        ) : null}
         {totalCycles > 0 ? (
           <div className="text-sm text-gray-600 mt-4 px-2 border border-gray-200 rounded-md p-2">
             Total Cycles: <b>{totalCycles}</b>
