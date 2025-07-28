@@ -54,7 +54,7 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
         </div>
         <div className="flex flex-col h-full rounded-md">
           {plan?.data?.treatment_cycles?.map((cycle, idx) => (
-            <Cycle key={idx} cycle={cycle} index={idx} showFUllDetails={true} />
+            <Cycle key={idx} cycle={cycle} index={idx + 1} showFUllDetails={true} />
           ))}
         </div>
       </div>
