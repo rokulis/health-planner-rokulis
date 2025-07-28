@@ -78,6 +78,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
         return rescheduleVisit(visitId, {
           start_date: selectedDate,
           start_time: values.start_time,
+          recursive: true,
         }).then(res => {
           if (res.success) {
             queryClient.invalidateQueries({
