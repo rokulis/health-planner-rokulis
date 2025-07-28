@@ -48,9 +48,17 @@ export const Visit: React.FC<Props> = ({ showFUllDetails, visit, no }) => {
           <>
             <div className="flex justify-between w-full items-center">
               <h4 className="font-medium text-black text-sm">Visit {no} </h4>
-              {showFUllDetails && visit.status ? (
-                <VisitStatusBadge status={visit.status} />
-              ) : null}
+              <div className="flex gap-2 items-center">
+                {showFUllDetails && visit.status ? (
+                  <VisitStatusBadge status={visit.status} />
+                ) : null}
+                <button
+                  className="cursor-pointer"
+                  onClick={() => setEditMode(prev => !prev)}
+                >
+                  <Pencil size={16} />
+                </button>
+              </div>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-4 text-xs text-gray-600">
@@ -80,12 +88,6 @@ export const Visit: React.FC<Props> = ({ showFUllDetails, visit, no }) => {
                   )}
                 </div>
               </div>
-              <button
-                className="cursor-pointer"
-                onClick={() => setEditMode(prev => !prev)}
-              >
-                <Pencil size={16} />
-              </button>
             </div>
           </>
         )}
