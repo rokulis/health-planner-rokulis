@@ -35,7 +35,6 @@ export const VisitReschedule: React.FC<Props> = ({
   onFinish,
   onCancel,
 }) => {
-  console.log(visit);
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
   const [date, setDate] = React.useState<Date | undefined>(
@@ -79,7 +78,6 @@ export const VisitReschedule: React.FC<Props> = ({
           start_time: values.start_time,
           recursive: false,
         }).then(res => {
-          console.log(res);
           if (res.success) {
             if (res.data) {
               onFinish?.(res.data);
