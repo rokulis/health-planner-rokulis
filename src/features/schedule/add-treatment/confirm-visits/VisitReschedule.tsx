@@ -34,15 +34,23 @@ export const VisitReschedule: React.FC<Props> = ({
 }) => {
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = React.useState<Date | undefined>(
+    visit.date_time ? new Date(visit.date_time) : new Date()
+  );
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
     undefined
   );
   const selectedDate = React.useMemo(() => {
-    if (!date) return format(new Date().toString(), 'yyyy-MM-dd');
+    if (!date)
+      return format(
+        visit.date_time
+          ? new Date(visit.date_time).toString()
+          : new Date().toString(),
+        'yyyy-MM-dd'
+      );
 
     return format(date?.toString() as string, 'yyyy-MM-dd');
-  }, [date]);
+  }, [date, visit.date_time]);
 
   const { data } = useOpenSlotsQuery({
     date: selectedDate,

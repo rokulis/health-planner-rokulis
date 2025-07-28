@@ -26,6 +26,10 @@ function formatDuration(seconds: number) {
 export const Visit: React.FC<Props> = ({ showFUllDetails, visit, no }) => {
   const [editMode, setEditMode] = React.useState<boolean>(false);
 
+  if (!visit) {
+    return null;
+  }
+
   return (
     <div className="flex items-start w-full justify-between">
       <div className="space-y-1 w-full">
