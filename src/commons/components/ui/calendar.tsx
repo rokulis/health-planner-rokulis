@@ -1,23 +1,32 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { DayPicker } from 'react-day-picker';
 
-import { buttonVariants } from "@/commons/components/ui/button"
-import { cn } from "@/lib/utils"
+import { buttonVariants } from '@/commons/components/ui/button';
+import { cn } from '@/lib/utils';
+
+interface Props {
+  size?: 'default' | 'sm';
+}
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: React.ComponentProps<typeof DayPicker> & Props) {
+  const { size = 'default' } = props;
+  const isSmall = size === 'sm';
+  const cellSize = isSmall ? 'w-[52px] h-[52px]' : 'w-[62px] h-[62px]';
+  const cellPadding = isSmall ? 'p-0' : 'p-0';
+
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 !border-0 bg-white rounded-xl", className)}
+      className={cn('p-3 !border-0 bg-white rounded-xl', className)}
       classNames={{
         months: 'flex flex-col justify-center',
         month: 'space-y-4',
@@ -33,14 +42,18 @@ function Calendar({
         nav_button_next: 'right-1',
         table: 'w-full border-collapse space-y-0',
         head_row: 'flex',
-        head_cell:
+        head_cell: cn(
           'text-muted-foreground rounded-full w-[62px] font-normal text-xl',
+          cellSize
+        ),
         row: 'flex w-full',
         cell: cn(
           'relative w-[62px] p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-white/5 [&:has([aria-selected].day-outside)]:bg-white/5 [&:has([aria-selected].day-range-end)]:rounded-r-full',
           props.mode === 'range'
             ? '[&:has(>.day-range-end)]:rounded-r-full [&:has(>.day-range-start)]:rounded-l-full first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full'
-            : '[&:has([aria-selected])]:rounded-full'
+            : '[&:has([aria-selected])]:rounded-full',
+          cellSize,
+          cellPadding
         ),
         day: cn(
           buttonVariants({ variant: 'ghost' }),
@@ -82,7 +95,7 @@ function Calendar({
       }}
       {...props}
     />
-  )
+  );
 }
 
-export { Calendar }
+export { Calendar };

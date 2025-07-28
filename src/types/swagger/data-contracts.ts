@@ -1922,6 +1922,12 @@ export interface GetSectorsData {
   data?: SectorResource[];
 }
 
+export interface StartCycleData {
+  /** @example true */
+  success?: boolean;
+  data?: TreatmentCycleResource;
+}
+
 export interface GetTreatmentPlansData {
   /** @example true */
   success?: boolean;
@@ -2017,6 +2023,8 @@ export interface RescheduleVisitPayload {
   start_date?: string;
   /** @example "11:00" */
   start_time?: string;
+  /** @example "false" */
+  recursive?: boolean;
 }
 
 export interface RescheduleVisitData {

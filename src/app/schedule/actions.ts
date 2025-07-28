@@ -95,13 +95,13 @@ export const rescheduleVisit = async (
   id: string,
   data: Visits.RescheduleVisit.RequestBody
 ) => {
-  const res = await apiClient<Visits.RescheduleVisit.ResponseBody>(
-    `/visits/${id}/reschedule`,
-    {
-      method: 'POST',
-      body: data,
-    }
-  );
+  const res = await apiClient<
+    Visits.RescheduleVisit.ResponseBody,
+    Visits.RescheduleVisit.RequestBody
+  >(`/visits/${id}/reschedule`, {
+    method: 'POST',
+    body: data,
+  });
 
   if (res.success) {
     revalidateTag('schedule');

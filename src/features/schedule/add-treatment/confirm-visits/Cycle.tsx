@@ -2,8 +2,7 @@
 
 import React from 'react';
 
-import { formatInTimeZone } from 'date-fns-tz';
-import { ChevronDown, ChevronUp, Clock, MapPin, Calendar } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import {
   Card,
@@ -16,23 +15,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/commons/components/ui/collapsible';
-import { VisitStatusBadge } from '@/commons/components/visit-status-badge/VisitStatusBadge';
+import { Visit } from '@/features/schedule/add-treatment/confirm-visits/Visit';
 import { TreatmentCycleResource } from '@/types/swagger/data-contracts';
 
 interface CycleProps {
   cycle: TreatmentCycleResource;
   showFUllDetails?: boolean;
   index: number;
-}
-
-function formatDuration(seconds: number) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-
-  if (hours > 0) {
-    return `${hours}h ${minutes > 0 ? `${minutes}min` : ''}`;
-  }
-  return `${minutes}min`;
 }
 
 export default function Cycle({ cycle, index, showFUllDetails }: CycleProps) {
@@ -47,7 +36,7 @@ export default function Cycle({ cycle, index, showFUllDetails }: CycleProps) {
         >
           <CardHeader className="cursor-pointer transition-colors py-1">
             <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-3 bg-white px-1.5 py-1 text-sm">
+              <div className="flex items-center gap-3 bg-white rounded-lg px-1.5 py-1 text-sm">
                 <CardTitle className="text-md font-semibold text-primary">
                   Cycle {index + 1}
                 </CardTitle>
@@ -71,46 +60,11 @@ export default function Cycle({ cycle, index, showFUllDetails }: CycleProps) {
                   key={visit.id}
                   className="p-2 border-b border-primary/10 py-2"
                 >
-                  <div className="flex items-start w-full justify-between">
-                    <div className="space-y-1 w-full">
-                      <div className="flex justify-between w-full items-center">
-                        <h4 className="font-medium text-black text-sm">
-                          Visit {idx + 1}{' '}
-                        </h4>
-                        {showFUllDetails && visit.status ? (
-                          <VisitStatusBadge status={visit.status} />
-                        ) : null}
-                      </div>
-
-                      <div className="flex items-center gap-4 text-xs text-gray-600">
-                        {visit.date_time ? (
-                          <div className="flex items-center gap-1">
-                            <Calendar size={20} className="h-4 w-4" />
-                            {formatInTimeZone(
-                              new Date(visit.date_time),
-                              'UTC',
-                              'yyyy-MM-dd HH:mm'
-                            )}
-                          </div>
-                        ) : null}
-                        {visit.duration ? (
-                          <div className="flex items-center gap-1">
-                            <Clock size={20} className="h-4 w-4" />
-                            {formatDuration(visit.duration)}
-                          </div>
-                        ) : null}
-
-                        <div className="flex items-center gap-1">
-                          <MapPin size={20} className="h-4 w-4" />
-                          {visit.bed?.name ? (
-                            visit.bed.name
-                          ) : (
-                            <span className="text-danger">No Spot</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <Visit
+                    visit={visit}
+                    no={idx + 1}
+                    showFUllDetails={showFUllDetails}
+                  />
                 </div>
               ))}
             </div>
