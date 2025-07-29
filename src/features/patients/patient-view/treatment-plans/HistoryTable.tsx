@@ -61,7 +61,7 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
           row.original.status === TreatmentPlanStatusEnum.Confirmed;
 
         return activeCycle ? (
-          `${activeCycle?.cycle_number}/${row.original.treatment_cycles?.length ?? 0}`
+          `Cycle: ${activeCycle?.cycle_number}/${row.original.treatment_cycles?.length ?? 0}`
         ) : (
           <>
             {shouldPlanNextCycle ? (
