@@ -18,6 +18,7 @@ import {
 import { Visit } from '@/features/schedule/add-treatment/confirm-visits/Visit';
 import {
   TreatmentCycleResource,
+  TreatmentCycleStatus,
   TreatmentPlanResource,
 } from '@/types/swagger/data-contracts';
 
@@ -34,7 +35,9 @@ export default function Cycle({
   showFUllDetails,
   onReschedule,
 }: CycleProps) {
-  const shouldBeOpen = cycle.visits && cycle.visits.length > 0;
+  const shouldBeOpen =
+    cycle.status === TreatmentCycleStatus.Planned ||
+    cycle.status === TreatmentCycleStatus.InProgress;
   const [isOpen, setIsOpen] = React.useState<boolean>(shouldBeOpen ?? true);
 
   return (

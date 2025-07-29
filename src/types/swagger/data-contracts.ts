@@ -52,6 +52,15 @@ export enum VisitStatusEnum {
   Draft = "draft",
 }
 
+export enum TreatmentCycleStatus {
+  InProgress = "in_progress",
+  Completed = "completed",
+  Stopped = "stopped",
+  Paused = "paused",
+  Created = "created",
+  Planned = "planned",
+}
+
 export interface ApiResponse {
   /** @example true */
   success: boolean;
@@ -200,7 +209,7 @@ export interface UpdateTreatmentPlanRequest {
     id?: number;
     name?: string;
     protocol_id?: number;
-    status?: UpdateTreatmentPlanRequestStatusEnum1;
+    status?: TreatmentCycleStatus;
     cycle_number?: number;
     /** @format date */
     start_date?: string;
@@ -281,7 +290,7 @@ export interface TreatmentCycleResource {
   treatment_plan_id?: number;
   protocol_id?: number;
   name?: string;
-  status?: TreatmentCycleResourceStatusEnum;
+  status?: TreatmentCycleStatus;
   cycle_number?: number;
   /** @format date */
   start_date?: string;
@@ -1449,20 +1458,7 @@ export enum UpdateTreatmentPlanRequestStatusEnum {
   Completed = "completed",
   Stopped = "stopped",
   Paused = "paused",
-}
-
-export enum UpdateTreatmentPlanRequestStatusEnum1 {
-  InProgress = "in_progress",
-  Completed = "completed",
-  Stopped = "stopped",
-  Paused = "paused",
-}
-
-export enum TreatmentCycleResourceStatusEnum {
-  InProgress = "in_progress",
-  Completed = "completed",
-  Stopped = "stopped",
-  Paused = "paused",
+  Confirmed = "confirmed",
 }
 
 /**
@@ -1922,7 +1918,7 @@ export interface GetSectorsData {
   data?: SectorResource[];
 }
 
-export interface StartCycleData {
+export interface PlanCycleData {
   /** @example true */
   success?: boolean;
   data?: TreatmentCycleResource;

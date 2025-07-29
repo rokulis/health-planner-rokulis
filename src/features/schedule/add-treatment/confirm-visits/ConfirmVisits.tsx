@@ -10,7 +10,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { confirmTreatmentPlan } from '@/app/schedule/actions';
 import { Button } from '@/commons/components/ui/button';
 import Cycle from '@/features/schedule/add-treatment/confirm-visits/Cycle';
-import { TreatmentCycleResourceStatusEnum } from '@/types/swagger/data-contracts';
+import { TreatmentCycleStatus } from '@/types/swagger/data-contracts';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
@@ -51,7 +51,7 @@ export const ConfirmVisits: React.FC<Props> = ({
       cycle =>
         cycle.visits &&
         cycle.visits.length > 0 &&
-        cycle.status === TreatmentCycleResourceStatusEnum.InProgress
+        cycle.status === TreatmentCycleStatus.InProgress
     );
     if (!cycleInProgress) {
       return visitsData?.treatment_cycles?.[0];

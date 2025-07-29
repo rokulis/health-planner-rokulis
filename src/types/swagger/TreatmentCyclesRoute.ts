@@ -10,18 +10,18 @@
  * ---------------------------------------------------------------
  */
 
-import { StartCycleData } from "./data-contracts";
+import { PlanCycleData } from "./data-contracts";
 
 export namespace TreatmentCycles {
   /**
    * No description
    * @tags Treatment Cycles
-   * @name StartCycle
-   * @summary Start treatment cycle
-   * @request POST:/treatment-cycles/{id}/start
+   * @name PlanCycle
+   * @summary Plan a treatment cycle
+   * @request POST:/treatment-cycles/{id}/plan
    * @secure
    */
-  export namespace StartCycle {
+  export namespace PlanCycle {
     export type RequestParams = {
       /** Treatment Plan ID */
       id: any;
@@ -29,6 +29,6 @@ export namespace TreatmentCycles {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = StartCycleData;
+    export type ResponseBody = PlanCycleData;
   }
 }

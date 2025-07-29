@@ -16,7 +16,7 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col space-y-8">
+    <div className="w-full h-full flex flex-col space-y-8 pb-12">
       <div className="p-0">
         <div className="bg-primary/20 p-2 px-4 rounded-tl-lg rounded-tr-lg flex justify-between items-center">
           <div>Treatment plan information</div>
