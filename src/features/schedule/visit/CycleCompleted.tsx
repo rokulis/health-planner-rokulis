@@ -40,9 +40,17 @@ export const CycleCompleted: React.FC<Props> = ({ visit }) => {
             </div>
           </div>
         ) : (
-          <div className="text-danger font-semibold text-sm">
-            Next visits not planned
-          </div>
+          <>
+            {!!nextCycle ? (
+              <div className="text-danger font-semibold text-sm">
+                Next visits not planned
+              </div>
+            ) : (
+              <div className="text-green-800 font-semibold text-sm">
+                All cycles completed
+              </div>
+            )}
+          </>
         )}
       </div>
       {isNextCyclePlanned ? (
