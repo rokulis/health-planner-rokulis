@@ -40,6 +40,8 @@ export const Visit: React.FC<Props> = ({
     return null;
   }
 
+  const visitDate = visit.date_time ?? visit.date;
+
   return (
     <div className="flex items-start w-full justify-between">
       <div className="space-y-1 w-full">
@@ -77,11 +79,11 @@ export const Visit: React.FC<Props> = ({
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center flex-wrap space-x-4 space-y-2 text-xs text-gray-600">
-                {visit.date_time ? (
+                {visitDate ? (
                   <div className="flex items-center gap-1">
                     <Calendar size={20} className="h-4 w-4" />
                     {formatInTimeZone(
-                      new Date(visit.date_time),
+                      new Date(visitDate),
                       'UTC',
                       'yyyy-MM-dd HH:mm'
                     )}
@@ -99,7 +101,7 @@ export const Visit: React.FC<Props> = ({
                   {visit.bed?.name ? (
                     visit.bed.name
                   ) : (
-                    <span className="text-danger">No Spot</span>
+                    <div className="text-danger">No Spot</div>
                   )}
                 </div>
               </div>

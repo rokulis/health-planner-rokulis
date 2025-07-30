@@ -357,6 +357,8 @@ export interface VisitResource {
   date_time?: string;
   /** @format date-time */
   end_time?: string;
+  /** @format date */
+  date?: string;
   duration?: number;
   notes?: string;
   is_last_visit?: boolean;

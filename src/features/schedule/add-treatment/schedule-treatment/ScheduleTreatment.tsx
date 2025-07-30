@@ -53,7 +53,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
     return format(date?.toString() as string, 'yyyy-MM-dd');
   }, [date]);
 
-  const { data } = useOpenSlotsQuery({
+  const { data, isLoading } = useOpenSlotsQuery({
     date: selectedDate,
     duration: firstTreatmentDuration,
   });
@@ -122,6 +122,11 @@ export const ScheduleTreatment: React.FC<Props> = ({
         >
           <FormLabel className="mb-2">Select available time</FormLabel>
           <div className="flex gap-2 flex-wrap">
+            {uniqueTimeSlots.length === 0 && !isLoading ? (
+              <span className="text-red-500">
+                No available time slots for this date.
+              </span>
+            ) : null}
             {uniqueTimeSlots.map((slot, index) => (
               <button
                 type="button"
@@ -144,7 +149,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
           </div>
 
           <div className="flex justify-end mt-8 gap-2">
-            <Button disabled={!!form.formState.errors.start_time}>
+            <Button disabled={!selectedTime} type="submit">
               {buttonText ?? 'Schedule all'}
             </Button>
           </div>
