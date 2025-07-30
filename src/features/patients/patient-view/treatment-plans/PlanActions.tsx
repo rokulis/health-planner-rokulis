@@ -47,6 +47,12 @@ export const PlanActions: React.FC<Props> = ({ activeTreatmentPlan }) => {
             queryClient.invalidateQueries({
               queryKey: ['schedule'],
             });
+            queryClient.invalidateQueries({
+              queryKey: ['treatment-plans'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['visits'],
+            });
             toast.success('Treatment plan finished successfully');
           }
         });

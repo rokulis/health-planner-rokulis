@@ -8,6 +8,7 @@ import { VisitReschedule } from '@/features/schedule/add-treatment/confirm-visit
 import {
   TreatmentPlanResource,
   VisitResource,
+  VisitStatusEnum,
 } from '@/types/swagger/data-contracts';
 
 interface Props {
@@ -64,12 +65,14 @@ export const Visit: React.FC<Props> = ({
                 {showFUllDetails && visit.status ? (
                   <VisitStatusBadge status={visit.status} />
                 ) : null}
-                <button
-                  className="cursor-pointer"
-                  onClick={() => setEditMode(prev => !prev)}
-                >
-                  <Pencil size={16} />
-                </button>
+                {visit.status !== VisitStatusEnum.Completed ? (
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => setEditMode(prev => !prev)}
+                  >
+                    <Pencil size={16} />
+                  </button>
+                ) : null}
               </div>
             </div>
             <div className="flex justify-between items-center">
