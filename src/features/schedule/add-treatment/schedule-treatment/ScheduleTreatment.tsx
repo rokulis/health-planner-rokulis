@@ -136,6 +136,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
         onSelect={setDate}
         className="rounded-md border"
         weekStartsOn={1}
+        defaultMonth={new Date(selectedDate)}
       />
 
       <Form {...form}>

@@ -107,6 +107,7 @@ export function DateNavigator({ className, onDateChange }: DateNavigatorProps) {
               }
             }}
             initialFocus={true}
+            defaultMonth={new Date(currentDate)}
           />
         </PopoverContent>
       </Popover>
