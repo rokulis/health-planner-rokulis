@@ -209,7 +209,7 @@ export default function VisitCard({
                     >
                       {treatmentIdx ===
                       (visit.data?.visit_treatments?.length ?? 0) - 1
-                        ? 'Finish cycle'
+                        ? 'Finish visit'
                         : 'Next Procedure'}
                     </Button>
                   </div>
