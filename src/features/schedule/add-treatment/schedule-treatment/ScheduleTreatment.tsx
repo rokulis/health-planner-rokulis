@@ -32,6 +32,29 @@ interface Props {
   buttonText?: string;
 }
 
+function filterAvailableHours(date: string, hours: string[]): string[] {
+  const now = new Date()
+  const targetDate = new Date(date)
+
+  // If the target date is in the future, all hours are available
+  if (targetDate.toDateString() !== now.toDateString()) {
+    if (targetDate > now) {
+      return hours // All hours available for future dates
+    } else {
+      return [] // All hours passed for past dates
+    }
+  }
+
+  // For today, filter out passed hours
+  const currentTime = now.getHours() * 60 + now.getMinutes()
+
+  return hours.filter((hour) => {
+    const [hourStr, minuteStr] = hour.split(":")
+    const hourInMinutes = Number.parseInt(hourStr) * 60 + Number.parseInt(minuteStr)
+    return hourInMinutes > currentTime
+  })
+}
+
 export const ScheduleTreatment: React.FC<Props> = ({
   onStepSubmit,
   treatmentPlan,
@@ -66,7 +89,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
     },
   });
 
-  const uniqueTimeSlots = getUniqueTimeSlots(data ?? []);
+  const uniqueTimeSlots = filterAvailableHours(selectedDate, getUniqueTimeSlots(data ?? []));
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {
@@ -123,7 +146,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
           <FormLabel className="mb-2">Select available time</FormLabel>
           <div className="flex gap-2 flex-wrap">
             {uniqueTimeSlots.length === 0 && !isLoading ? (
-              <span className="text-red-500">
+              <span className="text-danger text-sm">
                 No available time slots for this date.
               </span>
             ) : null}
