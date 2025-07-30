@@ -14,14 +14,14 @@ interface Props {
 export const PatientViewLayout: React.FC<Props> = ({ children, patient }) => {
   const TABS = [
     {
-      label: 'Profile',
-      icon: <Timeline />,
+      label: 'Treatment Plans',
+      icon: <List />,
       href: `/patients/view/${patient.data?.id}`,
     },
     {
-      label: 'Treatment Plans',
-      icon: <List />,
-      href: `/patients/view/${patient.data?.id}/treatment-plans`,
+      label: 'Profile',
+      icon: <Timeline />,
+      href: `/patients/view/${patient.data?.id}/profile`,
     },
     {
       label: 'Relatives',
