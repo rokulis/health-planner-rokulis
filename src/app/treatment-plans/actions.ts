@@ -31,6 +31,21 @@ export const createTreatmentPlan = async (
   return res;
 };
 
+export const deleteTreatmentPlan = async (id: number) => {
+  const res = await apiClient<TreatmentPlans.DeleteTreatmentPlan.ResponseBody>(
+    `/treatment-plans/${id}`,
+    {
+      method: 'DELETE',
+    }
+  );
+
+  if (res.success) {
+    revalidateTag('schedule');
+    revalidateTag('treatment-plans');
+    revalidateTag('patient-treatment-plans');
+  }
+};
+
 export const planVisits = async ({
   id,
   start_date,
@@ -62,7 +77,7 @@ export const planVisits = async ({
 
 export const planNextCycleVisits = async (id: string) => {
   const res = await apiClient<TreatmentCycles.PlanCycle.ResponseBody>(
-    `/treatment-cycles/${id}/plan`,
+    `/treatment-plans/${id}/plan-next-cycle`,
     {
       method: 'POST',
     }

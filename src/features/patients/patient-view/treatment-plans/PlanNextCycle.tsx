@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { planNextCycleVisits } from '@/app/treatment-plans/actions';
@@ -9,9 +10,17 @@ import { Button } from '@/commons/components/ui/button';
 interface Props {
   id: string;
   onSuccess?: () => void;
+  size?: 'sm' | 'default';
+  className?: string;
 }
 
-export const PlanNextCycle: React.FC<Props> = ({ id, onSuccess }) => {
+export const PlanNextCycle: React.FC<Props> = ({
+  id,
+  onSuccess,
+  size = 'sm',
+  className,
+}) => {
+  const queryClient = useQueryClient();
   const [isPending, startTransition] = React.useTransition();
 
   const handlePlanNextVisits = () => {
@@ -20,6 +29,15 @@ export const PlanNextCycle: React.FC<Props> = ({ id, onSuccess }) => {
         if (res.message) {
           toast.error(res.message);
         } else {
+          queryClient.invalidateQueries({
+            queryKey: ['schedule'],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['treatment-plans'],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['visits'],
+          });
           toast.success('Next visits planned successfully');
           onSuccess?.();
         }
@@ -30,7 +48,12 @@ export const PlanNextCycle: React.FC<Props> = ({ id, onSuccess }) => {
   return (
     <>
       {isPending ? <PageTopLoader /> : null}
-      <Button size="sm" onClick={handlePlanNextVisits} disabled={isPending}>
+      <Button
+        size={size}
+        onClick={handlePlanNextVisits}
+        className={className}
+        disabled={isPending}
+      >
         Plan next visits
       </Button>
     </>

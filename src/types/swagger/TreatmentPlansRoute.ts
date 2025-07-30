@@ -19,6 +19,7 @@ import {
   GetPatientTreatmentPlansData,
   GetTreatmentPlanData,
   GetTreatmentPlansData,
+  PlanCycleData,
   PlanVisitsData,
   PlanVisitsPayload,
   StoreTreatmentPlanRequest,
@@ -27,6 +28,25 @@ import {
 } from "./data-contracts";
 
 export namespace TreatmentPlans {
+  /**
+   * No description
+   * @tags Treatment Cycles
+   * @name PlanCycle
+   * @summary Plan a treatment cycle
+   * @request POST:/treatment-plans/{id}/plan-next-cycle
+   * @secure
+   */
+  export namespace PlanCycle {
+    export type RequestParams = {
+      /** Treatment Plan ID */
+      id: any;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PlanCycleData;
+  }
+
   /**
    * No description
    * @tags Treatment Plans

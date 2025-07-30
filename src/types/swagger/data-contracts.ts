@@ -296,6 +296,7 @@ export interface TreatmentCycleResource {
   start_date?: string;
   /** @format date */
   end_date?: string;
+  next_cycle?: TreatmentCycleResource;
   treatment_medicine_groups?: TreatmentMedicineGroupResource[];
   /** Treatment protocol template */
   protocol?: Protocol;
@@ -358,6 +359,7 @@ export interface VisitResource {
   end_time?: string;
   duration?: number;
   notes?: string;
+  is_last_visit?: boolean;
   treatment_cycle?: TreatmentCycleResource;
   treatment_plan?: TreatmentPlanResource;
   patient?: PatientResource;

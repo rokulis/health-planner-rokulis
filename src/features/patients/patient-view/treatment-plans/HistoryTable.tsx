@@ -66,7 +66,7 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
           <>
             {shouldPlanNextCycle ? (
               <PlanNextCycle
-                id={String(firstNotPlannedCycle.id)}
+                id={String(row.original.id)}
                 onSuccess={() =>
                   dispatchAction('view_patient_treatment_plan', {
                     id: row.original.id,

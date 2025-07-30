@@ -14,6 +14,7 @@ import { Badge } from '@/commons/components/ui/badge';
 import { Button } from '@/commons/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/commons/components/ui/card';
 import CheckCircle from '@/commons/icons/svg/check-circle.svg';
+import { CycleCompleted } from '@/features/schedule/visit/CycleCompleted';
 import { VisitTreatmentStatus } from '@/types/swagger/data-contracts';
 import { Visits } from '@/types/swagger/VisitsRoute';
 
@@ -37,6 +38,11 @@ export default function VisitCard({
     visit.data?.visit_treatments?.find(
       v => v.status === VisitTreatmentStatus.Pending
     )?.id ?? null;
+
+  const isVisitCompleted = visit?.data?.visit_treatments?.every(
+    t => t.status === VisitTreatmentStatus.Done
+  );
+  const isLastVisit = visit.data?.is_last_visit;
 
   const onNext = async (treatmentId?: number) =>
     startTransition(() => {
@@ -66,6 +72,10 @@ export default function VisitCard({
         }
       });
     });
+
+  if (isVisitCompleted && isLastVisit) {
+    return <CycleCompleted visit={visit} />;
+  }
 
   return (
     <div className="flex flex-col h-full justify-between">
