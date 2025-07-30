@@ -10,10 +10,10 @@ interface Props {
 }
 
 export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
-  const { data: plan } = useTreatmentPlanQuery(id);
+  const { data: plan, isLoading, isFetching } = useTreatmentPlanQuery(id);
 
-  if (!plan) {
-    return <div className="p-4">Loading...</div>;
+  if (!plan || isLoading || isFetching) {
+    return null;
   }
 
   return (
