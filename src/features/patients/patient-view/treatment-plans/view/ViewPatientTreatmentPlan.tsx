@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { TreatmentPlanStatus } from '@/commons/components/treatment-plan-status/TreatmentPlanStatus';
+import { PlanActions } from '@/features/patients/patient-view/treatment-plans/PlanActions';
 import Cycle from '@/features/schedule/add-treatment/confirm-visits/Cycle';
 import { useTreatmentPlanQuery } from '@/features/schedule/hooks/useTreatmentPlanQuery';
 
@@ -20,6 +21,7 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
       <div className="p-0">
         <div className="bg-primary/20 p-2 px-4 rounded-tl-lg rounded-tr-lg flex justify-between items-center">
           <div>Treatment plan information</div>
+          <PlanActions activeTreatmentPlan={plan} />
         </div>
         <div className="space-y-4 p-0 p-4 bg-primary/5 rounded-bl-lg rounded-br-lg text-sm">
           <div className="grid grid-cols-[150px_1fr] gap-4">
@@ -54,7 +56,12 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
         </div>
         <div className="flex flex-col h-full rounded-md">
           {plan?.data?.treatment_cycles?.map((cycle, idx) => (
-            <Cycle key={idx} cycle={cycle} index={idx + 1} showFUllDetails={true} />
+            <Cycle
+              key={idx}
+              cycle={cycle}
+              index={idx + 1}
+              showFUllDetails={true}
+            />
           ))}
         </div>
       </div>
