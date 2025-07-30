@@ -1,5 +1,6 @@
 import React from 'react';
 
+import cx from 'classnames';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Calendar, Clock, MapPin, Pencil } from 'lucide-react';
 
@@ -96,13 +97,13 @@ export const Visit: React.FC<Props> = ({
                   </div>
                 ) : null}
 
-                <div className="flex items-center gap-1">
+                <div
+                  className={cx('flex items-center gap-1', {
+                    'text-danger': !visit.bed?.name,
+                  })}
+                >
                   <MapPin size={20} className="h-4 w-4" />
-                  {visit.bed?.name ? (
-                    visit.bed.name
-                  ) : (
-                    <div className="text-danger">No Spot</div>
-                  )}
+                  {visit.bed?.name ? visit.bed.name : 'No Spot'}
                 </div>
               </div>
             </div>
