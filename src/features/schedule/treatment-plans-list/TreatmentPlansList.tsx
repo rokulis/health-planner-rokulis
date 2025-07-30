@@ -36,8 +36,16 @@ export const TreatmentPlansList = () => {
       header: 'Room',
     },
     {
-      accessorKey: 'bed.name',
+      accessorKey: 'bed',
       header: 'Bed',
+      cell: info => {
+        const bed = info.row.original.bed;
+        if (bed) {
+          return <span>{bed.name}</span>;
+        }
+
+        return <span className="text-danger">Unassigned Spot</span>;
+      },
     },
     {
       accessorKey: 'date_time',
