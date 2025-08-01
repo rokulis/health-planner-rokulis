@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { secondsToMinutes } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { Clock, TestTubeDiagonal } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -73,6 +74,24 @@ export default function VisitCard({
       });
     });
 
+  const FormattedVisitTime = () => {
+    return (
+      <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+        {`Visit: ${formatInTimeZone(
+          new Date(visit.data?.date_time as string),
+          'UTC',
+          'HH:mm'
+        )}
+        -
+        ${formatInTimeZone(
+        new Date(visit.data?.end_time as string),
+        'UTC',
+        'HH:mm'
+      )}`}
+      </Badge>
+    );
+  };
+
   if (isVisitCompleted && isLastVisit) {
     return <CycleCompleted visit={visit} />;
   }
@@ -83,6 +102,7 @@ export default function VisitCard({
       <Card className="w-full mx-auto p-0">
         <CardHeader className="px-0">
           <div className="flex gap-2 mt-2">
+            <FormattedVisitTime />
             <Badge variant="secondary" className="bg-gray-100 text-gray-700">
               {visit.data?.room?.name} - {visit.data?.bed?.name}
             </Badge>
