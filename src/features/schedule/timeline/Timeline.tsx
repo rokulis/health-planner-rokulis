@@ -26,7 +26,7 @@ import {
 
 // Fixed cell width for time slots
 const TIME_CELL_WIDTH = 60;
-const TIME_INTERVAL = 15; // minutes
+const TIME_INTERVAL = 10; // minutes
 
 interface Props {
   rooms?: Array<RoomResource>;
@@ -87,9 +87,11 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       slots.push(`${hour.toString().padStart(2, '0')}:00`);
 
       if (hour < maxHour) {
-        slots.push(`${hour.toString().padStart(2, '0')}:15`);
+        slots.push(`${hour.toString().padStart(2, '0')}:10`);
+        slots.push(`${hour.toString().padStart(2, '0')}:20`);
         slots.push(`${hour.toString().padStart(2, '0')}:30`);
-        slots.push(`${hour.toString().padStart(2, '0')}:45`);
+        slots.push(`${hour.toString().padStart(2, '0')}:40`);
+        slots.push(`${hour.toString().padStart(2, '0')}:50`);
       }
     }
     return slots;
@@ -111,16 +113,20 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
         return currentMinute >= 0 && currentMinute < 15;
       }
       // For XX:15 slots, it's current if minutes are 15-29
-      else if (slotMinute === 15) {
-        return currentMinute >= 15 && currentMinute < 30;
+      else if (slotMinute === 10) {
+        return currentMinute >= 10 && currentMinute < 20;
       }
       // For XX:30 slots, it's current if minutes are 30-44
-      else if (slotMinute === 30) {
-        return currentMinute >= 30 && currentMinute < 45;
+      else if (slotMinute === 20) {
+        return currentMinute >= 20 && currentMinute < 30;
       }
-      // For XX:45 slots, it's current if minutes are 45-59
-      else if (slotMinute === 45) {
-        return currentMinute >= 45 && currentMinute < 60;
+      // For XX:45 slots, it's current if minutes are 30-44
+      else if (slotMinute === 30) {
+        return currentMinute >= 30 && currentMinute < 40;
+      }
+      // For XX:50 slots, it's current if minutes are 40-59
+      else if (slotMinute === 40) {
+        return currentMinute >= 40 && currentMinute < 50;
       }
     }
 
@@ -221,16 +227,23 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
             dispatchAction('visit_view', { id: appointmentForSlot.id })
           }
         >
-          <span
-            className={cn(
-              'inline-flex items-center justify-center bg-[#E4E7EC] text-primary rounded-full w-6 h-6 mr-2 flex-shrink-0'
-            )}
-          >
-            {appointmentForSlot?.patient?.name?.[0].toUpperCase()}
-          </span>
-          <span className="whitespace-nowrap overflow-hidden text-ellipsis">
-            {appointmentForSlot?.patient?.name}
-          </span>
+          <div className="flex items-center justify-between w-full">
+            <div className="flex">
+              <span
+                className={cn(
+                  'inline-flex items-center justify-center bg-[#E4E7EC] text-primary rounded-full w-6 h-6 mr-2 flex-shrink-0'
+                )}
+              >
+                {appointmentForSlot?.patient?.name?.[0].toUpperCase()}
+              </span>
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">
+                {appointmentForSlot?.patient?.name}
+              </span>
+            </div>
+            <span className="text-xs">
+              {appointmentForSlot.start_time} - {appointmentForSlot.end_time}
+            </span>
+          </div>
         </button>
       );
     }

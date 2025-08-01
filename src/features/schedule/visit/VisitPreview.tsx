@@ -2,7 +2,10 @@
 
 import React from 'react';
 
+import { formatInTimeZone } from 'date-fns-tz';
+
 import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
+import { Badge } from '@/commons/components/ui/badge';
 import { Button } from '@/commons/components/ui/button';
 import { Visits } from '@/types/swagger/VisitsRoute';
 import { MedicineProcedure } from '@/utils/factory';
@@ -14,8 +17,27 @@ interface Props {
 }
 
 export const VisitPreview: React.FC<Props> = ({ visit, onClose, onStart }) => {
+  const FormattedVisitTime = () => {
+    return (
+      <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+        {`Visit: ${formatInTimeZone(
+          new Date(visit.data?.date_time as string),
+          'UTC',
+          'HH:mm'
+        )}
+        -
+        ${formatInTimeZone(
+        new Date(visit.data?.end_time as string),
+        'UTC',
+        'HH:mm'
+      )}`}
+      </Badge>
+    );
+  };
+
   return (
     <div className="w-full h-full flex flex-col justify-between mx-auto p-0 space-y-8">
+      <FormattedVisitTime />
       <div className="p-0">
         <div className="bg-primary/20 p-2 px-4 rounded-tl-lg rounded-tr-lg">
           <div>Protocol information</div>
