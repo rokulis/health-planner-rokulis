@@ -28,14 +28,14 @@ export function roundToNearest15Min(dateTime: Date | string): Date {
     );
 
     // Round the minutes
-    const remainder = minutes % 15;
+    const remainder = minutes % 10;
 
     if (remainder < 7.5) {
       // Round down
       date.setMinutes(minutes - remainder);
     } else {
       // Round up
-      date.setMinutes(minutes + (15 - remainder));
+      date.setMinutes(minutes + (10 - remainder));
     }
 
     return date;
@@ -43,12 +43,12 @@ export function roundToNearest15Min(dateTime: Date | string): Date {
     // Work with local time for non-UTC inputs
     const date = new Date(inputDate);
     minutes = date.getMinutes();
-    const remainder = minutes % 15;
+    const remainder = minutes % 10;
 
     if (remainder < 7.5) {
       date.setMinutes(minutes - remainder);
     } else {
-      date.setMinutes(minutes + (15 - remainder));
+      date.setMinutes(minutes + (10 - remainder));
     }
 
     date.setSeconds(0);
