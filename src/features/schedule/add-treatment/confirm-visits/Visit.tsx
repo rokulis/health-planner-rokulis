@@ -19,7 +19,7 @@ interface Props {
   no: number;
 }
 
-function formatDuration(seconds: number) {
+export function formatDuration(seconds: number) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 

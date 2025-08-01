@@ -8,6 +8,7 @@ import { useActionContext } from '@/commons/action-context-provider/useActionCon
 import { NumberedSteps } from '@/commons/components/numbered-steps/NumberedSteps';
 import { Button } from '@/commons/components/ui/button';
 import { useProtocolQuery } from '@/features/protocols/hooks/useProtocolQuery';
+import { formatDuration } from '@/features/schedule/add-treatment/confirm-visits/Visit';
 import { MedicineProcedure } from '@/utils/factory';
 
 interface Props {
@@ -44,6 +45,10 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
           </div>
           {protocol?.data?.protocol_medicine_groups?.map((mg, i) => (
             <NumberedSteps number={i + 1} key={i}>
+              <div className="grid grid-cols-[140px_1fr] gap-4 pb-4">
+                <div className="text-gray-600">Group duration:</div>
+                <div className="font-medium">{formatDuration(mg.duration)}</div>
+              </div>
               {mg.protocol_medicines?.map((m, j) => (
                 <div
                   key={j}
@@ -69,7 +74,7 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
                     <div className="font-medium">{m.dose}</div>
 
                     <div className="text-gray-600">Comment:</div>
-                    <div className="font-medium">{m.comments ?? "-"}</div>
+                    <div className="font-medium">{m.comments ?? '-'}</div>
                   </div>
                 </div>
               ))}

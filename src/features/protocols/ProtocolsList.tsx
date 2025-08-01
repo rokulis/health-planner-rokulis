@@ -48,7 +48,7 @@ export const ProtocolsList: React.FC<Props> = () => {
     },
     {
       accessorKey: 'cycle_duration',
-      header: 'Cycle Duration',
+      header: 'Default cycles',
     },
     {
       id: 'actions',
