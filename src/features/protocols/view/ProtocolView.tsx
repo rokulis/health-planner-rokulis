@@ -45,7 +45,7 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
           </div>
           {protocol?.data?.protocol_medicine_groups?.map((mg, i) => (
             <NumberedSteps number={i + 1} key={i}>
-              <div className="grid grid-cols-[140px_1fr] gap-4 pb-4">
+              <div className="grid grid-cols-[140px_1fr] gap-4 pb-4 mb-4 border-b border-gray-200">
                 <div className="text-gray-600">Group duration:</div>
                 <div className="font-medium">{formatDuration(mg.duration)}</div>
 
