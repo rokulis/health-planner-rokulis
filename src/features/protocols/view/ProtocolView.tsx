@@ -48,6 +48,9 @@ export const ProtocolView: React.FC<Props> = ({ id }) => {
               <div className="grid grid-cols-[140px_1fr] gap-4 pb-4">
                 <div className="text-gray-600">Group duration:</div>
                 <div className="font-medium">{formatDuration(mg.duration)}</div>
+
+                <div className="text-gray-600">Treatment days:</div>
+                <div className="font-medium">{mg.treatment_days.join(", ")}</div>
               </div>
               {mg.protocol_medicines?.map((m, j) => (
                 <div
