@@ -48,6 +48,7 @@ export namespace Schedule {
       date: string;
       sector_id?: number;
       duration?: number;
+      local_time?: number;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};

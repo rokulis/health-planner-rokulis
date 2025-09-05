@@ -1,16 +1,21 @@
 'use client';
 
+import React from 'react';
+
 import { X } from 'lucide-react';
 import type { Control } from 'react-hook-form';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
 import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
+import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
 import { Button } from '@/commons/components/ui/button';
 import { FormLabel } from '@/commons/components/ui/form';
 import { Textarea } from '@/commons/components/ui/textarea';
 import { SelectTreatmentFormValues } from '@/features/schedule/add-treatment/select-treatment/validations';
+import { CreateMedicineProcedureEnum } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
+import { MedicineProcedure } from '@/utils/factory';
 
 interface MedicineFieldProps {
   groupIndex: number;
@@ -71,7 +76,21 @@ export function MedicineField({
             control={control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.procedure`}
           >
-            <FloatingLabelInput label="Procedure" />
+            <FloatingLabelSelect
+              label="Procedure"
+              options={Object.keys(CreateMedicineProcedureEnum).map(key => ({
+                value:
+                  CreateMedicineProcedureEnum[
+                    key as keyof typeof CreateMedicineProcedureEnum
+                  ],
+                label:
+                  MedicineProcedure[
+                    CreateMedicineProcedureEnum[
+                      key as keyof typeof CreateMedicineProcedureEnum
+                    ]
+                  ],
+              }))}
+            />
           </FieldWrapper>
         </div>
         <div className="col-span-2">

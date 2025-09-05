@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-import { toast } from 'sonner';
-
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
+import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/ConfirmVisits';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { useTreatmentPlanQuery } from '@/features/schedule/hooks/useTreatmentPlanQuery';
+import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 interface Props {
   treatmentPlanId?: number;
@@ -18,6 +18,8 @@ export const UpdateTreatment: React.FC<Props> = ({
   treatmentPlanId,
   visitId,
 }) => {
+  const [proposedVisits, setProposedVisits] =
+    React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const { onClose } = useActionContext();
   const [currentStep, setCurrentStep] = React.useState(1);
   const { data: treatmentPlan, isLoading } =
@@ -32,17 +34,29 @@ export const UpdateTreatment: React.FC<Props> = ({
           buttonText="Reschedule Visits"
           treatmentPlan={treatmentPlan}
           visitId={visitId}
-          onStepSubmit={() => {
-            toast.success('Visits rescheduled successfully');
-            onClose?.();
+          onStepSubmit={data => {
+            setProposedVisits(data);
+            setCurrentStep(prev => prev + 1);
           }}
+        />
+      ),
+    },
+    {
+      id: 2,
+      label: 'Confirm',
+      content: (
+        <ConfirmVisits
+          treatmentPlanId={treatmentPlan?.data?.id}
+          visits={proposedVisits}
+          onBack={() => setCurrentStep(prev => prev - 1)}
+          onSuccess={() => onClose?.()}
         />
       ),
     },
   ];
 
   if (isLoading) {
-    return <div>Loading treatment plan...</div>;
+    return null;
   }
 
   return (

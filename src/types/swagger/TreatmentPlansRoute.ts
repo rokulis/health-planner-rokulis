@@ -12,6 +12,7 @@
 
 import {
   CancelTreatmentPlanData,
+  ConfirmCycleData,
   ConfirmTreatmentPlanData,
   CreateTreatmentPlanData,
   DeleteTreatmentPlanData,
@@ -19,7 +20,8 @@ import {
   GetPatientTreatmentPlansData,
   GetTreatmentPlanData,
   GetTreatmentPlansData,
-  PlanCycleData,
+  PlanNextCycleData,
+  PlanNextCyclePayload,
   PlanVisitsData,
   PlanVisitsPayload,
   StoreTreatmentPlanRequest,
@@ -31,12 +33,31 @@ export namespace TreatmentPlans {
   /**
    * No description
    * @tags Treatment Cycles
-   * @name PlanCycle
+   * @name PlanNextCycle
    * @summary Plan a treatment cycle
    * @request POST:/treatment-plans/{id}/plan-next-cycle
    * @secure
    */
-  export namespace PlanCycle {
+  export namespace PlanNextCycle {
+    export type RequestParams = {
+      /** Treatment Plan ID */
+      id: any;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = PlanNextCyclePayload;
+    export type RequestHeaders = {};
+    export type ResponseBody = PlanNextCycleData;
+  }
+
+  /**
+   * No description
+   * @tags Treatment Cycles
+   * @name ConfirmCycle
+   * @summary Confirm a treatment cycle
+   * @request POST:/treatment-plans/{id}/confirm-cycle
+   * @secure
+   */
+  export namespace ConfirmCycle {
     export type RequestParams = {
       /** Treatment Plan ID */
       id: any;
@@ -44,7 +65,7 @@ export namespace TreatmentPlans {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = PlanCycleData;
+    export type ResponseBody = ConfirmCycleData;
   }
 
   /**

@@ -367,6 +367,7 @@ export interface VisitResource {
   patient?: PatientResource;
   /** Room within a clinic sector */
   room?: Room;
+  is_working_day?: boolean;
   /** Bed within a room */
   bed?: Bed;
   visit_treatments?: VisitTreatmentResource[];
@@ -1896,6 +1897,7 @@ export interface GetOpenSlotsParams {
   date: string;
   sector_id?: number;
   duration?: number;
+  local_time?: number;
 }
 
 export interface GetOpenSlotsData {
@@ -1922,7 +1924,20 @@ export interface GetSectorsData {
   data?: SectorResource[];
 }
 
-export interface PlanCycleData {
+export interface PlanNextCyclePayload {
+  /** @example "2022-01-01" */
+  start_date?: string;
+  /** @example "11:00" */
+  start_time?: string;
+}
+
+export interface PlanNextCycleData {
+  /** @example true */
+  success?: boolean;
+  data?: TreatmentCycleResource;
+}
+
+export interface ConfirmCycleData {
   /** @example true */
   success?: boolean;
   data?: TreatmentCycleResource;

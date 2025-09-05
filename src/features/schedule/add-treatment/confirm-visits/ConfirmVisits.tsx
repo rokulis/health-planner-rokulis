@@ -17,12 +17,14 @@ interface Props {
   visits?: TreatmentPlans.PlanVisits.ResponseBody;
   onBack?: () => void;
   treatmentPlanId?: number;
+  onSuccess?: () => void;
 }
 
 export const ConfirmVisits: React.FC<Props> = ({
   visits,
   onBack,
   treatmentPlanId,
+  onSuccess,
 }) => {
   const [visitsData, setVisitsData] = React.useState(visits?.data);
   const pathname = usePathname();
@@ -41,7 +43,11 @@ export const ConfirmVisits: React.FC<Props> = ({
           queryKey: ['schedule'],
         });
         toast.success('Visits confirmed successfully');
-        router.push(pathname);
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          router.push(pathname);
+        }
       }
     });
   };
