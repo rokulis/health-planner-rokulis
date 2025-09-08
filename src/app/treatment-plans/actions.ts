@@ -3,7 +3,6 @@
 import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
-import { TreatmentCycles } from '@/types/swagger/TreatmentCyclesRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 export const getTreatmentPlans = async () => {
@@ -75,13 +74,17 @@ export const planVisits = async ({
   return res;
 };
 
-export const planNextCycleVisits = async (id: string) => {
-  const res = await apiClient<TreatmentCycles.PlanCycle.ResponseBody>(
-    `/treatment-plans/${id}/plan-next-cycle`,
-    {
-      method: 'POST',
-    }
-  );
+export const planNextCycleVisits = async (
+  id: string,
+  data: TreatmentPlans.PlanNextCycle.RequestBody
+) => {
+  const res = await apiClient<
+    TreatmentPlans.PlanNextCycle.ResponseBody,
+    TreatmentPlans.PlanNextCycle.RequestBody
+  >(`/treatment-plans/${id}/plan-next-cycle`, {
+    method: 'POST',
+    body: data,
+  });
 
   if (res.success) {
     revalidateTag('schedule');

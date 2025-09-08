@@ -52,6 +52,11 @@ const ACTIONS = {
       <UpdateTreatment treatmentPlanId={params?.id} visitId={params?.visitId} />
     </Drawer>
   ),
+  plan_next_cycle: (params?: Record<string, any>) => (
+    <Drawer title="Plan Next Cycle" isOpen={true}>
+      <UpdateTreatment treatmentPlanId={params?.id} visitId={params?.visitId} />
+    </Drawer>
+  ),
   visit_view: (params?: Record<string, any>) => <VisitForm id={params?.id} />,
   protocol_new: (
     <Drawer title="Protocol Form" isOpen={true}>

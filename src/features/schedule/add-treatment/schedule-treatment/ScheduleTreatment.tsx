@@ -6,10 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { rescheduleVisit } from '@/app/schedule/actions';
-import { planVisits } from '@/app/treatment-plans/actions';
+import { planNextCycleVisits, planVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
@@ -17,6 +18,7 @@ import { Form, FormLabel } from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
+import { PlanVisitsData } from '@/types/swagger/data-contracts';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
 const FormSchema = z.object({
@@ -30,29 +32,31 @@ interface Props {
   treatmentPlan?: TreatmentPlans.CreateTreatmentPlan.ResponseBody;
   visitId?: string;
   buttonText?: string;
+  planNextCycle?: boolean;
 }
 
 function filterAvailableHours(date: string, hours: string[]): string[] {
-  const now = new Date()
-  const targetDate = new Date(date)
+  const now = new Date();
+  const targetDate = new Date(date);
 
   // If the target date is in the future, all hours are available
   if (targetDate.toDateString() !== now.toDateString()) {
     if (targetDate > now) {
-      return hours // All hours available for future dates
+      return hours; // All hours available for future dates
     } else {
-      return [] // All hours passed for past dates
+      return []; // All hours passed for past dates
     }
   }
 
   // For today, filter out passed hours
-  const currentTime = now.getHours() * 60 + now.getMinutes()
+  const currentTime = now.getHours() * 60 + now.getMinutes();
 
-  return hours.filter((hour) => {
-    const [hourStr, minuteStr] = hour.split(":")
-    const hourInMinutes = Number.parseInt(hourStr) * 60 + Number.parseInt(minuteStr)
-    return hourInMinutes > currentTime
-  })
+  return hours.filter(hour => {
+    const [hourStr, minuteStr] = hour.split(':');
+    const hourInMinutes =
+      Number.parseInt(hourStr) * 60 + Number.parseInt(minuteStr);
+    return hourInMinutes > currentTime;
+  });
 }
 
 export const ScheduleTreatment: React.FC<Props> = ({
@@ -60,6 +64,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
   treatmentPlan,
   visitId,
   buttonText,
+  planNextCycle,
 }) => {
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
@@ -89,12 +94,36 @@ export const ScheduleTreatment: React.FC<Props> = ({
     },
   });
 
-  const uniqueTimeSlots = filterAvailableHours(selectedDate, getUniqueTimeSlots(data ?? []));
+  const uniqueTimeSlots = filterAvailableHours(
+    selectedDate,
+    getUniqueTimeSlots(data ?? [])
+  );
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {
       if (!treatmentPlan?.data?.id) {
         return;
+      }
+
+      if (planNextCycle) {
+        return planNextCycleVisits(String(treatmentPlan?.data?.id), {
+          start_date: selectedDate,
+          start_time: values.start_time,
+        }).then(res => {
+          if (res.success) {
+            queryClient.invalidateQueries({
+              queryKey: ['schedule'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['treatment-plans'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['visits'],
+            });
+            toast.success('Next visits planned successfully');
+            onStepSubmit(res as PlanVisitsData);
+          }
+        });
       }
 
       if (visitId) {
@@ -106,6 +135,12 @@ export const ScheduleTreatment: React.FC<Props> = ({
           if (res.success) {
             queryClient.invalidateQueries({
               queryKey: ['schedule'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['treatment-plans'],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ['visits'],
             });
             onStepSubmit(res);
           }
@@ -120,6 +155,12 @@ export const ScheduleTreatment: React.FC<Props> = ({
         if (res.success) {
           queryClient.invalidateQueries({
             queryKey: ['schedule'],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['treatment-plans'],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ['visits'],
           });
           onStepSubmit(res);
         }

@@ -67,6 +67,10 @@ export const ConfirmVisits: React.FC<Props> = ({
   }, [visitsData]);
   const totalCycles = visitsData?.treatment_cycles?.length || 0;
 
+  const isDisabledSubmit = !!activeCycle?.visits?.find(
+    visit => !visit.is_working_day || !visit.bed?.name
+  );
+
   return (
     <div className="flex flex-col h-full justify-between py-6">
       <div className="flex flex-col h-full rounded-md">
@@ -91,7 +95,12 @@ export const ConfirmVisits: React.FC<Props> = ({
             Back
           </Button>
         ) : null}
-        <Button onClick={onConfirm} type="submit" className="w-1/2">
+        <Button
+          disabled={isDisabledSubmit}
+          onClick={onConfirm}
+          type="submit"
+          className="w-1/2"
+        >
           Confirm Visits
         </Button>
       </div>

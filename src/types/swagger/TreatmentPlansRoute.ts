@@ -41,7 +41,7 @@ export namespace TreatmentPlans {
   export namespace PlanNextCycle {
     export type RequestParams = {
       /** Treatment Plan ID */
-      id: any;
+      id: number;
     };
     export type RequestQuery = {};
     export type RequestBody = PlanNextCyclePayload;
