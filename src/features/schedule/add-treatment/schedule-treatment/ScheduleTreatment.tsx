@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { rescheduleVisit } from '@/app/schedule/actions';
-import { planNextCycleVisits, planVisits } from '@/app/treatment-plans/actions';
+import { planNextCycleVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
@@ -18,8 +18,7 @@ import { Form, FormLabel } from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
-import { PlanVisitsData } from '@/types/swagger/data-contracts';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
+import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 
 const FormSchema = z.object({
   start_date: z.string(),
@@ -27,12 +26,11 @@ const FormSchema = z.object({
 });
 
 interface Props {
-  onStepSubmit: (visits: TreatmentPlans.PlanVisits.ResponseBody) => void;
+  onStepSubmit: (treatmentPlan: TreatmentPlanResource) => void;
   onBack?: () => void;
-  treatmentPlan?: TreatmentPlans.CreateTreatmentPlan.ResponseBody;
+  treatmentPlan?: TreatmentPlanResource;
   visitId?: string;
   buttonText?: string;
-  planNextCycle?: boolean;
 }
 
 function filterAvailableHours(date: string, hours: string[]): string[] {
@@ -64,7 +62,6 @@ export const ScheduleTreatment: React.FC<Props> = ({
   treatmentPlan,
   visitId,
   buttonText,
-  planNextCycle,
 }) => {
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
@@ -73,7 +70,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
     undefined
   );
   const firstTreatmentDuration =
-    treatmentPlan?.data?.treatment_cycles?.[0].visits?.[0].duration ?? 1800;
+    treatmentPlan?.treatment_cycles?.[0].visits?.[0].duration ?? 1800;
 
   const selectedDate = React.useMemo(() => {
     if (!date) return format(new Date().toString(), 'yyyy-MM-dd');
@@ -99,31 +96,22 @@ export const ScheduleTreatment: React.FC<Props> = ({
     getUniqueTimeSlots(data ?? [])
   );
 
+  const revalidateCache = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['schedule'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['treatment-plans'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['visits'],
+    });
+  }
+
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {
-      if (!treatmentPlan?.data?.id) {
+      if (!treatmentPlan?.id) {
         return;
-      }
-
-      if (planNextCycle) {
-        return planNextCycleVisits(String(treatmentPlan?.data?.id), {
-          start_date: selectedDate,
-          start_time: values.start_time,
-        }).then(res => {
-          if (res.success) {
-            queryClient.invalidateQueries({
-              queryKey: ['schedule'],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ['treatment-plans'],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ['visits'],
-            });
-            toast.success('Next visits planned successfully');
-            onStepSubmit(res as PlanVisitsData);
-          }
-        });
       }
 
       if (visitId) {
@@ -133,36 +121,25 @@ export const ScheduleTreatment: React.FC<Props> = ({
           recursive: true,
         }).then(res => {
           if (res.success) {
-            queryClient.invalidateQueries({
-              queryKey: ['schedule'],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ['treatment-plans'],
-            });
-            queryClient.invalidateQueries({
-              queryKey: ['visits'],
-            });
-            onStepSubmit(res);
+            revalidateCache();
+            if (res.data) {
+              onStepSubmit(res.data);
+            }
           }
         });
       }
 
-      await planVisits({
-        id: treatmentPlan.data.id,
+      return planNextCycleVisits(String(treatmentPlan?.id), {
         start_date: selectedDate,
         start_time: values.start_time,
       }).then(res => {
         if (res.success) {
-          queryClient.invalidateQueries({
-            queryKey: ['schedule'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ['treatment-plans'],
-          });
-          queryClient.invalidateQueries({
-            queryKey: ['visits'],
-          });
-          onStepSubmit(res);
+          revalidateCache();
+          toast.success('Next visits planned successfully');
+
+          if (res.data) {
+            onStepSubmit(res.data);
+          }
         }
       });
     });

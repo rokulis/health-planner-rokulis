@@ -7,7 +7,7 @@ import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/ConfirmVisits';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { useTreatmentPlanQuery } from '@/features/schedule/hooks/useTreatmentPlanQuery';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
+import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 
 interface Props {
   treatmentPlanId?: number;
@@ -18,12 +18,12 @@ export const UpdateTreatment: React.FC<Props> = ({
   treatmentPlanId,
   visitId,
 }) => {
-  const [proposedVisits, setProposedVisits] =
-    React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
-  const { onClose } = useActionContext();
-  const [currentStep, setCurrentStep] = React.useState(1);
   const { data: treatmentPlan, isLoading } =
     useTreatmentPlanQuery(treatmentPlanId);
+  const [suggestedTreatmentPlan, setSuggestedTreatmentPlan] =
+    React.useState<TreatmentPlanResource>(treatmentPlan?.data as TreatmentPlanResource);
+  const { onClose } = useActionContext();
+  const [currentStep, setCurrentStep] = React.useState(1);
 
   const steps: Step[] = [
     {
@@ -32,10 +32,10 @@ export const UpdateTreatment: React.FC<Props> = ({
       content: (
         <ScheduleTreatment
           buttonText="Reschedule Visits"
-          treatmentPlan={treatmentPlan}
+          treatmentPlan={suggestedTreatmentPlan}
           visitId={visitId}
           onStepSubmit={data => {
-            setProposedVisits(data);
+            setSuggestedTreatmentPlan(data);
             setCurrentStep(prev => prev + 1);
           }}
         />
@@ -46,8 +46,7 @@ export const UpdateTreatment: React.FC<Props> = ({
       label: 'Confirm',
       content: (
         <ConfirmVisits
-          treatmentPlanId={treatmentPlan?.data?.id}
-          visits={proposedVisits}
+          treatmentPlan={suggestedTreatmentPlan}
           onBack={() => setCurrentStep(prev => prev - 1)}
           onSuccess={() => onClose?.()}
         />

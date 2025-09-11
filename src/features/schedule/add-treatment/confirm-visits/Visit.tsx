@@ -45,7 +45,7 @@ export const Visit: React.FC<Props> = ({
 
   return (
     <div className="flex items-start w-full justify-between">
-      <div className="space-y-1 w-full">
+      <div className="flex flex-col w-full">
         {editMode ? (
           <div className="flex flex-col gap-4">
             <div className="font-bold text-sm text-gray-600">
@@ -79,7 +79,7 @@ export const Visit: React.FC<Props> = ({
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <div className="flex items-center flex-wrap gap-4 py-2 text-xs text-gray-600">
+              <div className="flex items-center flex-wrap gap-x-4 gap-y-1.5 py-1.5 text-xs text-gray-600">
                 {visitDate ? (
                   <div className="flex items-center gap-1">
                     <Calendar size={20} className="h-4 w-4" />

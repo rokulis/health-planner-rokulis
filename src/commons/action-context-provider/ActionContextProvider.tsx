@@ -13,6 +13,7 @@ import { PatientQuickView } from '@/features/patients/quick-view/PatientQuickVie
 import { ProtocolEntity } from '@/features/protocols/add-protocol/ProtocolEntity';
 import { ProtocolView } from '@/features/protocols/view/ProtocolView';
 import { AddTreatment } from '@/features/schedule/add-treatment/AddTreatment';
+import { PlanNextCycle } from '@/features/schedule/plan-next-cycle/PlanNextCycle';
 import { UpdateTreatment } from '@/features/schedule/update-treatment/UpdateTreatment';
 import { VisitForm } from '@/features/schedule/visit/VisitForm';
 
@@ -54,7 +55,7 @@ const ACTIONS = {
   ),
   plan_next_cycle: (params?: Record<string, any>) => (
     <Drawer title="Plan Next Cycle" isOpen={true}>
-      <UpdateTreatment treatmentPlanId={params?.id} visitId={params?.visitId} />
+      <PlanNextCycle treatmentPlanId={params?.id} />
     </Drawer>
   ),
   visit_view: (params?: Record<string, any>) => <VisitForm id={params?.id} />,

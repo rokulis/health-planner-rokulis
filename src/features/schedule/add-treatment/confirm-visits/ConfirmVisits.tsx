@@ -7,35 +7,33 @@ import { toast } from 'sonner';
 
 import { usePathname, useRouter } from 'next/navigation';
 
-import { confirmTreatmentPlan } from '@/app/schedule/actions';
+import { confirmTreatmentPlanCycle } from '@/app/schedule/actions';
 import { Button } from '@/commons/components/ui/button';
 import Cycle from '@/features/schedule/add-treatment/confirm-visits/Cycle';
-import { TreatmentCycleStatus } from '@/types/swagger/data-contracts';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
+import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 
 interface Props {
-  visits?: TreatmentPlans.PlanVisits.ResponseBody;
+  treatmentPlan?: TreatmentPlanResource;
   onBack?: () => void;
-  treatmentPlanId?: number;
   onSuccess?: () => void;
 }
 
 export const ConfirmVisits: React.FC<Props> = ({
-  visits,
+  treatmentPlan,
   onBack,
-  treatmentPlanId,
   onSuccess,
 }) => {
-  const [visitsData, setVisitsData] = React.useState(visits?.data);
+  const [currentTreatmentPlan, setCurrentTreatmentPlan] =
+    React.useState(treatmentPlan);
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const onConfirm = async () => {
-    if (!treatmentPlanId) {
+    if (!treatmentPlan?.id) {
       return;
     }
-    return confirmTreatmentPlan(treatmentPlanId).then(res => {
+    return confirmTreatmentPlanCycle(treatmentPlan?.id).then(res => {
       if (res.message) {
         toast.error(res.message);
       } else {
@@ -52,20 +50,8 @@ export const ConfirmVisits: React.FC<Props> = ({
     });
   };
 
-  const activeCycle = React.useMemo(() => {
-    const cycleInProgress = visitsData?.treatment_cycles?.find(
-      cycle =>
-        cycle.visits &&
-        cycle.visits.length > 0 &&
-        cycle.status === TreatmentCycleStatus.InProgress
-    );
-    if (!cycleInProgress) {
-      return visitsData?.treatment_cycles?.[0];
-    }
-
-    return cycleInProgress;
-  }, [visitsData]);
-  const totalCycles = visitsData?.treatment_cycles?.length || 0;
+  const activeCycle = currentTreatmentPlan?.current_cycle;
+  const totalCycles = currentTreatmentPlan?.cycles ?? 0;
 
   const isDisabledSubmit = !!activeCycle?.visits?.find(
     visit => !visit.is_working_day || !visit.bed?.name
@@ -78,7 +64,7 @@ export const ConfirmVisits: React.FC<Props> = ({
           <Cycle
             cycle={activeCycle}
             index={activeCycle.cycle_number ?? 1}
-            onReschedule={data => setVisitsData(data)}
+            onReschedule={data => setCurrentTreatmentPlan(data)}
           />
         ) : null}
         {totalCycles > 0 ? (

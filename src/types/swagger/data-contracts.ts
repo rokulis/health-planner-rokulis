@@ -340,6 +340,7 @@ export interface TreatmentPlanResource {
   diagnosis?: Diagnosis;
   /** @example 1 */
   diagnosis_id?: number;
+  current_cycle?: TreatmentCycleResource;
   treatment_cycles?: TreatmentCycleResource[];
   patient?: PatientResource;
 }
@@ -1934,13 +1935,13 @@ export interface PlanNextCyclePayload {
 export interface PlanNextCycleData {
   /** @example true */
   success?: boolean;
-  data?: TreatmentCycleResource;
+  data?: TreatmentPlanResource;
 }
 
 export interface ConfirmCycleData {
   /** @example true */
   success?: boolean;
-  data?: TreatmentCycleResource;
+  data?: TreatmentPlanResource;
 }
 
 export interface GetTreatmentPlansData {
@@ -1959,25 +1960,6 @@ export interface GetPatientTreatmentPlansData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource[];
-}
-
-export interface PlanVisitsPayload {
-  /** @example "2022-01-01" */
-  start_date?: string;
-  /** @example "11:00" */
-  start_time?: string;
-}
-
-export interface PlanVisitsData {
-  /** @example true */
-  success?: boolean;
-  data?: TreatmentPlanResource;
-}
-
-export interface ConfirmTreatmentPlanData {
-  /** @example true */
-  success?: boolean;
-  data?: TreatmentPlanResource;
 }
 
 export interface GetTreatmentPlanData {

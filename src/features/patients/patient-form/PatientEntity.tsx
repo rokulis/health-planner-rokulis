@@ -10,7 +10,7 @@ import { useProtocolsQuery } from '@/features/protocols/hooks/useProtocolsQuery'
 import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/ConfirmVisits';
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { SelectTreatment } from '@/features/schedule/add-treatment/select-treatment/SelectTreatment';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
+import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 
 interface Props {
   id?: string;
@@ -18,14 +18,12 @@ interface Props {
 }
 
 export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
-  const [proposedVisits, setProposedVisits] =
-    React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const [currentStep, setCurrentStep] = React.useState(defaultStep);
   const [patientId, setPatientId] = React.useState<number | undefined>(
     id ? parseInt(id, 10) : undefined
   );
   const [treatmentPlan, setTreatmentPlan] =
-    React.useState<TreatmentPlans.CreateTreatmentPlan.ResponseBody>();
+    React.useState<TreatmentPlanResource>();
 
   const { data: patient } = usePatientQuery(id);
   const { data: protocols } = useProtocolsQuery();
@@ -85,7 +83,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
         <ScheduleTreatment
           treatmentPlan={treatmentPlan}
           onStepSubmit={data => {
-            setProposedVisits(data);
+            setTreatmentPlan(data);
             setCurrentStep(prev => prev + 1);
           }}
         />
@@ -97,8 +95,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
       content: (
         <ConfirmVisits
           onBack={() => setCurrentStep(prev => prev - 1)}
-          treatmentPlanId={treatmentPlan?.data?.id}
-          visits={proposedVisits}
+          treatmentPlan={treatmentPlan}
         />
       ),
     },

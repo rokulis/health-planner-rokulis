@@ -40,9 +40,9 @@ export const getTreatmentPlan = async (id?: number) => {
   );
 };
 
-export const confirmTreatmentPlan = async (id: number) => {
+export const confirmTreatmentPlanCycle = async (id: number) => {
   const res = await apiClient<Schedule.GetSchedule.ResponseBody>(
-    `/treatment-plans/${id}/confirm`,
+    `/treatment-plans/${id}/confirm-cycle`,
     {
       method: 'POST',
     }

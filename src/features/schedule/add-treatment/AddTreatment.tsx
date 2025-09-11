@@ -9,17 +9,15 @@ import { ConfirmVisits } from '@/features/schedule/add-treatment/confirm-visits/
 import { ScheduleTreatment } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { SelectPatient } from '@/features/schedule/add-treatment/select-patient/SelectPatient';
 import { SelectTreatment } from '@/features/schedule/add-treatment/select-treatment/SelectTreatment';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
+import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 
 export const AddTreatment: React.FC = () => {
-  const [proposedVisits, setProposedVisits] =
-    React.useState<TreatmentPlans.PlanVisits.ResponseBody>();
   const [currentStep, setCurrentStep] = React.useState(1);
   const [patientId, setPatientId] = React.useState<number | undefined>(
     undefined
   );
   const [treatmentPlan, setTreatmentPlan] =
-    React.useState<TreatmentPlans.CreateTreatmentPlan.ResponseBody>();
+    React.useState<TreatmentPlanResource>();
 
   const { data: medicines } = useMedicinesQuery();
   const { data: protocols } = useProtocolsQuery();
@@ -60,7 +58,7 @@ export const AddTreatment: React.FC = () => {
         <ScheduleTreatment
           treatmentPlan={treatmentPlan}
           onStepSubmit={data => {
-            setProposedVisits(data);
+            setTreatmentPlan(data);
             setCurrentStep(prev => prev + 1);
           }}
         />
@@ -71,8 +69,7 @@ export const AddTreatment: React.FC = () => {
       label: 'Confirm',
       content: (
         <ConfirmVisits
-          treatmentPlanId={treatmentPlan?.data?.id}
-          visits={proposedVisits}
+          treatmentPlan={treatmentPlan}
           onBack={() => setCurrentStep(prev => prev - 1)}
         />
       ),

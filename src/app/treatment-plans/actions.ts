@@ -45,35 +45,6 @@ export const deleteTreatmentPlan = async (id: number) => {
   }
 };
 
-export const planVisits = async ({
-  id,
-  start_date,
-  start_time,
-}: {
-  id: number;
-  start_date: string;
-  start_time: string;
-}) => {
-  const res = await apiClient<TreatmentPlans.PlanVisits.ResponseBody>(
-    `/treatment-plans/${id}/plan-visits`,
-    {
-      method: 'POST',
-      body: {
-        start_date,
-        start_time,
-      },
-    }
-  );
-
-  if (res.success) {
-    revalidateTag('schedule');
-    revalidateTag('treatment-plans');
-    revalidateTag('patient-treatment-plans');
-  }
-
-  return res;
-};
-
 export const planNextCycleVisits = async (
   id: string,
   data: TreatmentPlans.PlanNextCycle.RequestBody

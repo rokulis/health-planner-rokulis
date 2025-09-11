@@ -21,9 +21,9 @@ import {
   SelectTreatmentFormSchema,
   type SelectTreatmentFormValues,
 } from '@/features/schedule/add-treatment/select-treatment/validations';
+import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
-import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 import { useDiagnosesQuery } from '@/utils/hooks/useDiagnosesQuery';
 
 import { MedicineGroup } from './medicine-group/MedicineGroup';
@@ -31,9 +31,7 @@ import { MedicineGroup } from './medicine-group/MedicineGroup';
 interface Props {
   protocols?: Protocols.GetProtocols.ResponseBody;
   medicines?: Medicines.GetMedicines.ResponseBody;
-  onStepSubmit?: (
-    treatmentPlan: TreatmentPlans.CreateTreatmentPlan.ResponseBody
-  ) => void;
+  onStepSubmit?: (treatmentPlan: TreatmentPlanResource) => void;
   patientId?: number;
   onSkip?: () => void;
 }
@@ -117,7 +115,7 @@ export const SelectTreatment: React.FC<Props> = ({
       }
       if (res.success) {
         if (typeof onStepSubmit === 'function' && res.data?.id) {
-          onStepSubmit(res);
+          onStepSubmit(res.data);
         }
       }
     });
