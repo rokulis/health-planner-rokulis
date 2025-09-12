@@ -48,8 +48,11 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
       id: 'cycle',
       header: 'Active Cycle',
       cell: ({ row }) => {
-        const activeCycle =  row.original.current_cycle;
-        const shouldPlanNextCycle = !activeCycle && row.original.status === TreatmentPlanStatusEnum.Confirmed;
+        const activeCycle = row.original.current_cycle;
+        const shouldPlanNextCycle =
+          (!activeCycle ||
+            activeCycle.status === TreatmentCycleStatus.Planned) &&
+          row.original.status === TreatmentPlanStatusEnum.Confirmed;
 
         return activeCycle ? (
           `Cycle: ${activeCycle?.cycle_number}/${row.original.treatment_cycles?.length ?? 0}`
