@@ -77,11 +77,7 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
     {
       header: 'Cycle Visits',
       cell: ({ row }) => {
-        const activeCycle = row.original.treatment_cycles?.find(
-          cycle =>
-            cycle.status === TreatmentCycleStatus.Planned ||
-            cycle.status === TreatmentCycleStatus.InProgress
-        );
+        const activeCycle = row.original.current_cycle;
 
         return (
           <div className="flex justify-center w-full">
