@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
@@ -17,6 +18,19 @@ export const CycleCompleted: React.FC<Props> = ({ visit }) => {
   const { dispatchAction, onClose } = useActionContext();
   const nextCycle = visit?.data?.treatment_cycle?.next_cycle;
   const isNextCyclePlanned = nextCycle?.status !== TreatmentCycleStatus.Created;
+  const queryClient = useQueryClient();
+
+  const revalidateCache = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['schedule'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['treatment-plans'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['visits'],
+    });
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-between p-4">
@@ -60,11 +74,12 @@ export const CycleCompleted: React.FC<Props> = ({ visit }) => {
           </Button>
           <Button
             className="flex-1"
-            onClick={() =>
+            onClick={async () => {
+              await revalidateCache();
               dispatchAction('view_patient_treatment_plan', {
                 id: visit.data?.treatment_plan?.id,
-              })
-            }
+              });
+            }}
           >
             Preview Plan
           </Button>

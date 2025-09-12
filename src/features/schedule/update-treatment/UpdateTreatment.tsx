@@ -25,6 +25,14 @@ export const UpdateTreatment: React.FC<Props> = ({
   const { onClose } = useActionContext();
   const [currentStep, setCurrentStep] = React.useState(1);
 
+  React.useEffect(() => {
+    if (treatmentPlan && !suggestedTreatmentPlan) {
+      setSuggestedTreatmentPlan(treatmentPlan.data  as TreatmentPlanResource);
+    }
+  }, [suggestedTreatmentPlan, treatmentPlan]);
+
+  if(!suggestedTreatmentPlan) return null;
+
   const steps: Step[] = [
     {
       id: 1,

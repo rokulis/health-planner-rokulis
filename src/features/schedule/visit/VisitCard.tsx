@@ -69,6 +69,9 @@ export default function VisitCard({
           queryClient.invalidateQueries({
             queryKey: ['schedule'],
           });
+          queryClient.invalidateQueries({
+            queryKey: ['treatment-plans'],
+          });
           onNextProcedure?.();
         }
       });
