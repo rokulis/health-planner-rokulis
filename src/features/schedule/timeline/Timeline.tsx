@@ -127,8 +127,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       // For XX:50 slots, it's current if minutes are 40-59
       else if (slotMinute === 40) {
         return currentMinute >= 40 && currentMinute < 50;
-      }
-      else if (slotMinute === 50) {
+      } else if (slotMinute === 50) {
         return currentMinute >= 50 && currentMinute < 59;
       }
     }
@@ -218,13 +217,12 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       return (
         <button
           className={cn(
-            'absolute top-1 left-0  border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40 cursor-pointer',
+            'absolute top-1 left-0  border rounded-full py-1 px-2 text-sm h-10 flex items-center z-40 cursor-pointer overflow-hidden',
             getAppointmentBgColor(appointmentForSlot.status)
           )}
           style={{
             width: `${width}px`,
             maxWidth: 'none',
-            overflow: 'visible',
           }}
           onClick={() =>
             dispatchAction('visit_view', { id: appointmentForSlot.id })
