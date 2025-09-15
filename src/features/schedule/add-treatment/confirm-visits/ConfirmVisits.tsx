@@ -69,9 +69,16 @@ export const ConfirmVisits: React.FC<Props> = ({
         ) : null}
         {totalCycles > 0 ? (
           <div className="text-sm text-gray-600 mt-4 px-2 border border-gray-200 rounded-md p-2">
-            Total Cycles: <b>{totalCycles}</b>
+            Cycle:{' '}
+            <b>
+              {activeCycle?.cycle_number}/{totalCycles}
+            </b>
             <br />
-            Next cycle will be planned after first one is completed.
+            {totalCycles < (activeCycle?.cycle_number ?? 0) ? (
+              <>
+                Next cycle will be planned after this one is completed.
+              </>
+            ) : null}
           </div>
         ) : null}
       </div>

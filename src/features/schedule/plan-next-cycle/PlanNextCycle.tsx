@@ -17,7 +17,7 @@ export const PlanNextCycle: React.FC<Props> = ({ treatmentPlanId }) => {
   const { data: treatmentPlan, isLoading } =
     useTreatmentPlanQuery(treatmentPlanId);
   const [suggestedTreatmentPlan, setSuggestedTreatmentPlan] =
-    React.useState<TreatmentPlanResource>(treatmentPlan as TreatmentPlanResource);
+    React.useState<TreatmentPlanResource>(treatmentPlan?.data as TreatmentPlanResource);
   const { onClose } = useActionContext();
   const [currentStep, setCurrentStep] = React.useState(1);
 
