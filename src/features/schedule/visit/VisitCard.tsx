@@ -170,21 +170,28 @@ export default function VisitCard({
                                 {medicine.medicine?.name}{' '}
                               </span>
                             </div>
-                            <div className="bg-primary/10 rounded-full px-2 py-1 text-xs text-primary font-semibold">
-                              {medicine.medicine?.atc_code ?? '-'}
+
+                            <div className="flex gap-2">
+                              {treatment.treatment_medicine_group?.duration ? (
+                                <div className="bg-primary/10 rounded-full px-2 py-1 text-xs text-primary font-semibold">
+                                  <span>
+                                    {secondsToMinutes(
+                                      treatment.treatment_medicine_group
+                                        ?.duration
+                                    )}
+                                    min
+                                  </span>
+                                </div>
+                              ) : null}
+                              <div className="bg-primary/10 rounded-full px-2 py-1 text-xs text-primary font-semibold">
+                                {medicine.medicine?.atc_code ?? '-'}
+                              </div>
                             </div>
                           </div>
 
                           {activeTreatment === treatment.id ? (
                             <>
                               <div className="flex gap-6 text-sm text-gray-600 mt-2">
-                                {treatment.treatment_medicine_group?.duration ? (
-                                  <div className="flex gap-1">
-                                    <Clock size={18} />{' '}
-                                    {secondsToMinutes(treatment.treatment_medicine_group?.duration)}min
-                                  </div>
-                                ) : null}
-
                                 {medicine.dose ? (
                                   <div className="flex gap-1">
                                     <TestTubeDiagonal size={18} />{' '}
