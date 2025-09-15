@@ -229,10 +229,10 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
           }
         >
           <div className="flex items-center justify-between w-full">
-            <div className="flex">
+            <div className="flex items-center gap-2">
               <span
                 className={cn(
-                  'inline-flex items-center justify-center bg-[#E4E7EC] text-primary rounded-full w-6 h-6 mr-2 flex-shrink-0'
+                  'inline-flex items-center justify-center bg-[#E4E7EC] text-primary rounded-full w-6 h-6 flex-shrink-0'
                 )}
               >
                 {appointmentForSlot?.patient?.name?.[0].toUpperCase()}
@@ -241,9 +241,11 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                 {appointmentForSlot?.patient?.name}
               </span>
             </div>
-            <span className="text-xs">
-              {appointmentForSlot.start_time} - {appointmentForSlot.end_time}
-            </span>
+            {width > 120 ? (
+              <span className="text-xs">
+                {appointmentForSlot.start_time} - {appointmentForSlot.end_time}
+              </span>
+            ) : null}
           </div>
         </button>
       );
