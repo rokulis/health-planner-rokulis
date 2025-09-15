@@ -178,10 +178,10 @@ export default function VisitCard({
                           {activeTreatment === treatment.id ? (
                             <>
                               <div className="flex gap-6 text-sm text-gray-600 mt-2">
-                                {medicine.medicine?.default_time ? (
+                                {treatment.treatment_medicine_group?.duration ? (
                                   <div className="flex gap-1">
                                     <Clock size={18} />{' '}
-                                    {medicine.medicine?.default_time}
+                                    {secondsToMinutes(treatment.treatment_medicine_group?.duration)}min
                                   </div>
                                 ) : null}
 
