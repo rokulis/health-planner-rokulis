@@ -59,6 +59,7 @@ export enum TreatmentCycleStatus {
   Paused = "paused",
   Created = "created",
   Planned = "planned",
+  Confirmed = "confirmed",
 }
 
 export interface ApiResponse {

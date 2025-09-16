@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import { planNextCycleVisits } from '@/app/treatment-plans/actions';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { Button } from '@/commons/components/ui/button';
 
@@ -16,13 +20,36 @@ export const PlanNextCycle: React.FC<Props> = ({
   className,
 }) => {
   const { dispatchAction } = useActionContext();
+  const queryClient = useQueryClient();
+
+  const revalidateCache = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['schedule'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['treatment-plans'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['visits'],
+    });
+  };
+
+  const handleButtonClick = async () => {
+    return planNextCycleVisits(id).then(res => {
+      if (res.success) {
+        revalidateCache();
+        toast.success('Next visits planned successfully');
+
+        if (res.data) {
+          dispatchAction('plan_next_cycle', { id });
+        }
+      }
+    });
+  };
+
   return (
     <>
-      <Button
-        size={size}
-        onClick={() => dispatchAction('plan_next_cycle', { id })}
-        className={className}
-      >
+      <Button size={size} onClick={handleButtonClick} className={className}>
         Plan next visits
       </Button>
     </>

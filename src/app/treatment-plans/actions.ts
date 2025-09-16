@@ -47,7 +47,7 @@ export const deleteTreatmentPlan = async (id: number) => {
 
 export const planNextCycleVisits = async (
   id: string,
-  data: TreatmentPlans.PlanNextCycle.RequestBody
+  data?: TreatmentPlans.PlanNextCycle.RequestBody
 ) => {
   const res = await apiClient<
     TreatmentPlans.PlanNextCycle.ResponseBody,

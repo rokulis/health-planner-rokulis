@@ -66,8 +66,8 @@ export default function Cycle({
         </CollapsibleTrigger>
 
         <CollapsibleContent className="bg-primary/5">
-          <CardContent className="bg-white px-0">
-            <div className="space-y-2 px-5 bg-primary/5">
+          <CardContent className="bg-white px-0 overflow-y-scroll">
+            <div className="px-5 bg-primary/5">
               {cycle.visits?.length === 0 ? (
                 <div className="text-gray-500 text-sm py-4">
                   Cycle visits are not yet planned
@@ -77,7 +77,7 @@ export default function Cycle({
                   {cycle.visits?.map((visit, idx) => (
                     <div
                       key={visit.id}
-                      className="p-2 border-b border-primary/10 py-2"
+                      className="p-2 border-b border-primary/10 py-2 overflow-y-auto"
                     >
                       <Visit
                         visit={visit}

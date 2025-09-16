@@ -106,7 +106,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
     await queryClient.invalidateQueries({
       queryKey: ['visits'],
     });
-  }
+  };
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {
@@ -146,13 +146,14 @@ export const ScheduleTreatment: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col gap-8 h-full pb-8">
+    <div className="flex flex-col gap-4 h-full pb-8">
       {isPending ? <PageTopLoader /> : null}
+
       <Calendar
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="rounded-md border"
+        className="rounded-md border mt-0"
         weekStartsOn={1}
         defaultMonth={new Date(selectedDate)}
       />

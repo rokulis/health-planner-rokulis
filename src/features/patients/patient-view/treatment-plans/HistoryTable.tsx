@@ -54,24 +54,25 @@ export const HistoryTable: React.FC<Props> = ({ treatmentPlans }) => {
             activeCycle.status === TreatmentCycleStatus.Planned) &&
           row.original.status === TreatmentPlanStatusEnum.Confirmed;
 
-        return activeCycle?.status === TreatmentCycleStatus.InProgress ? (
-          `Cycle: ${activeCycle?.cycle_number}/${row.original.treatment_cycles?.length ?? 0}`
-        ) : (
-          <>
-            {shouldPlanNextCycle ? (
-              <PlanNextCycle
-                id={String(row.original.id)}
-                onSuccess={() =>
-                  dispatchAction('view_patient_treatment_plan', {
-                    id: row.original.id,
-                  })
-                }
-              />
+        return activeCycle?.status === TreatmentCycleStatus.InProgress ||
+          activeCycle?.status === TreatmentCycleStatus.Completed ? (
+              `Cycle: ${activeCycle?.cycle_number}/${row.original.treatment_cycles?.length ?? 0}`
             ) : (
-              <span className="text-gray-500">No active cycle</span>
-            )}
-          </>
-        );
+              <>
+                {shouldPlanNextCycle ? (
+                  <PlanNextCycle
+                    id={String(row.original.id)}
+                    onSuccess={() =>
+                      dispatchAction('view_patient_treatment_plan', {
+                        id: row.original.id,
+                      })
+                    }
+                  />
+                ) : (
+                  <span className="text-gray-500">No active cycle</span>
+                )}
+              </>
+            );
       },
     },
     {

@@ -96,7 +96,7 @@ export const VisitReschedule: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col gap-8 h-full pb-8">
+    <div className="flex flex-col gap-8 h-full pb-8 overflow-y-auto">
       {isPending ? <PageTopLoader /> : null}
       <Calendar
         size="sm"

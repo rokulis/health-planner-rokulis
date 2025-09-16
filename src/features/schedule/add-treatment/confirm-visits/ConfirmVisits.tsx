@@ -54,12 +54,12 @@ export const ConfirmVisits: React.FC<Props> = ({
   const totalCycles = currentTreatmentPlan?.cycles ?? 0;
 
   const isDisabledSubmit = !!activeCycle?.visits?.find(
-    visit => !visit.is_working_day || !visit.bed?.name
+    visit => !visit.is_working_day
   );
 
   return (
     <div className="flex flex-col h-full justify-between py-6">
-      <div className="flex flex-col h-full rounded-md">
+      <div className="flex flex-col rounded-md">
         {activeCycle ? (
           <Cycle
             cycle={activeCycle}
@@ -75,14 +75,12 @@ export const ConfirmVisits: React.FC<Props> = ({
             </b>
             <br />
             {totalCycles < (activeCycle?.cycle_number ?? 0) ? (
-              <>
-                Next cycle will be planned after this one is completed.
-              </>
+              <>Next cycle will be planned after this one is completed.</>
             ) : null}
           </div>
         ) : null}
       </div>
-      <div className="col-span-6 mt-12 flex justify-between">
+      <div className="col-span-6 mt-12 flex justify-end">
         {onBack ? (
           <Button onClick={onBack} variant="outline">
             Back
