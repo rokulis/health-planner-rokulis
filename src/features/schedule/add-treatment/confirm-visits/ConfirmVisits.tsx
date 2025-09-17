@@ -29,17 +29,27 @@ export const ConfirmVisits: React.FC<Props> = ({
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const revalidateCache = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['schedule'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['treatment-plans'],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ['visits'],
+    });
+  };
+
   const onConfirm = async () => {
     if (!treatmentPlan?.id) {
       return;
     }
     return confirmTreatmentPlanCycle(treatmentPlan?.id).then(res => {
+      revalidateCache();
       if (res.message) {
         toast.error(res.message);
       } else {
-        queryClient.invalidateQueries({
-          queryKey: ['schedule'],
-        });
         toast.success('Visits confirmed successfully');
         if (onSuccess) {
           onSuccess();
@@ -80,7 +90,7 @@ export const ConfirmVisits: React.FC<Props> = ({
           </div>
         ) : null}
       </div>
-      <div className="col-span-6 mt-12 flex justify-end">
+      <div className="col-span-6 mt-12 flex justify-end gap-4">
         {onBack ? (
           <Button onClick={onBack} variant="outline">
             Back

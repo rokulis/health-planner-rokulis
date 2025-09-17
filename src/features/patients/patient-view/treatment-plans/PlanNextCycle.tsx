@@ -36,8 +36,8 @@ export const PlanNextCycle: React.FC<Props> = ({
 
   const handleButtonClick = async () => {
     return planNextCycleVisits(id).then(res => {
+      revalidateCache();
       if (res.success) {
-        revalidateCache();
         toast.success('Next visits planned successfully');
 
         if (res.data) {

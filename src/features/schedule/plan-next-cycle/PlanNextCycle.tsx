@@ -15,7 +15,7 @@ export const PlanNextCycle: React.FC<Props> = ({ treatmentPlanId }) => {
   const { data: treatmentPlan, isLoading } =
     useTreatmentPlanQuery(treatmentPlanId);
   const [suggestedTreatmentPlan, setSuggestedTreatmentPlan] =
-    React.useState<TreatmentPlanResource>(
+    React.useState<TreatmentPlanResource | null>(
       treatmentPlan?.data as TreatmentPlanResource
     );
   const { onClose } = useActionContext();
@@ -35,7 +35,10 @@ export const PlanNextCycle: React.FC<Props> = ({ treatmentPlanId }) => {
   return (
     <ConfirmVisits
       treatmentPlan={suggestedTreatmentPlan}
-      onSuccess={() => onClose?.()}
+      onSuccess={() => {
+        onClose?.();
+        setSuggestedTreatmentPlan(null);
+      }}
     />
   );
 };
