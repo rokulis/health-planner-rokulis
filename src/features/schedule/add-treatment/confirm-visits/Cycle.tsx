@@ -45,7 +45,7 @@ export default function Cycle({
       <Collapsible open={isOpen} onOpenChange={() => setIsOpen(prev => !prev)}>
         <CollapsibleTrigger
           asChild={true}
-          className="flex items-center justify-between w-full"
+          className="flex items-center justify-between w-full overflow-hidden"
         >
           <CardHeader className="cursor-pointer transition-colors py-1">
             <div className="flex items-center justify-between w-full">

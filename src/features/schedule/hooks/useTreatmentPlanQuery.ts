@@ -17,7 +17,7 @@ export const useTreatmentPlanQuery = (id?: number) => {
     queryKey: ['treatment-plans', id],
     queryFn: fetchTreatmentPlan,
     enabled: !!id,
-    staleTime: 60 * 60 * 1000, // 1 hour
+    staleTime: 0,
     refetchOnWindowFocus: 'always',
   });
 };
