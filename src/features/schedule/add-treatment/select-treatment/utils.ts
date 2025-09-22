@@ -22,7 +22,7 @@ export function mapTreatmentRequest(
       medicine_groups: currentRequest.medicine_groups.map(group => ({
         protocol_medicine_group_id: group.protocol_medicine_group_id,
         duration: minutesToSeconds(group.duration),
-        treatment_days: group.treatment_days,
+        treatment_days: group.treatment_days.split(",").map(day => parseInt(day.trim(), 10)),
         medicines: group.medicines.map(medicine => ({
           medicine_id: medicine.medicine_id,
           dose: medicine.dose,

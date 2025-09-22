@@ -180,7 +180,7 @@ export const SelectTreatment: React.FC<Props> = ({
             >
               <MedicineGroup
                 index={index}
-                control={form.control}
+                form={form}
                 onRemove={() => remove(index)}
                 medicines={medicines}
               />
@@ -200,7 +200,7 @@ export const SelectTreatment: React.FC<Props> = ({
               append({
                 protocol_medicine_group_id: fields.length + 1,
                 duration: 0,
-                treatment_days: [0],
+                treatment_days: '',
                 medicines: [],
               });
             }}

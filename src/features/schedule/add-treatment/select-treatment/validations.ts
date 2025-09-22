@@ -1,5 +1,21 @@
 import { z } from "zod"
 
+export const strictCommaSeparatedNumbersSchema = z
+  .string()
+  .min(1, "Cannot be empty")
+  .regex(/^\d+(,\d+)*$/, {
+    message: "Must be numbers separated by commas (e.g., '1,2,3')",
+  })
+  .refine(
+    (val) => {
+      // Ensure no leading/trailing commas or double commas
+      return !val.startsWith(",") && !val.endsWith(",") && !val.includes(",,")
+    },
+    {
+      message: "Invalid comma placement",
+    },
+  )
+
 export const SelectTreatmentFormSchema = z.object({
   patient_id: z.coerce.number().int().positive(),
   protocol_id: z.coerce.number().int().positive(),
@@ -11,7 +27,7 @@ export const SelectTreatmentFormSchema = z.object({
     z.object({
       protocol_medicine_group_id: z.coerce.number().int().positive(),
       duration: z.coerce.number().int().nonnegative().min(1),
-      treatment_days: z.array(z.coerce.number().int().nonnegative()),
+      treatment_days: strictCommaSeparatedNumbersSchema,
       medicines: z.array(
         z.object({
           medicine_id: z.coerce.number().int().nonnegative(),

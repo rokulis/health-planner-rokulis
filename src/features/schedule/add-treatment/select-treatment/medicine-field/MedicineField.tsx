@@ -3,7 +3,8 @@
 import React from 'react';
 
 import { X } from 'lucide-react';
-import type { Control } from 'react-hook-form';
+import { UseFormReturn, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
@@ -12,15 +13,18 @@ import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSele
 import { Button } from '@/commons/components/ui/button';
 import { FormLabel } from '@/commons/components/ui/form';
 import { Textarea } from '@/commons/components/ui/textarea';
-import { SelectTreatmentFormValues } from '@/features/schedule/add-treatment/select-treatment/validations';
-import { CreateMedicineProcedureEnum } from '@/types/swagger/data-contracts';
+import { SelectTreatmentFormSchema } from '@/features/schedule/add-treatment/select-treatment/validations';
+import {
+  CreateMedicineProcedureEnum,
+  MedicineProcedureEnum,
+} from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { MedicineProcedure } from '@/utils/factory';
 
 interface MedicineFieldProps {
   groupIndex: number;
   medicineIndex: number;
-  control: Control<SelectTreatmentFormValues>;
+  form: UseFormReturn<z.infer<typeof SelectTreatmentFormSchema>>;
   onRemove: () => void;
   medicines?: Medicines.GetMedicines.ResponseBody;
 }
@@ -28,10 +32,33 @@ interface MedicineFieldProps {
 export function MedicineField({
   groupIndex,
   medicineIndex,
-  control,
+  form,
   onRemove,
   medicines,
 }: MedicineFieldProps) {
+  const medicineId = useWatch({
+    name: `medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine_id`,
+    control: form.control,
+  });
+
+  React.useEffect(() => {
+    if (medicineId) {
+      const selectedMedicine = medicines?.data?.find(
+        m => m.id === Number(medicineId)
+      );
+      if (selectedMedicine) {
+        form.setValue(
+          `medicine_groups.${groupIndex}.medicines.${medicineIndex}.atc_code`,
+          selectedMedicine.atc_code ?? ''
+        );
+        form.setValue(
+          `medicine_groups.${groupIndex}.medicines.${medicineIndex}.procedure`,
+          selectedMedicine.procedure ?? MedicineProcedureEnum.Iv
+        );
+      }
+    }
+  }, [medicineId, medicines?.data, form, groupIndex, medicineIndex]);
+
   return (
     <div className="pt-4 mt-2">
       <div className="flex justify-between items-center">
@@ -51,7 +78,7 @@ export function MedicineField({
       <div className="grid grid-cols-6 gap-4">
         <div className="col-span-6">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine_id`}
           >
             <FloatingLabelSearchableSelect
@@ -65,7 +92,7 @@ export function MedicineField({
         </div>
         <div className="col-span-2">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.atc_code`}
           >
             <FloatingLabelInput label="ATC Code" />
@@ -73,7 +100,7 @@ export function MedicineField({
         </div>
         <div className="col-span-2">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.procedure`}
           >
             <FloatingLabelSelect
@@ -95,7 +122,7 @@ export function MedicineField({
         </div>
         <div className="col-span-2">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.dose`}
           >
             <FloatingLabelInput label="Dose" type="text" />
@@ -103,7 +130,7 @@ export function MedicineField({
         </div>
         <div className="col-span-6">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.comment`}
           >
             <Textarea />

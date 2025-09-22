@@ -1,33 +1,32 @@
 'use client';
 
 import { Plus, X } from 'lucide-react';
-import { useFieldArray, type Control } from 'react-hook-form';
+import { useFieldArray, UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
 
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
 import { Button } from '@/commons/components/ui/button';
-import {
-  FormLabel,
-} from '@/commons/components/ui/form';
+import { FormLabel } from '@/commons/components/ui/form';
 import { MedicineField } from '@/features/schedule/add-treatment/select-treatment/medicine-field/MedicineField';
-import { SelectTreatmentFormValues } from '@/features/schedule/add-treatment/select-treatment/validations';
+import { SelectTreatmentFormSchema } from '@/features/schedule/add-treatment/select-treatment/validations';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 
 interface MedicineGroupProps {
   index: number;
-  control: Control<SelectTreatmentFormValues>;
+  form: UseFormReturn<z.infer<typeof SelectTreatmentFormSchema>>;
   onRemove: () => void;
   medicines?: Medicines.GetMedicines.ResponseBody;
 }
 
 export function MedicineGroup({
   index,
-  control,
+  form,
   onRemove,
   medicines,
 }: MedicineGroupProps) {
   const { fields, append, remove } = useFieldArray({
-    control,
+    control: form.control,
     name: `medicine_groups.${index}.medicines`,
   });
 
@@ -53,7 +52,7 @@ export function MedicineGroup({
       <div className="grid gap-4 grid-cols-2">
         <div className="col-span-2">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${index}.duration`}
           >
             <FloatingLabelInput label="Duration (minutes)" />
@@ -61,7 +60,7 @@ export function MedicineGroup({
         </div>
         <div className="col-span-2">
           <FieldWrapper
-            control={control}
+            control={form.control}
             name={`medicine_groups.${index}.treatment_days`}
             description="Separated by comma. ie: 1,4,8"
           >
@@ -75,7 +74,7 @@ export function MedicineGroup({
           key={field.id}
           groupIndex={index}
           medicineIndex={medicineIndex}
-          control={control}
+          form={form}
           onRemove={() => remove(medicineIndex)}
           medicines={medicines}
         />
