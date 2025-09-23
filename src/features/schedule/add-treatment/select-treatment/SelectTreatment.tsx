@@ -80,7 +80,7 @@ export const SelectTreatment: React.FC<Props> = ({
         group => ({
           protocol_medicine_group_id: group.id,
           duration: secondsToMinutes(group.duration),
-          treatment_days: group.treatment_days,
+          treatment_days: group.treatment_days.toString(),
           medicines: group.protocol_medicines?.map(medicine => {
             // Parse dose to extract number and unit
             const doseMatch = medicine.dose.match(/^(\d+)(\w+)$/);
