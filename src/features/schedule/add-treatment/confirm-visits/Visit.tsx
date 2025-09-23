@@ -109,7 +109,9 @@ export const Visit: React.FC<Props> = ({
                   })}
                 >
                   <MapPin size={20} className="h-4 w-4" />
-                  {visit.bed?.name ? visit.bed.name : 'No Spot'}
+                  {visit.bed?.name
+                    ? `${visit.room?.name} - ${visit.bed.name}`
+                    : 'No Spot'}
                 </div>
               </div>
             </div>
