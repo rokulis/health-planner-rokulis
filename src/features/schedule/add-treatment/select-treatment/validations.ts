@@ -31,10 +31,10 @@ export const SelectTreatmentFormSchema = z.object({
       medicines: z.array(
         z.object({
           medicine_id: z.coerce.number().int().nonnegative(),
-          medicine_name: z.string().min(1),
+          medicine_name: z.string().optional(),
           atc_code: z.string().min(1),
           procedure: z.string().min(1),
-          dose: z.coerce.string(),
+          dose: z.coerce.string().min(1, "Dose is required"),
           dose_unit: z.string().min(1),
           comment: z.string().nullish(),
         })
