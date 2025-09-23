@@ -14,10 +14,7 @@ import { Button } from '@/commons/components/ui/button';
 import { FormLabel } from '@/commons/components/ui/form';
 import { Textarea } from '@/commons/components/ui/textarea';
 import { SelectTreatmentFormSchema } from '@/features/schedule/add-treatment/select-treatment/validations';
-import {
-  CreateMedicineProcedureEnum,
-  MedicineProcedureEnum,
-} from '@/types/swagger/data-contracts';
+import { CreateMedicineProcedureEnum } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { MedicineProcedure } from '@/utils/factory';
 
@@ -53,7 +50,11 @@ export function MedicineField({
         );
         form.setValue(
           `medicine_groups.${groupIndex}.medicines.${medicineIndex}.procedure`,
-          selectedMedicine.procedure ?? MedicineProcedureEnum.Iv
+          selectedMedicine.procedure ?? 'Iv'
+        );
+        form.setValue(
+          `medicine_groups.${groupIndex}.medicines.${medicineIndex}.medicine_name`,
+          selectedMedicine.name
         );
       }
     }
