@@ -26,7 +26,7 @@ import {
 
 // Fixed cell width for time slots
 const TIME_CELL_WIDTH = 60;
-const TIME_INTERVAL = 5; // minutes
+const TIME_INTERVAL = 15; // minutes
 
 interface Props {
   rooms?: Array<RoomResource>;
@@ -59,7 +59,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
   }, []);
 
   const generateTimeSlots = () => {
-    let minHour = 8;
+    let minHour = 10;
     let maxHour = 17;
 
     rooms?.forEach(room => {
@@ -87,17 +87,9 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       slots.push(`${hour.toString().padStart(2, '0')}:00`);
 
       if (hour < maxHour) {
-        slots.push(`${hour.toString().padStart(2, '0')}:05`);
-        slots.push(`${hour.toString().padStart(2, '0')}:10`);
         slots.push(`${hour.toString().padStart(2, '0')}:15`);
-        slots.push(`${hour.toString().padStart(2, '0')}:20`);
-        slots.push(`${hour.toString().padStart(2, '0')}:25`);
         slots.push(`${hour.toString().padStart(2, '0')}:30`);
-        slots.push(`${hour.toString().padStart(2, '0')}:35`);
-        slots.push(`${hour.toString().padStart(2, '0')}:40`);
         slots.push(`${hour.toString().padStart(2, '0')}:45`);
-        slots.push(`${hour.toString().padStart(2, '0')}:50`);
-        slots.push(`${hour.toString().padStart(2, '0')}:55`);
       }
     }
     return slots;
@@ -118,50 +110,19 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
       if (slotMinute === 0) {
         return currentMinute >= 0 && currentMinute < 5;
       }
-      // For XX:05 slots, it's current if minutes are 5-9
-      if (slotMinute === 5) {
-        return currentMinute >= 5 && currentMinute < 10;
-      }
-      // For XX:10 slots, it's current if minutes are 10-14
-      if (slotMinute === 10) {
-        return currentMinute >= 10 && currentMinute < 15;
-      }
-      // For XX:15 slots, it's current if minutes are 15-19
+      // For XX:15 slots, it's current if minutes are 15-29
       if (slotMinute === 15) {
         return currentMinute >= 15 && currentMinute < 20;
       }
-      // For XX:20 slots, it's current if minutes are 20-24
-      if (slotMinute === 20) {
-        return currentMinute >= 20 && currentMinute < 25;
-      }
-      // For XX:25 slots, it's current if minutes are 25-29
-      if (slotMinute === 25) {
-        return currentMinute >= 25 && currentMinute < 30;
-      }
-      // For XX:30 slots, it's current if minutes are 30-34
+      // For XX:30 slots, it's current if minutes are 30-44
       if (slotMinute === 30) {
         return currentMinute >= 30 && currentMinute < 35;
       }
-      // For XX:35 slots, it's current if minutes are 35-39
-      if (slotMinute === 35) {
-        return currentMinute >= 35 && currentMinute < 40;
-      }
-      // For XX:40 slots, it's current if minutes are 40-44
-      if (slotMinute === 40) {
-        return currentMinute >= 40 && currentMinute < 45;
-      }
-      // For XX:45 slots, it's current if minutes are 45-49
+      // For XX:45 slots, it's current if minutes are 45-59
       if (slotMinute === 45) {
         return currentMinute >= 45 && currentMinute < 50;
       }
-      // For XX:50 slots, it's current if minutes are 50-54
-      if (slotMinute === 50) {
-        return currentMinute >= 50 && currentMinute < 55;
-      }
-      // For XX:55 slots, it's current if minutes are 55-59
-      if (slotMinute === 55) {
-        return currentMinute >= 55 && currentMinute < 60;
-      }
+      return false;
     }
 
     return false;

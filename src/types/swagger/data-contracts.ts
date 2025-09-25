@@ -372,6 +372,7 @@ export interface VisitResource {
   is_working_day?: boolean;
   /** Bed within a room */
   bed?: Bed;
+  next_visit?: VisitResource;
   visit_treatments?: VisitTreatmentResource[];
 }
 
