@@ -40,8 +40,6 @@ export const PlanNextCycle: React.FC<Props> = ({
       const res = await planNextCycleVisits(id);
       await revalidateCache();
       if (res.success) {
-        toast.success('Next visits planned successfully');
-
         if (res.data) {
           dispatchAction('plan_next_cycle', { id });
         }
