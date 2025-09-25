@@ -112,11 +112,10 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
             queryKey: ['protocols'],
           });
           toast.success('Protocol updated successfully');
-          form.reset();
-          onClose?.();
         }
       });
     }
+
     return createProtocol(transformedData).then(res => {
       if (res.message) {
         toast.error(res.message);
@@ -125,7 +124,6 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
           queryKey: ['protocols'],
         });
         toast.success('Protocol added successfully');
-        form.reset();
         dispatchAction('protocol_view', { id: res.data?.id });
       }
     });
