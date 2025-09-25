@@ -46,6 +46,11 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
             <div className="font-medium">
               {plan?.data?.days_between_cycles ?? '-'}
             </div>
+
+            <div className="text-gray-600">Patient:</div>
+            <div className="font-medium">
+              {plan?.data?.patient?.name ?? '-'}
+            </div>
           </div>
         </div>
       </div>

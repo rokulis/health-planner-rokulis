@@ -3,6 +3,7 @@ import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -38,11 +39,14 @@ export const VisitReschedule: React.FC<Props> = ({
   const [isPending, startTransition] = React.useTransition();
   const queryClient = useQueryClient();
   const [date, setDate] = React.useState<Date | undefined>(
-    visit.date_time ? new Date(visit.date_time) : new Date()
+    visit.date ? new Date(visit.date) : new Date()
   );
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
-    undefined
+    visit.date_time
+      ? formatInTimeZone(new Date(visit.date_time), 'UTC', 'HH:mm')
+      : undefined
   );
+
   const selectedDate = React.useMemo(() => {
     if (!date)
       return format(

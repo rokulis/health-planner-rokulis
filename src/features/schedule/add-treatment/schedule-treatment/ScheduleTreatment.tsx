@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { rescheduleVisit } from '@/app/schedule/actions';
@@ -135,7 +134,6 @@ export const ScheduleTreatment: React.FC<Props> = ({
       }).then(res => {
         if (res.success) {
           revalidateCache();
-          toast.success('Next visits planned successfully');
 
           if (res.data) {
             onStepSubmit(res.data);

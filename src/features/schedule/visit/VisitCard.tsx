@@ -44,6 +44,9 @@ export default function VisitCard({
     t => t.status === VisitTreatmentStatus.Done
   );
   const isLastVisit = visit.data?.is_last_visit;
+  const shouldShowNextVisitDate = visit?.data?.visit_treatments?.every(
+    v => v.status === VisitTreatmentStatus.Done
+  );
 
   const onNext = async (treatmentId?: number) =>
     startTransition(() => {
@@ -176,18 +179,22 @@ export default function VisitCard({
                                 {medicine.medicine?.atc_code ?? '-'}
                               </div>
                             </div>
-
                           </div>
 
                           {activeTreatment === treatment.id ? (
                             <>
                               <div className="flex gap-6 text-sm text-gray-600 mt-2">
-                                {treatment.treatment_medicine_group?.duration ? (
-                                  <div className="flex gap-1">
-                                    <Clock size={18} />{' '}
-                                    {secondsToMinutes(treatment.treatment_medicine_group?.duration)}min
-                                  </div>
-                                ) : null}
+                                {treatment.treatment_medicine_group
+                                  ?.duration ? (
+                                      <div className="flex gap-1">
+                                        <Clock size={18} />{' '}
+                                        {secondsToMinutes(
+                                          treatment.treatment_medicine_group
+                                            ?.duration
+                                        )}
+                                    min
+                                      </div>
+                                    ) : null}
 
                                 {medicine.dose ? (
                                   <div className="flex gap-1">
@@ -244,6 +251,20 @@ export default function VisitCard({
               </div>
             ))}
           </div>
+          {shouldShowNextVisitDate ? (
+            <div className="text-sm text-gray-600 flex items-center justify-center gap-1 mt-4">
+              Next visit:
+              <span className="font-semibold">
+                {visit.data?.next_visit?.date_time
+                  ? formatInTimeZone(
+                    new Date(visit.data?.next_visit?.date_time),
+                    'UTC',
+                    'yyyy-MM-dd HH:mm'
+                  )
+                  : '-'}
+              </span>
+            </div>
+          ) : null}
         </CardContent>
       </Card>
       <div className="pb-4 pt-8 w-full">
