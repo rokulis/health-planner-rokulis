@@ -19,6 +19,7 @@ export const PlanNextCycle: React.FC<Props> = ({
   id,
   className,
 }) => {
+  const [isPending, startTransition] = React.useTransition();
   const { dispatchAction } = useActionContext();
   const queryClient = useQueryClient();
 
@@ -35,8 +36,9 @@ export const PlanNextCycle: React.FC<Props> = ({
   };
 
   const handleButtonClick = async () => {
-    return planNextCycleVisits(id).then(res => {
-      revalidateCache();
+    return startTransition(async () => {
+      const res = await planNextCycleVisits(id);
+      await revalidateCache();
       if (res.success) {
         toast.success('Next visits planned successfully');
 
@@ -49,7 +51,12 @@ export const PlanNextCycle: React.FC<Props> = ({
 
   return (
     <>
-      <Button size={size} onClick={handleButtonClick} className={className}>
+      <Button
+        size={size}
+        isLoading={isPending}
+        onClick={handleButtonClick}
+        className={className}
+      >
         Plan next visits
       </Button>
     </>
