@@ -23,6 +23,7 @@ export const ConfirmVisits: React.FC<Props> = ({
   onBack,
   onSuccess,
 }) => {
+  const [isPending, startTransition] = React.useTransition();
   const [currentTreatmentPlan, setCurrentTreatmentPlan] =
     React.useState(treatmentPlan);
   const pathname = usePathname();
@@ -42,21 +43,23 @@ export const ConfirmVisits: React.FC<Props> = ({
   };
 
   const onConfirm = async () => {
-    if (!treatmentPlan?.id) {
-      return;
-    }
-    return confirmTreatmentPlanCycle(treatmentPlan?.id).then(res => {
-      revalidateCache();
-      if (res.message) {
-        toast.error(res.message);
-      } else {
-        toast.success('Visits confirmed successfully');
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          router.push(pathname);
-        }
+    return startTransition(() => {
+      if (!treatmentPlan?.id) {
+        return;
       }
+      confirmTreatmentPlanCycle(treatmentPlan?.id).then(res => {
+        revalidateCache();
+        if (res.message) {
+          toast.error(res.message);
+        } else {
+          toast.success('Visits confirmed successfully');
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            router.push(pathname);
+          }
+        }
+      });
     });
   };
 
@@ -97,6 +100,7 @@ export const ConfirmVisits: React.FC<Props> = ({
           </Button>
         ) : null}
         <Button
+          isLoading={isPending}
           disabled={isDisabledSubmit}
           onClick={onConfirm}
           type="submit"

@@ -45,7 +45,8 @@ const transformTreatmentDaysToArrayOfNumber = (
 };
 
 export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
-  const { onClose, dispatchAction } = useActionContext();
+  const [isPending, startTransition] = React.useTransition();
+  const { dispatchAction } = useActionContext();
   const queryClient = useQueryClient();
 
   const [search, setSearch] = React.useState<string>('');
@@ -101,31 +102,33 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
   const onSubmit: SubmitHandler<
     z.infer<typeof protocolSchema>
   > = async data => {
-    const transformedData = transformTreatmentDaysToArrayOfNumber(data);
+    return startTransition(async () => {
+      const transformedData = transformTreatmentDaysToArrayOfNumber(data);
 
-    if (protocol?.data?.id) {
-      return updateProtocol(protocol.data.id, transformedData).then(res => {
+      if (protocol?.data?.id) {
+        return updateProtocol(protocol.data.id, transformedData).then(res => {
+          if (res.message) {
+            toast.error(res.message);
+          } else {
+            queryClient.invalidateQueries({
+              queryKey: ['protocols'],
+            });
+            toast.success('Protocol updated successfully');
+          }
+        });
+      }
+
+      return createProtocol(transformedData).then(res => {
         if (res.message) {
           toast.error(res.message);
         } else {
           queryClient.invalidateQueries({
             queryKey: ['protocols'],
           });
-          toast.success('Protocol updated successfully');
+          toast.success('Protocol added successfully');
+          dispatchAction('protocol_view', { id: res.data?.id });
         }
       });
-    }
-
-    return createProtocol(transformedData).then(res => {
-      if (res.message) {
-        toast.error(res.message);
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: ['protocols'],
-        });
-        toast.success('Protocol added successfully');
-        dispatchAction('protocol_view', { id: res.data?.id });
-      }
     });
   };
 
@@ -210,7 +213,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
           </Button>
         </div>
         <div className="col-span-6 mt-12 flex justify-end">
-          <Button type="submit" className="w-1/2">
+          <Button isLoading={isPending} type="submit" className="w-1/2">
             {protocol?.data?.id ? 'Update Protocol' : 'Add Protocol'}
           </Button>
         </div>
