@@ -23,7 +23,7 @@ export const protocolMedicineSchema = z.object({
 
 export const medicineGroupSchema = z.object({
   protocol_id: z.number().int().nonnegative(),
-  duration: z.coerce.number().min(1, 'Duration must be at least 1 day'),
+  duration: z.coerce.number().min(0, 'Duration must be at least 1 day'),
   treatment_days: flexibleDaysSchema,
   medicines: z
     .array(protocolMedicineSchema)
