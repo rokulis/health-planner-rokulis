@@ -108,19 +108,19 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     if (slotHour === currentHour) {
       // For XX:00 slots, it's current if minutes are 0-14
       if (slotMinute === 0) {
-        return currentMinute >= 0 && currentMinute < 5;
+        return currentMinute >= 0 && currentMinute < 15;
       }
       // For XX:15 slots, it's current if minutes are 15-29
       if (slotMinute === 15) {
-        return currentMinute >= 15 && currentMinute < 20;
+        return currentMinute >= 15 && currentMinute < 30;
       }
       // For XX:30 slots, it's current if minutes are 30-44
       if (slotMinute === 30) {
-        return currentMinute >= 30 && currentMinute < 35;
+        return currentMinute >= 30 && currentMinute < 45;
       }
       // For XX:45 slots, it's current if minutes are 45-59
       if (slotMinute === 45) {
-        return currentMinute >= 45 && currentMinute < 50;
+        return currentMinute >= 45 && currentMinute < 60;
       }
       return false;
     }
