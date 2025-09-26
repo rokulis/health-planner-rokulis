@@ -12,6 +12,7 @@ import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
 import { Form, FormLabel } from '@/commons/components/ui/form';
+import { filterAvailableHours } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
@@ -72,7 +73,10 @@ export const VisitReschedule: React.FC<Props> = ({
     },
   });
 
-  const uniqueTimeSlots = getUniqueTimeSlots(data ?? []);
+  const uniqueTimeSlots = filterAvailableHours(
+    selectedDate,
+    getUniqueTimeSlots(data ?? [])
+  );
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
     return startTransition(async () => {

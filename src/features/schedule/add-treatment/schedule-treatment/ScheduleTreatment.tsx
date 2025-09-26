@@ -32,7 +32,7 @@ interface Props {
   buttonText?: string;
 }
 
-function filterAvailableHours(date: string, hours: string[]): string[] {
+export function filterAvailableHours(date: string, hours: string[]): string[] {
   const now = new Date();
   const targetDate = new Date(date);
 
