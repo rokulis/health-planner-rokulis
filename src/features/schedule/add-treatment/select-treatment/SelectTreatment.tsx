@@ -43,6 +43,7 @@ export const SelectTreatment: React.FC<Props> = ({
   patientId,
   onSkip,
 }) => {
+  const [isPending, startTransition] = React.useTransition();
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
   const { data: diagnoses } = useDiagnosesQuery(searchValue);
@@ -108,16 +109,18 @@ export const SelectTreatment: React.FC<Props> = ({
   };
 
   const onSubmit: SubmitHandler<SelectTreatmentFormValues> = async data => {
-    const request = mapTreatmentRequest(data);
-    await createTreatmentPlan(request).then(res => {
-      if (res.message) {
-        return toast.error(res.message);
-      }
-      if (res.success) {
-        if (typeof onStepSubmit === 'function' && res.data?.id) {
-          onStepSubmit(res.data);
+    return startTransition(async () => {
+      const request = mapTreatmentRequest(data);
+      await createTreatmentPlan(request).then(res => {
+        if (res.message) {
+          return toast.error(res.message);
         }
-      }
+        if (res.success) {
+          if (typeof onStepSubmit === 'function' && res.data?.id) {
+            onStepSubmit(res.data);
+          }
+        }
+      });
     });
   };
 
@@ -218,7 +221,9 @@ export const SelectTreatment: React.FC<Props> = ({
               </Button>
             ) : null}
 
-            <Button type="submit">Save Procedure</Button>
+            <Button isLoading={isPending} type="submit">
+              Save Procedure
+            </Button>
           </div>
         </div>
       </form>
