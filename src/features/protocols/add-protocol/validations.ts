@@ -17,7 +17,7 @@ export const protocolMedicineSchema = z.object({
   medicine_id: z.coerce.number().min(1, 'Medicine ID is required'),
   dose: z.coerce.string().min(1, 'Dosage must be at least 1'),
   comments: z.string().optional().nullish(),
-  protocol_medicine_group_id: z.coerce.number().int().nonnegative(),
+  protocol_medicine_group_id: z.coerce.number().int().nonnegative().nullish(),
   medicine: medicineSchema,
 });
 

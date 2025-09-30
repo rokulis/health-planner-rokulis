@@ -201,7 +201,7 @@ export const SelectTreatment: React.FC<Props> = ({
             variant="ghost"
             onClick={() => {
               append({
-                protocol_medicine_group_id: fields.length + 1,
+                protocol_medicine_group_id: null,
                 duration: 0,
                 treatment_days: '',
                 medicines: [],

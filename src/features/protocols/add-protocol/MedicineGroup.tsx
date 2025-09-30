@@ -90,7 +90,7 @@ export function MedicineGroup({
         className="text-sm"
         onClick={() => {
           append({
-            protocol_medicine_group_id: 0,
+            protocol_medicine_group_id: null,
             medicine_id: 0,
             dose: '',
             comments: '',

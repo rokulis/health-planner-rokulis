@@ -22,10 +22,10 @@ export const SelectTreatmentFormSchema = z.object({
   cycles: z.coerce.number().int().positive(),
   days_between_cycles: z.coerce.number().int().nonnegative(),
   sector_id: z.number().int().positive(),
-  diagnosis_id: z.coerce.number(),
+  diagnosis_id: z.coerce.number().nullish(),
   medicine_groups: z.array(
     z.object({
-      protocol_medicine_group_id: z.coerce.number().int().positive(),
+      protocol_medicine_group_id: z.coerce.number().int().positive().nullish(),
       duration: z.coerce.number().int().nonnegative().min(0),
       treatment_days: strictCommaSeparatedNumbersSchema,
       medicines: z.array(

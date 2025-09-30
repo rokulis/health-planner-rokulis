@@ -272,6 +272,8 @@ export type RoomResource = Room & {
   /** @example false */
   can_be_deleted?: boolean;
   sector?: SectorResource;
+  /** @example "Room 1" */
+  name?: string;
 } & {
   beds?: (Bed & {
     /** @example false */

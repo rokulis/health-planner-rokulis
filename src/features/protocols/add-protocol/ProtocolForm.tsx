@@ -81,7 +81,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
           treatment_days: '',
           medicines: [
             {
-              protocol_medicine_group_id: 0,
+              protocol_medicine_group_id: null,
               dose: '',
               comments: '',
               medicine: {
@@ -197,7 +197,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
                 medicines: [
                   {
                     medicine_id: 0,
-                    protocol_medicine_group_id: 0,
+                    protocol_medicine_group_id: null,
                     dose: '',
                     comments: '',
                     medicine: {
