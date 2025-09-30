@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 import { planNextCycleVisits } from '@/app/treatment-plans/actions';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
