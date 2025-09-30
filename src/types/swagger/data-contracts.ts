@@ -25,6 +25,12 @@ export enum VisitTreatmentStatus {
   Done = "done",
 }
 
+/** @example "on_site_treatment" */
+export enum VisitTypeEnum {
+  OnSiteTreatment = "on_site_treatment",
+  Ambulatory = "ambulatory",
+}
+
 /** @example "upcoming" */
 export enum VisitStatus {
   Completed = "completed",
@@ -376,6 +382,7 @@ export interface VisitResource {
   bed?: Bed;
   next_visit?: VisitResource;
   visit_treatments?: VisitTreatmentResource[];
+  type?: VisitTypeEnum;
 }
 
 export interface VisitTreatmentResource {

@@ -10,7 +10,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { confirmTreatmentPlanCycle } from '@/app/schedule/actions';
 import { Button } from '@/commons/components/ui/button';
 import Cycle from '@/features/schedule/add-treatment/confirm-visits/Cycle';
-import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
+import { TreatmentPlanResource, VisitTypeEnum } from '@/types/swagger/data-contracts';
 
 interface Props {
   treatmentPlan?: TreatmentPlanResource;
@@ -67,7 +67,7 @@ export const ConfirmVisits: React.FC<Props> = ({
   const totalCycles = currentTreatmentPlan?.cycles ?? 0;
 
   const isDisabledSubmit = !!activeCycle?.visits?.find(
-    visit => !visit.is_working_day
+    visit => !visit.is_working_day && visit.type !== VisitTypeEnum.Ambulatory
   );
 
   return (
