@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 import { planNextCycleVisits } from '@/app/treatment-plans/actions';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
@@ -41,6 +42,9 @@ export const PlanNextCycle: React.FC<Props> = ({
       if (res.success) {
         if (res.data) {
           dispatchAction('plan_next_cycle', { id });
+        }
+        if (res.message) {
+          toast.error(res.message);
         }
       }
     });
