@@ -25,12 +25,6 @@ export enum VisitTreatmentStatus {
   Done = "done",
 }
 
-/** @example "on_site_treatment" */
-export enum VisitTypeEnum {
-  OnSiteTreatment = "on_site_treatment",
-  Ambulatory = "ambulatory",
-}
-
 /** @example "upcoming" */
 export enum VisitStatus {
   Completed = "completed",
@@ -48,6 +42,12 @@ export enum TreatmentPlanStatus {
   Confirmed = "confirmed",
   Stopped = "stopped",
   Completed = "completed",
+}
+
+/** @example "on_site_treatment" */
+export enum VisitTypeEnum {
+  OnSiteTreatment = "on_site_treatment",
+  Ambulatory = "ambulatory",
 }
 
 /** Possible statuses for a visit */
@@ -356,6 +356,7 @@ export interface TreatmentPlanResource {
 
 export interface VisitResource {
   id?: number;
+  index?: number;
   patient_id?: number;
   treatment_plan_id?: number;
   treatment_cycle_id?: number;
@@ -1365,6 +1366,13 @@ export interface Visit {
    * @format date-time
    */
   updated_at?: string;
+  /**
+   * Visit index
+   * @format int64
+   * @example 1
+   */
+  index?: number;
+  type?: VisitTypeEnum;
 }
 
 /**

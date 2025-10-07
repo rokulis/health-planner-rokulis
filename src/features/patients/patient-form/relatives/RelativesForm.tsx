@@ -207,7 +207,7 @@ export const RelativesForm: React.FC<Props> = ({
           ) : null}
 
           <Button type="submit" className="w-1/2">
-            Next
+            Update Relatives
           </Button>
         </div>
       </form>

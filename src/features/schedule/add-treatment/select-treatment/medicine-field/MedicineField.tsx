@@ -9,7 +9,6 @@ import { z } from 'zod';
 import { FieldWrapper } from '@/commons/components/form/FieldWrapper';
 import { FloatingLabelInput } from '@/commons/components/form/FloatingLabelInput';
 import { FloatingLabelSearchableSelect } from '@/commons/components/form/FloatingLabelSearchableSelect';
-import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
 import { Button } from '@/commons/components/ui/button';
 import { FormLabel } from '@/commons/components/ui/form';
 import { Textarea } from '@/commons/components/ui/textarea';
@@ -104,7 +103,7 @@ export function MedicineField({
             control={form.control}
             name={`medicine_groups.${groupIndex}.medicines.${medicineIndex}.procedure`}
           >
-            <FloatingLabelSelect
+            <FloatingLabelSearchableSelect
               label="Procedure"
               options={Object.keys(CreateMedicineProcedureEnum).map(key => ({
                 value:

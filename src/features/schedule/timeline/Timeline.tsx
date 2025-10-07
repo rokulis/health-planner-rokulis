@@ -235,7 +235,7 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
               </span>
             </div>
             {width > 120 ? (
-              <span className="text-xs">
+              <span>
                 {appointmentForSlot.start_time} - {appointmentForSlot.end_time}
               </span>
             ) : null}
