@@ -3,7 +3,7 @@
  * @param dateTime The date/time to round
  * @returns The rounded date
  */
-export function roundToNearest10Min(dateTime: Date | string): Date {
+export function roundToNearest15Min(dateTime: Date | string): Date {
   // Convert to Date object if string is provided
   const inputDate = typeof dateTime === 'string' ? new Date(dateTime) : new Date(dateTime);
 
@@ -28,14 +28,14 @@ export function roundToNearest10Min(dateTime: Date | string): Date {
     );
 
     // Round the minutes
-    const remainder = minutes % 10;
+    const remainder = minutes % 15;
 
     if (remainder < 7.5) {
       // Round down
       date.setMinutes(minutes - remainder);
     } else {
       // Round up
-      date.setMinutes(minutes + (10 - remainder));
+      date.setMinutes(minutes + (15 - remainder));
     }
 
     return date;
@@ -43,12 +43,12 @@ export function roundToNearest10Min(dateTime: Date | string): Date {
     // Work with local time for non-UTC inputs
     const date = new Date(inputDate);
     minutes = date.getMinutes();
-    const remainder = minutes % 10;
+    const remainder = minutes % 15;
 
     if (remainder < 7.5) {
       date.setMinutes(minutes - remainder);
     } else {
-      date.setMinutes(minutes + (10 - remainder));
+      date.setMinutes(minutes + (15 - remainder));
     }
 
     date.setSeconds(0);
@@ -105,8 +105,8 @@ export function processVisitTime(
   }
 
   // Round the start time to nearest 15 minutes
-  const roundedStartTime = roundToNearest10Min(dateTime);
-  const roundedEndTime = roundToNearest10Min(endTime);
+  const roundedStartTime = roundToNearest15Min(dateTime);
+  const roundedEndTime = roundToNearest15Min(endTime);
 
   return {
     start_time: formatTimeForTimeline(roundedStartTime),
