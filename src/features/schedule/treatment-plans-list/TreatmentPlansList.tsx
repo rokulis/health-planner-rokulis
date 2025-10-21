@@ -18,7 +18,7 @@ import { VisitResource } from '@/types/swagger/data-contracts';
 export const TreatmentPlansList = () => {
   const { dispatchAction } = useActionContext();
   const params = useSearchParams();
-  const { data: schedule } = useScheduleQuery(
+  const { data: schedule, isLoading } = useScheduleQuery(
     params.get('date') ?? new Date().toISOString().split('T')[0]
   );
 
@@ -98,6 +98,7 @@ export const TreatmentPlansList = () => {
     <ScheduleLayout>
       <DataTable
         columns={columns}
+        isLoading={isLoading}
         data={schedule?.data.data ?? []}
         onRowClick={data =>
           dispatchAction('visit_view', { id: data.original.id })

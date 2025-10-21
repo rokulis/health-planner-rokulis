@@ -23,7 +23,7 @@ interface Props {
 export const ProtocolsList: React.FC<Props> = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get('search') || '';
-  const { data: protocols } = useProtocolsQuery(search);
+  const { data: protocols, isLoading } = useProtocolsQuery(search);
   const { dispatchAction } = useActionContext();
 
   const columns: ColumnDef<ProtocolResource>[] = [
@@ -77,6 +77,7 @@ export const ProtocolsList: React.FC<Props> = () => {
       <DataTable
         columns={columns}
         data={protocols?.data ?? []}
+        isLoading={isLoading}
         onRowClick={r => dispatchAction('protocol_view', { id: r.original.id })}
       />
     </PageLayout>

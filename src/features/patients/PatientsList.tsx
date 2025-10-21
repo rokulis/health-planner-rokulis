@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -25,7 +25,7 @@ export const PatientsList: React.FC<Props> = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get('search') || '';
-  const { data: patients } = usePatientsQuery(search);
+  const { data: patients, isLoading } = usePatientsQuery(search);
 
   const columns: ColumnDef<PatientResource>[] = [
     {
@@ -81,6 +81,7 @@ export const PatientsList: React.FC<Props> = () => {
       <DataTable
         columns={columns}
         data={patients?.data ?? []}
+        isLoading={isLoading}
         onRowClick={row => router.push(`/patients/view/${row.original.id}`)}
       />
     </PatientsLayout>

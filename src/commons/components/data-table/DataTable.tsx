@@ -24,11 +24,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/commons/components/ui/table';
+import { Spinner } from '../loader/Spinner';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   showPagination?: boolean;
+  isLoading?: boolean;
   onRowClick?: (
     row: Row<TData>,
     event: React.MouseEvent<HTMLTableRowElement>
@@ -40,6 +42,7 @@ export function DataTable<TData, TValue>({
   data,
   showPagination = true,
   onRowClick,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -80,7 +83,18 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isLoading ? (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center"
+              >
+                <div className="flex justify-center items-center mt-4">
+                  <Spinner className="w-16 h-16" />
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}

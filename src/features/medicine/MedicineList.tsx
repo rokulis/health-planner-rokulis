@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 import { formatInTimeZone } from 'date-fns-tz';
@@ -27,8 +27,8 @@ export const MedicineList: React.FC<Props> = ({ medicine }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get('search') || '';
-  const { data: medicines } = useMedicinesQuery(search);
-  const [addMedicineOpen, setAddMedicineOpen] = React.useState(
+  const { data: medicines, isLoading } = useMedicinesQuery(search);
+  const [addMedicineOpen, setAddMedicineOpen] = useState(
     !!medicine?.data?.id || false
   );
 
@@ -100,7 +100,11 @@ export const MedicineList: React.FC<Props> = ({ medicine }) => {
           </Button>
         }
       >
-        <DataTable columns={columns} data={medicines?.data ?? []} />
+        <DataTable
+          columns={columns}
+          data={medicines?.data ?? []}
+          isLoading={isLoading}
+        />
       </PageLayout>
     </>
   );
