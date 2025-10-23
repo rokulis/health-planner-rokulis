@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 import { secondsToMinutes } from 'date-fns';
@@ -18,9 +18,17 @@ import { VisitResource } from '@/types/swagger/data-contracts';
 export const TreatmentPlansList = () => {
   const { dispatchAction } = useActionContext();
   const params = useSearchParams();
+  const sectorId = params.get('sector_id')
+    ? Number(params.get('sector_id'))
+    : undefined;
   const { data: schedule, isLoading } = useScheduleQuery(
-    params.get('date') ?? new Date().toISOString().split('T')[0]
+    params.get('date') ?? new Date().toISOString().split('T')[0],
+    sectorId,
   );
+
+  useEffect(() => {
+    console.log('got schedule:', schedule);
+  }, [schedule]);
 
   const columns: ColumnDef<VisitResource>[] = [
     {

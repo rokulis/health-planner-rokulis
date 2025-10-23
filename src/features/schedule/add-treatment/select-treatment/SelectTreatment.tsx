@@ -25,6 +25,7 @@ import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 import { Medicines } from '@/types/swagger/MedicinesRoute';
 import { Protocols } from '@/types/swagger/ProtocolsRoute';
 import { useDiagnosesQuery } from '@/utils/hooks/useDiagnosesQuery';
+import { useSectorsQuery } from '@/utils/hooks/useSectorsQuery';
 
 import { MedicineGroup } from './medicine-group/MedicineGroup';
 
@@ -47,6 +48,7 @@ export const SelectTreatment: React.FC<Props> = ({
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
   const { data: diagnoses } = useDiagnosesQuery(searchValue);
+  const { data: sectors } = useSectorsQuery();
 
   const form = useForm<SelectTreatmentFormValues>({
     resolver: zodResolver(SelectTreatmentFormSchema),
@@ -55,7 +57,7 @@ export const SelectTreatment: React.FC<Props> = ({
       protocol_id: null as unknown as number, // Protocol ID will be set after selection
       cycles: 10,
       days_between_cycles: 7,
-      sector_id: 1,
+      sector_id: undefined as unknown as number,
       diagnosis_id: undefined as unknown as number, // Diagnosis ID will be set after selection
       medicine_groups: [], // No medicine groups until protocol is selected
     },
@@ -74,9 +76,7 @@ export const SelectTreatment: React.FC<Props> = ({
     if (selectedProtocol) {
       form.setValue('protocol_id', selectedProtocol.id ?? 0);
       form.setValue('days_between_cycles', selectedProtocol.cycle_duration);
-      form.setValue('diagnosis_id', selectedProtocol.diagnosis?.id ?? 1);
 
-      // Transform medicine groups to match form structure
       const medicineGroups = selectedProtocol.protocol_medicine_groups?.map(
         group => ({
           protocol_medicine_group_id: group.id,
@@ -127,12 +127,28 @@ export const SelectTreatment: React.FC<Props> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="px-4">
-        <input type="hidden" {...form.register('sector_id')} value="1" />
         <input
           type="hidden"
           {...form.register('patient_id')}
           value={patientId}
         />
+
+        <FormLabel className="mb-2">General information</FormLabel>
+        <div className="grid grid-cols-6 gap-4 mb-4">
+          <div className="col-span-6">
+            <FieldWrapper control={form.control} name="sector_id">
+              <FloatingLabelSearchableSelect
+                label="Select sector"
+                options={
+                  (sectors?.data ?? []).map(sector => ({
+                    value: String(sector.id),
+                    label: `${sector.name}`,
+                  })) ?? []
+                }
+              />
+            </FieldWrapper>
+          </div>
+        </div>
 
         <FormLabel className="mb-2">Protocol information</FormLabel>
         <div className="grid grid-cols-6 gap-4">
@@ -148,7 +164,6 @@ export const SelectTreatment: React.FC<Props> = ({
               />
             </FieldWrapper>
           </div>
-
           <div className="col-span-6">
             <FieldWrapper control={form.control} name="diagnosis_id">
               <FloatingLabelSearchableSelect

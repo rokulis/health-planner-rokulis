@@ -63,7 +63,7 @@ export const ConfirmVisits: React.FC<Props> = ({
     });
   };
 
-  const activeCycle = currentTreatmentPlan?.current_cycle;
+  const activeCycle = currentTreatmentPlan?.treatment_cycles?.find(tc => tc.status === 'planned' && tc.visits?.length) || currentTreatmentPlan?.current_cycle;
   const totalCycles = currentTreatmentPlan?.cycles ?? 0;
 
   const isDisabledSubmit = !!activeCycle?.visits?.find(

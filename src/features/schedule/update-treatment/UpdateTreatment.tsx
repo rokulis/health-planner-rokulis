@@ -48,7 +48,7 @@ export const UpdateTreatment: React.FC<Props> = ({
       content: (
         <ConfirmVisits
           treatmentPlan={treatmentPlan.data}
-          onBack={() => setCurrentStep(prev => prev - 1)}
+          // onBack={() => setCurrentStep(prev => prev - 1)}
           onSuccess={() => onClose?.()}
         />
       ),

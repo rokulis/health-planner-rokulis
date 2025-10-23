@@ -11,7 +11,14 @@ import { rescheduleVisit } from '@/app/schedule/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
-import { Form, FormLabel } from '@/commons/components/ui/form';
+import { Checkbox } from '@/commons/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/commons/components/ui/form';
 import { filterAvailableHours } from '@/features/schedule/add-treatment/schedule-treatment/ScheduleTreatment';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
@@ -30,6 +37,7 @@ interface Props {
 const FormSchema = z.object({
   start_date: z.string(),
   start_time: z.string(),
+  recursive: z.boolean(),
 });
 
 export const VisitReschedule: React.FC<Props> = ({
@@ -70,6 +78,7 @@ export const VisitReschedule: React.FC<Props> = ({
     defaultValues: {
       start_date: selectedDate,
       start_time: '',
+      recursive: false,
     },
   });
 
@@ -84,7 +93,7 @@ export const VisitReschedule: React.FC<Props> = ({
         return rescheduleVisit(String(visit.id), {
           start_date: selectedDate,
           start_time: values.start_time,
-          recursive: false,
+          recursive: values.recursive,
         }).then(res => {
           if (res.success) {
             if (res.data) {
@@ -121,6 +130,7 @@ export const VisitReschedule: React.FC<Props> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col items-between justify-between h-full px-4"
         >
+
           <FormLabel className="mb-2">Select available time</FormLabel>
           <div className="flex gap-2 flex-wrap">
             {uniqueTimeSlots.map((slot, index) => (
@@ -143,6 +153,24 @@ export const VisitReschedule: React.FC<Props> = ({
               </button>
             ))}
           </div>
+
+                 <FormField
+            control={form.control}
+            name="recursive"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center space-x-2 mt-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>
+                  Reschedule upcoming visits
+                </FormLabel>
+              </FormItem>
+            )}
+          />
 
           <div className="flex justify-between w-full mt-8 gap-4">
             <Button onClick={onCancel} className="flex-1" variant="outline">

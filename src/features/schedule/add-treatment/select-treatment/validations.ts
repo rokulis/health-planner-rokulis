@@ -21,7 +21,7 @@ export const SelectTreatmentFormSchema = z.object({
   protocol_id: z.coerce.number().int().positive(),
   cycles: z.coerce.number().int().positive(),
   days_between_cycles: z.coerce.number().int().nonnegative(),
-  sector_id: z.number().int().positive(),
+  sector_id: z.coerce.number().int().positive(),
   diagnosis_id: z.coerce.number().nullish(),
   medicine_groups: z.array(
     z.object({

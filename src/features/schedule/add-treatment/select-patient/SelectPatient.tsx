@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -13,10 +13,18 @@ import { Button } from '@/commons/components/ui/button';
 import { Form, FormLabel } from '@/commons/components/ui/form';
 import AddPatient from '@/commons/icons/svg/add_patient.svg';
 import { usePatientsQuery } from '@/features/patients/hooks/usePatientsQuery';
+import {
+  PatientResource,
+  TreatmentPlanStatus,
+} from '@/types/swagger/data-contracts';
 
 interface Props {
   onStepSubmit: (patientId: number) => void;
 }
+
+type ExtendedPatientResource = PatientResource & {
+  hasActiveTreatmentPlan?: boolean;
+};
 
 const FormSchema = z.object({
   patientId: z.coerce.number().positive(),
@@ -25,12 +33,36 @@ const FormSchema = z.object({
 export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
   const { data: patients } = usePatientsQuery();
   const { dispatchAction } = useActionContext();
+  const [selectedPatient, setSelectedPatient] = useState<
+    ExtendedPatientResource | undefined
+  >();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      patientId: patients?.data?.[0]?.id ?? -1, // Default to the first patient or -1 if none
+      patientId: -1,
     },
   });
+  const patientId = form.watch('patientId');
+
+  useEffect(() => {
+    if (patients?.data?.[0]?.id) {
+      form.reset({ patientId: patients.data[0].id });
+    }
+  }, [patients?.data, form]);
+
+  useEffect(() => {
+    const patient = patients?.data?.find(p => p.id == patientId);
+    if (patient) {
+      setSelectedPatient({
+        ...patient,
+        hasActiveTreatmentPlan: patient.treatment_plans?.some(
+          plan => plan.status === TreatmentPlanStatus.Confirmed
+        ),
+      });
+    } else {
+      setSelectedPatient(undefined);
+    }
+  }, [patientId, patients?.data]);
 
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = data => {
     if (typeof onStepSubmit === 'function') {
@@ -57,6 +89,11 @@ export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
                 }))}
               />
             </FieldWrapper>
+            {selectedPatient?.hasActiveTreatmentPlan ? (
+              <p className="text-sm text-red-500 self-start">
+                Patient already has an active treatment plan
+              </p>
+            ) : null}
             <span className="text-muted-foreground/80">or</span>
             <div className="flex justify-end mb-2 w-full">
               <Button
@@ -73,7 +110,9 @@ export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
           </div>
 
           <div className="flex justify-end">
-            <Button>Next</Button>
+            <Button disabled={selectedPatient?.hasActiveTreatmentPlan}>
+              Next
+            </Button>
           </div>
         </form>
       </Form>

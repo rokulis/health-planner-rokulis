@@ -157,6 +157,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
       />
 
       <Form {...form}>
+        resurcive true
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col items-between justify-between h-full px-4"

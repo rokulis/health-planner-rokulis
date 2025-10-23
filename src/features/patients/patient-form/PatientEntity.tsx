@@ -94,7 +94,7 @@ export const PatientEntity: React.FC<Props> = ({ id, defaultStep = 1 }) => {
       label: 'Confirm',
       content: (
         <ConfirmVisits
-          onBack={() => setCurrentStep(prev => prev - 1)}
+          // onBack={() => setCurrentStep(prev => prev - 1)}
           treatmentPlan={treatmentPlan}
         />
       ),

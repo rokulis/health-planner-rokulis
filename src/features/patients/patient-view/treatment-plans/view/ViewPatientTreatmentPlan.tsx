@@ -65,7 +65,7 @@ export const ViewPatientTreatmentPlan: React.FC<Props> = ({ id }) => {
               key={idx}
               cycle={cycle}
               index={idx + 1}
-              showFUllDetails={true}
+              showFullDetails={true}
             />
           ))}
         </div>

@@ -70,7 +70,7 @@ export const AddTreatment: React.FC = () => {
       content: (
         <ConfirmVisits
           treatmentPlan={treatmentPlan}
-          onBack={() => setCurrentStep(prev => prev - 1)}
+          // onBack={() => setCurrentStep(prev => prev - 1)}
         />
       ),
     },

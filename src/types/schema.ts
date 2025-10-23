@@ -11,5 +11,6 @@ export * from "./swagger/RoomsRoute";
 export * from "./swagger/ScheduleRoute";
 export * from "./swagger/SectorsRoute";
 export * from "./swagger/TreatmentPlansRoute";
+export * from "./swagger/CyclesRoute";
 export * from "./swagger/VisitsRoute";
 export * from "./swagger/WorkspaceRoute";

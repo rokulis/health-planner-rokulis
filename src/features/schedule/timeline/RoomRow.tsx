@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import cx from 'classnames';
 import { ChevronDown, ChevronRight } from 'lucide-react';
@@ -46,6 +46,10 @@ export function RoomRow({
   expandedByDefault = true,
 }: RoomRowProps) {
   const [isExpanded, setIsExpanded] = useState(expandedByDefault);
+
+  useEffect(() => {
+    setIsExpanded(expandedByDefault);
+  }, [expandedByDefault]);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);

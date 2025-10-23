@@ -31,11 +31,12 @@ const TIME_INTERVAL = 15; // minutes
 interface Props {
   rooms?: Array<RoomResource>;
   schedule?: Array<VisitResource>;
+  sectorId?: number;
 }
 
 type Appointment = VisitResource & ParsedVisitTime;
 
-export default function HospitalTimeline({ rooms, schedule }: Props) {
+export default function HospitalTimeline({ rooms, schedule, sectorId }: Props) {
   const { dispatchAction } = useActionContext();
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -46,14 +47,13 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
     ...processVisitTime(s.date_time, s.end_time),
   }));
 
-  // State for current time
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
-  // Update current time every minute
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
@@ -327,19 +327,19 @@ export default function HospitalTimeline({ rooms, schedule }: Props) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* Room rows */}
-                {rooms?.map(room => (
-                  <RoomRow
-                    expandedByDefault={appointments?.some(
-                      appt => appt.room_id === room.id
-                    )}
-                    key={room.id}
-                    room={room}
-                    timeSlots={timeSlots}
-                    renderAppointment={renderAppointment}
-                    isCurrentHour={isCurrentHour}
-                  />
-                ))}
+              
+                {rooms?.map(room => <RoomRow
+                      expandedByDefault={appointments?.some(
+                        appt =>
+                          appt.room_id === room.id 
+                      )}
+                      key={room.id}
+                      room={room}
+                      timeSlots={timeSlots}
+                      renderAppointment={renderAppointment}
+                      isCurrentHour={isCurrentHour}
+                    />
+                )}
               </TableBody>
             </Table>
           </div>

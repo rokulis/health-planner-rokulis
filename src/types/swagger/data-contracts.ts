@@ -1652,6 +1652,11 @@ export interface CreateInvitationData {
   data?: Invitation;
 }
 
+export interface CancelInvitationParams {
+  /** Invitation ID */
+  id: number;
+}
+
 export interface CancelInvitationData {
   /** @example true */
   success?: boolean;
@@ -1659,6 +1664,11 @@ export interface CancelInvitationData {
     /** @example "Invitation cancelled successfully" */
     message?: string;
   };
+}
+
+export interface ValidateInvitationParams {
+  /** Invitation token */
+  token: string;
 }
 
 export interface ValidateInvitationData {
@@ -1713,6 +1723,11 @@ export interface CreateMedicineData {
   data?: Medicine;
 }
 
+export interface GetMedicineParams {
+  /** Medicine ID */
+  id: number;
+}
+
 export interface GetMedicineData {
   /** @example true */
   success?: boolean;
@@ -1739,11 +1754,19 @@ export interface UpdateMedicinePayload {
   default_time?: string;
 }
 
+export interface UpdateMedicineParams {
+  id: number;
+}
+
 export interface UpdateMedicineData {
   /** @example true */
   success?: boolean;
   /** Medicine used in treatment protocols */
   data?: Medicine;
+}
+
+export interface DeleteMedicineParams {
+  id: number;
 }
 
 export interface DeleteMedicineData {
@@ -1770,15 +1793,27 @@ export interface CreatePatientData {
   data?: PatientResource;
 }
 
+export interface GetPatientParams {
+  id: number;
+}
+
 export interface GetPatientData {
   /** @example true */
   success?: boolean;
   data?: PatientResource;
 }
 
+export interface UpdatePatientParams {
+  id: number;
+}
+
 export interface UpdatePatientData {
   /** @example true */
   success?: boolean;
+}
+
+export interface DeletePatientParams {
+  id: number;
 }
 
 export interface DeletePatientData {
@@ -1787,6 +1822,10 @@ export interface DeletePatientData {
 }
 
 export type StorePatientRelativesPayload = Relative[];
+
+export interface StorePatientRelativesParams {
+  id: number;
+}
 
 export interface StorePatientRelativesData {
   /** @example true */
@@ -1839,16 +1878,31 @@ export interface CreateProtocolData {
   data?: Protocol;
 }
 
+export interface GetProtocolParams {
+  /** Protocol ID */
+  id: number;
+}
+
 export interface GetProtocolData {
   /** @example true */
   success?: boolean;
   data?: ProtocolResource;
 }
 
+export interface UpdateProtocolParams {
+  /** Protocol ID */
+  id: number;
+}
+
 export interface UpdateProtocolData {
   /** @example true */
   success?: boolean;
   data?: ProtocolResource;
+}
+
+export interface DeleteProtocolParams {
+  /** Protocol ID */
+  id: number;
 }
 
 export interface DeleteProtocolData {
@@ -1878,6 +1932,10 @@ export interface CreateRoomData {
   data?: Room;
 }
 
+export interface GetRoomParams {
+  id: number;
+}
+
 export interface GetRoomData {
   /** @example true */
   success?: boolean;
@@ -1888,11 +1946,19 @@ export type UpdateRoomPayload = Room & {
   beds?: Bed[];
 };
 
+export interface UpdateRoomParams {
+  id: number;
+}
+
 export interface UpdateRoomData {
   /** @example true */
   success?: boolean;
   /** Room within a clinic sector */
   data?: Room;
+}
+
+export interface Cf9104Dbefd91A81Bebb07Cafe7E70CfParams {
+  id: number;
 }
 
 export interface Cf9104Dbefd91A81Bebb07Cafe7E70CfData {
@@ -1951,16 +2017,72 @@ export interface PlanNextCyclePayload {
   start_time?: string;
 }
 
+export interface PlanNextCycleParams {
+  /** Treatment Plan ID */
+  id: number;
+}
+
 export interface PlanNextCycleData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource;
 }
 
+export interface ConfirmCycleParams {
+  /** Treatment Plan ID */
+  id: any;
+}
+
 export interface ConfirmCycleData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource;
+}
+
+export interface GetCycleParams {
+  /** Treatment Cycle ID */
+  id: number;
+}
+
+export interface GetCycleData {
+  /** @example true */
+  success?: boolean;
+  data?: TreatmentCycleResource;
+}
+
+export interface GetCyclesParams {
+  /** Filter by one or more statuses */
+  "status[]"?: StatusEnum[];
+  /** Filter by treatment plan ID */
+  treatment_plan_id?: number;
+  /** Filter by patient ID */
+  patient_id?: number;
+  /** Number of results per page (default: 15, max: 100) */
+  per_page?: number;
+}
+
+export enum StatusEnum {
+  Created = "created",
+  Planned = "planned",
+  Confirmed = "confirmed",
+  InProgress = "in_progress",
+  Paused = "paused",
+  Completed = "completed",
+}
+
+export interface GetCyclesData {
+  /** @example true */
+  success?: boolean;
+  data?: TreatmentCycleResource[];
+}
+
+export enum GetCyclesParams1StatusEnum {
+  Created = "created",
+  Planned = "planned",
+  Confirmed = "confirmed",
+  InProgress = "in_progress",
+  Paused = "paused",
+  Completed = "completed",
 }
 
 export interface GetTreatmentPlansData {
@@ -1975,10 +2097,20 @@ export interface CreateTreatmentPlanData {
   data?: TreatmentPlanResource;
 }
 
+export interface GetPatientTreatmentPlansParams {
+  /** Patient ID */
+  id: number;
+}
+
 export interface GetPatientTreatmentPlansData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource[];
+}
+
+export interface GetTreatmentPlanParams {
+  /** Treatment Plan ID */
+  id: number;
 }
 
 export interface GetTreatmentPlanData {
@@ -1987,10 +2119,20 @@ export interface GetTreatmentPlanData {
   data?: TreatmentPlanResource;
 }
 
+export interface UpdateTreatmentPlanParams {
+  /** Treatment Plan ID */
+  id: number;
+}
+
 export interface UpdateTreatmentPlanData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource;
+}
+
+export interface DeleteTreatmentPlanParams {
+  /** Treatment Plan ID */
+  id: number;
 }
 
 export interface DeleteTreatmentPlanData {
@@ -1998,14 +2140,28 @@ export interface DeleteTreatmentPlanData {
   success?: boolean;
 }
 
+export interface CancelTreatmentPlanParams {
+  /** Treatment Plan ID */
+  id: any;
+}
+
 export interface CancelTreatmentPlanData {
   /** @example true */
   success?: boolean;
 }
 
+export interface FinishTreatmentPlanParams {
+  /** Treatment Plan ID */
+  id: any;
+}
+
 export interface FinishTreatmentPlanData {
   /** @example true */
   success?: boolean;
+}
+
+export interface GetVisitParams {
+  id: number;
 }
 
 export interface GetVisitData {
@@ -2014,8 +2170,32 @@ export interface GetVisitData {
   data?: VisitResource;
 }
 
+export interface UpdateVisitPayload {
+  /** @example "1" */
+  room_id?: number;
+  /** @example "1" */
+  bed_id?: number;
+  /** @example "Kraujo pylimas 123" */
+  notes?: string;
+}
+
+export interface UpdateVisitParams {
+  id: number;
+}
+
+export interface UpdateVisitData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource;
+}
+
 export interface ChangeVisitTreatmentStatusPayload {
   status?: VisitTreatmentStatus;
+}
+
+export interface ChangeVisitTreatmentStatusParams {
+  id: number;
+  treatmentId: number;
 }
 
 export interface ChangeVisitTreatmentStatusData {
@@ -2026,6 +2206,10 @@ export interface ChangeVisitTreatmentStatusData {
 
 export interface ChangeVisitStatusPayload {
   status?: VisitStatus;
+}
+
+export interface ChangeVisitStatusParams {
+  id: number;
 }
 
 export interface ChangeVisitStatusData {
@@ -2043,10 +2227,88 @@ export interface RescheduleVisitPayload {
   recursive?: boolean;
 }
 
+export interface RescheduleVisitParams {
+  id: number;
+}
+
 export interface RescheduleVisitData {
   /** @example true */
   success?: boolean;
   data?: TreatmentPlanResource;
+}
+
+export interface GetVisitsParams {
+  /** Filter by one or more statuses */
+  "status[]"?: StatusEnum1[];
+  /** Filter by treatment cycle ID */
+  cycle_id?: number;
+  /** Filter by patient ID */
+  patient_id?: number;
+  /** Filter by treatment plan ID */
+  treatment_plan_id?: number;
+  /**
+   * Filter visits from this date (Y-m-d format)
+   * @format date
+   */
+  date_from?: string;
+  /**
+   * Filter visits until this date (Y-m-d format)
+   * @format date
+   */
+  date_to?: string;
+  /** Number of results per page (default: 15, max: 100) */
+  per_page?: number;
+}
+
+export enum StatusEnum1 {
+  Draft = "draft",
+  Upcoming = "upcoming",
+  Confirmed = "confirmed",
+  InProgress = "in_progress",
+  Completed = "completed",
+  Cancelled = "cancelled",
+  NoShow = "no_show",
+}
+
+export interface GetVisitsData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource[];
+}
+
+export enum GetVisitsParams1StatusEnum {
+  Draft = "draft",
+  Upcoming = "upcoming",
+  Confirmed = "confirmed",
+  InProgress = "in_progress",
+  Completed = "completed",
+  Cancelled = "cancelled",
+  NoShow = "no_show",
+}
+
+export interface CreateVisitPayload {
+  /** @example "1" */
+  patient_id: number;
+  /** @example "2022-01-01" */
+  date: string;
+  /** @example "11:00" */
+  time: string;
+  /** @example "60" */
+  duration: number;
+  /** @example "1" */
+  room_id?: number;
+  /** @example "1" */
+  bed_id?: number;
+  /** @example "1" */
+  treatment_plan_id?: number;
+  /** @example "Kraujo pylimas 123" */
+  notes?: string;
+}
+
+export interface CreateVisitData {
+  /** @example true */
+  success?: boolean;
+  data?: VisitResource;
 }
 
 export interface GetWorkspaceData {

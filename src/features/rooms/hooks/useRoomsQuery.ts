@@ -3,10 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { Rooms } from '@/types/swagger/RoomsRoute';
 import { useApiClient } from '@/utils/hooks/useApiClient';
 
-export const useRoomsQuery = () => {
+export const useRoomsQuery = (sectorId?: number) => {
   const apiClient = useApiClient();
   const queryParams = new URLSearchParams();
-  queryParams.append('sector_id', '1');
+  if (sectorId) {
+    queryParams.append('sector_id', sectorId.toString());
+  }
   const url = `/rooms?${queryParams.toString()}`;
 
   const fetchRooms = async () => {

@@ -14,9 +14,8 @@ import {
 
 interface Props {
   visit: VisitResource;
-  showFUllDetails?: boolean;
+  showFullDetails?: boolean;
   onReschedule?: (data: TreatmentPlanResource) => void;
-  no: number;
 }
 
 export function formatDuration(seconds: number) {
@@ -30,9 +29,8 @@ export function formatDuration(seconds: number) {
 }
 
 export const Visit: React.FC<Props> = ({
-  showFUllDetails,
+  showFullDetails,
   visit,
-  no,
   onReschedule,
 }) => {
   const [editMode, setEditMode] = React.useState<boolean>(false);
@@ -49,7 +47,7 @@ export const Visit: React.FC<Props> = ({
         {editMode ? (
           <div className="flex flex-col gap-4">
             <div className="font-bold text-sm text-gray-600">
-              Edit Visit {no}
+              Edit Visit {visit.index}
             </div>
             <VisitReschedule
               visit={visit}
@@ -63,12 +61,15 @@ export const Visit: React.FC<Props> = ({
         ) : (
           <>
             <div className="flex justify-between w-full items-center">
-              <h4 className="font-medium text-black text-sm">Visit {no} </h4>
+              <h4 className="font-medium text-black text-sm">
+                 {visit.type === 'on_site_treatment' && <> Visit {visit.index} </>}
+                   {visit.type == 'ambulatory' && <> Ambulatory treatment </>}
+                </h4>
               <div className="flex gap-2 items-center">
-                {showFUllDetails && visit.status ? (
+                {showFullDetails && visit.status ? (
                   <VisitStatusBadge status={visit.status} />
                 ) : null}
-                {visit.status !== VisitStatusEnum.Completed ? (
+                {visit.status !== VisitStatusEnum.Completed && visit.type !== 'ambulatory' ? (
                   <button
                     className="cursor-pointer"
                     onClick={() => setEditMode(prev => !prev)}
@@ -78,6 +79,7 @@ export const Visit: React.FC<Props> = ({
                 ) : null}
               </div>
             </div>
+            
             <div className="flex justify-between items-center">
               <div className="flex items-center flex-wrap gap-x-4 gap-y-1.5 py-1.5 text-xs text-gray-600">
                 {visitDate ? (
@@ -85,14 +87,11 @@ export const Visit: React.FC<Props> = ({
                     <Calendar size={20} className="h-4 w-4" />
                     <span
                       className={cx({
-                        'text-danger': !visit.is_working_day,
+                        'text-danger': !visit.is_working_day && visit.type !== 'ambulatory',
                       })}
                     >
-                      {formatInTimeZone(
-                        new Date(visitDate),
-                        'UTC',
-                        'yyyy-MM-dd HH:mm'
-                      )}
+                      {(visit.type === 'on_site_treatment') && formatInTimeZone(new Date(visitDate),'UTC','yyyy-MM-dd HH:mm')}
+                      {(visit.type !== 'on_site_treatment') && formatInTimeZone(new Date(visitDate),'UTC','yyyy-MM-dd')}
                     </span>
                   </div>
                 ) : null}
@@ -103,16 +102,18 @@ export const Visit: React.FC<Props> = ({
                   </div>
                 ) : null}
 
-                <div
-                  className={cx('flex items-center gap-1', {
-                    'text-danger': !visit.bed?.name,
-                  })}
-                >
-                  <MapPin size={20} className="h-4 w-4" />
-                  {visit.bed?.name
-                    ? `${visit.room?.name} - ${visit.bed.name}`
-                    : 'No Spot'}
-                </div>
+                {visit.type === 'on_site_treatment' &&
+                  <div
+                    className={cx('flex items-center gap-1', {
+                      'text-danger': !visit.bed?.name,
+                    })}
+                  >
+                    <MapPin size={20} className="h-4 w-4" />
+                    {visit.bed?.name
+                      ? `${visit.room?.name} - ${visit.bed.name}`
+                      : 'No Spot'}
+                  </div>
+                }
               </div>
             </div>
           </>

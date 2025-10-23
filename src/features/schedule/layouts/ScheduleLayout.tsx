@@ -6,49 +6,68 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { DateNavigator } from '@/commons/components/date-navigator/DateNavigator';
+import { FloatingLabelSelect } from '@/commons/components/form/FloatingLabelSelect';
 import { Tabs } from '@/commons/components/tabs/Tabs';
 import { Button } from '@/commons/components/ui/button';
 import List from '@/commons/icons/svg/list.svg';
 import Plus from '@/commons/icons/svg/plus.svg';
 import Timeline from '@/commons/icons/svg/timeline.svg';
 import { PageLayout } from '@/commons/layouts/PageLayout';
+import { useSectorsQuery } from '@/utils/hooks/useSectorsQuery';
 
 interface Props {
   children: React.ReactNode;
-  visitId?: string;
 }
 
 export const ScheduleLayout: React.FC<Props> = ({ children }) => {
   const router = useRouter();
   const { dispatchAction } = useActionContext();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { data: sectors } = useSectorsQuery();
+
   const selectedDate =
     searchParams.get('date') || new Date().toISOString().split('T')[0];
-  const pathname = usePathname();
-  const currentUrl = `${pathname}?${searchParams.toString()}`;
+  const sectorId = searchParams.get('sector_id');
 
   const onDateChange = (date: string) => {
-    router.push(`${pathname}?date=${date}`);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('date', date);
+    router.push(`${pathname}?${newParams.toString()}`);
   };
 
-  const TABS = React.useMemo(
-    () => [
+  const onSectorChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      newParams.set('sector_id', value);
+    } else {
+      newParams.delete('sector_id');
+    }
+    router.push(`${pathname}?${newParams.toString()}`);
+  };
+
+  const TABS = React.useMemo(() => {
+    const params = new URLSearchParams();
+    params.set('date', selectedDate);
+    if (sectorId) {
+      params.set('sector_id', sectorId);
+    }
+    return [
       {
         label: 'Timeline',
         icon: <Timeline />,
-        href: `/schedule?date=${selectedDate}`,
+        href: `/schedule?${params.toString()}`,
       },
       {
         label: 'List',
         icon: <List />,
-        href: `/schedule/list?date=${selectedDate}`,
+        href: `/schedule/list?${params.toString()}`,
       },
-    ],
-    [selectedDate]
-  );
+    ];
+  }, [selectedDate, sectorId]);
 
   const activeTab =
-    TABS.find(tab => tab.href === currentUrl)?.label || 'Timeline';
+    TABS.find(tab => pathname === tab.href.split('?')[0])?.label || 'Timeline';
 
   return (
     <>
@@ -56,6 +75,20 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
         title="Today’s schedule"
         actions={
           <div className="flex items-center gap-2">
+            <div className="w-48">
+              <FloatingLabelSelect
+                label="Sector"
+                options={[
+                  { value: 'all', label: 'All Sectors' },
+                  ...(sectors?.data?.map(sector => ({
+                    value: sector.id!.toString(),
+                    label: sector.name!,
+                  })) ?? []),
+                ]}
+                value={sectorId ?? ''}
+                onChange={onSectorChange}
+              />
+            </div>
             <DateNavigator onDateChange={onDateChange} />
             <Button
               size="sm"

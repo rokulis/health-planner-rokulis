@@ -24,7 +24,7 @@ import {
 
 interface CycleProps {
   cycle: TreatmentCycleResource;
-  showFUllDetails?: boolean;
+  showFullDetails?: boolean;
   onReschedule?: (data: TreatmentPlanResource) => void;
   index: number;
 }
@@ -32,7 +32,7 @@ interface CycleProps {
 export default function Cycle({
   cycle,
   index,
-  showFUllDetails,
+  showFullDetails,
   onReschedule,
 }: CycleProps) {
   const shouldBeOpen =
@@ -81,8 +81,7 @@ export default function Cycle({
                     >
                       <Visit
                         visit={visit}
-                        no={idx + 1}
-                        showFUllDetails={showFUllDetails}
+                        showFullDetails={showFullDetails}
                         onReschedule={onReschedule}
                       />
                     </div>

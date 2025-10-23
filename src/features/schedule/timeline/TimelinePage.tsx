@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -10,24 +10,28 @@ import { useScheduleQuery } from '@/features/schedule/hooks/useScheduleQuery';
 import { ScheduleLayout } from '@/features/schedule/layouts/ScheduleLayout';
 import HospitalTimeline from '@/features/schedule/timeline/Timeline';
 
-interface Props {
-  visitId?: string;
-}
-
-export const TimelinePage: React.FC<Props> = ({ visitId }) => {
+export const TimelinePage: React.FC = () => {
   const params = useSearchParams();
+  const sectorId = params.get('sector_id')
+    ? Number(params.get('sector_id'))
+    : undefined;
 
-  const { data: rooms, isLoading } = useRoomsQuery();
+  const { data: rooms, isLoading } = useRoomsQuery(sectorId);
   const { data: schedule } = useScheduleQuery(
-    params.get('date') ?? new Date().toISOString().split('T')[0]
+    params.get('date') ?? new Date().toISOString().split('T')[0],
+    sectorId,
   );
+  
+  useEffect(() => {
+    console.log('TimelinePage rendered with sectorId:', sectorId);
+  }, [sectorId]);
 
   return (
-    <ScheduleLayout visitId={visitId}>
+    <ScheduleLayout>
       {isLoading ? (
         <PageTopLoader />
       ) : (
-        <HospitalTimeline rooms={rooms?.data} schedule={schedule?.data.data} />
+        <HospitalTimeline rooms={rooms?.data} schedule={schedule?.data.data} sectorId={sectorId} />
       )}
     </ScheduleLayout>
   );
