@@ -5,6 +5,17 @@ import { revalidateTag } from 'next/cache';
 import { apiClient } from '@/app/actions';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 
+export const getPatientTreatmentPlans = async (patientId: number) => {
+  return await apiClient<TreatmentPlans.GetPatientTreatmentPlans.ResponseBody>(
+    `/treatment-plans/patient/${patientId}`,
+    {
+      next: {
+        tags: ['patient-treatment-plans', `patient-treatment-plans-${patientId}`],
+      },
+    }
+  );
+};
+
 export const getTreatmentPlans = async () => {
   return await apiClient<TreatmentPlans.GetTreatmentPlans.ResponseBody>(
     '/treatment-plans'

@@ -20,6 +20,7 @@ import {
 
 interface Props {
   onStepSubmit: (patientId: number) => void;
+  showActiveTreatmentPlanError?: boolean;
 }
 
 type ExtendedPatientResource = PatientResource & {
@@ -30,7 +31,10 @@ const FormSchema = z.object({
   patientId: z.coerce.number().positive(),
 });
 
-export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
+export const SelectPatient: React.FC<Props> = ({
+  onStepSubmit,
+  showActiveTreatmentPlanError = true,
+}) => {
   const { data: patients } = usePatientsQuery();
   const { dispatchAction } = useActionContext();
   const [selectedPatient, setSelectedPatient] = useState<
@@ -89,7 +93,8 @@ export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
                 }))}
               />
             </FieldWrapper>
-            {selectedPatient?.hasActiveTreatmentPlan ? (
+            {showActiveTreatmentPlanError &&
+            selectedPatient?.hasActiveTreatmentPlan ? (
               <p className="text-sm text-red-500 self-start">
                 Patient already has an active treatment plan
               </p>
@@ -110,7 +115,12 @@ export const SelectPatient: React.FC<Props> = ({ onStepSubmit }) => {
           </div>
 
           <div className="flex justify-end">
-            <Button disabled={selectedPatient?.hasActiveTreatmentPlan}>
+            <Button
+              disabled={
+                showActiveTreatmentPlanError &&
+                selectedPatient?.hasActiveTreatmentPlan
+              }
+            >
               Next
             </Button>
           </div>

@@ -100,6 +100,16 @@ export const ScheduleLayout: React.FC<Props> = ({ children }) => {
                 Schedule Treatment
               </div>
             </Button>
+             <Button
+              size="sm"
+              className="flex gap-2 items-center"
+              onClick={() => dispatchAction('visit_new')}
+            >
+              <div className="flex gap-1 items-center">
+                <Plus />
+                Schedule Visit
+              </div>
+            </Button>
           </div>
         }
       >

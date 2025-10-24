@@ -3,13 +3,10 @@
 import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { rescheduleVisit } from '@/app/schedule/actions';
-import { planNextCycleVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
@@ -17,18 +14,22 @@ import { Form, FormLabel } from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
-import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 
 const FormSchema = z.object({
   start_date: z.string(),
   start_time: z.string(),
+  room_id: z.coerce.number().positive(),
+  bed_id: z.coerce.number().positive(),
 });
 
 interface Props {
-  onStepSubmit: (treatmentPlan: TreatmentPlanResource) => void;
-  onBack?: () => void;
-  treatmentPlan?: TreatmentPlanResource;
-  visitId?: string;
+  onStepSubmit: (data: {
+    start_date: string;
+    start_time: string;
+    room_id: number;
+    bed_id: number;
+  }) => void;
+  duration?: number;
   buttonText?: string;
 }
 
@@ -36,16 +37,14 @@ export function filterAvailableHours(date: string, hours: string[]): string[] {
   const now = new Date();
   const targetDate = new Date(date);
 
-  // If the target date is in the future, all hours are available
   if (targetDate.toDateString() !== now.toDateString()) {
     if (targetDate > now) {
-      return hours; // All hours available for future dates
+      return hours;
     } else {
-      return []; // All hours passed for past dates
+      return [];
     }
   }
 
-  // For today, filter out passed hours
   const currentTime = now.getHours() * 60 + now.getMinutes();
 
   return hours.filter(hour => {
@@ -56,30 +55,29 @@ export function filterAvailableHours(date: string, hours: string[]): string[] {
   });
 }
 
-export const ScheduleTreatment: React.FC<Props> = ({
+export const ScheduleVisitStep: React.FC<Props> = ({
   onStepSubmit,
-  treatmentPlan,
-  visitId,
+  duration,
   buttonText,
 }) => {
+  console.log("duration prop:", duration);
   const [isPending, startTransition] = React.useTransition();
-  const queryClient = useQueryClient();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(
     undefined
   );
-  const firstTreatmentDuration =
-    treatmentPlan?.treatment_cycles?.[0].visits?.[0].duration ?? 1800;
+  const [selectedBed, setSelectedBed] = React.useState<number | undefined>(
+    undefined
+  );
 
   const selectedDate = React.useMemo(() => {
     if (!date) return format(new Date().toString(), 'yyyy-MM-dd');
-
     return format(date?.toString() as string, 'yyyy-MM-dd');
   }, [date]);
 
   const { data, isLoading } = useOpenSlotsQuery({
     date: selectedDate,
-    duration: firstTreatmentDuration,
+    duration: duration ?? 1800,
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -87,59 +85,19 @@ export const ScheduleTreatment: React.FC<Props> = ({
     defaultValues: {
       start_date: selectedDate,
       start_time: '',
+      room_id: -1,
+      bed_id: -1,
     },
   });
 
   const uniqueTimeSlots = filterAvailableHours(
     selectedDate,
-    getUniqueTimeSlots(data ?? [])
+    getUniqueTimeSlots(data ?? { data: [] })
   );
 
-  const revalidateCache = async () => {
-    await queryClient.invalidateQueries({
-      queryKey: ['schedule'],
-    });
-    await queryClient.invalidateQueries({
-      queryKey: ['treatment-plans'],
-    });
-    await queryClient.invalidateQueries({
-      queryKey: ['visits'],
-    });
-  };
-
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async values => {
-    return startTransition(async () => {
-      if (!treatmentPlan?.id) {
-        return;
-      }
-
-      if (visitId) {
-        return rescheduleVisit(visitId, {
-          start_date: selectedDate,
-          start_time: values.start_time,
-          recursive: true,
-        }).then(res => {
-          if (res.success) {
-            revalidateCache();
-            if (res.data) {
-              onStepSubmit(res.data);
-            }
-          }
-        });
-      }
-
-      return planNextCycleVisits(String(treatmentPlan?.id), {
-        start_date: selectedDate,
-        start_time: values.start_time,
-      }).then(res => {
-        if (res.success) {
-          revalidateCache();
-
-          if (res.data) {
-            onStepSubmit(res.data);
-          }
-        }
-      });
+    startTransition(() => {
+      onStepSubmit(values);
     });
   };
 
@@ -189,9 +147,40 @@ export const ScheduleTreatment: React.FC<Props> = ({
             ))}
           </div>
 
+          <div className="flex flex-col gap-4 mt-4">
+            <FormLabel>Available spots</FormLabel>
+            {data?.data?.map((room: any) => (
+              <div key={room.id}>
+                <FormLabel className="mb-2">{room.name}</FormLabel>
+                <div className="flex gap-2 flex-wrap">
+                  {room.beds?.map((bed: any) => (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        form.setValue('room_id', room.id as number);
+                        form.setValue('bed_id', bed.id as number);
+                        setSelectedBed(bed.id);
+                      }}
+                      key={bed.id}
+                      className={cn(
+                        'flex cursor-pointer items-center justify-center border rounded-full py-1 px-2 text-xs hover:bg-primary hover:text-white transition-colors duration-200 ease-in-out',
+                        {
+                          'bg-primary text-white': selectedBed === bed.id,
+                          'bg-white text-gray-900': selectedBed !== bed.id,
+                        }
+                      )}
+                    >
+                      {bed.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
           <div className="flex justify-end mt-8 gap-2">
-            <Button disabled={!selectedTime} type="submit">
-              {buttonText ?? 'Schedule all'}
+            <Button disabled={!selectedTime || !selectedBed} type="submit">
+              {buttonText ?? 'Schedule Visit'}
             </Button>
           </div>
         </form>

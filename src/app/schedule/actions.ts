@@ -3,7 +3,10 @@
 import { revalidateTag } from 'next/cache';
 
 import { apiClient } from '@/app/actions';
-import { VisitTreatmentStatus } from '@/types/swagger/data-contracts';
+import {
+  CreateVisitPayload,
+  VisitTreatmentStatus,
+} from '@/types/swagger/data-contracts';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
 import { TreatmentPlans } from '@/types/swagger/TreatmentPlansRoute';
 import { Visits } from '@/types/swagger/VisitsRoute';
@@ -142,6 +145,23 @@ export const cancelTreatmentPlan = async (id: number) => {
     revalidateTag('treatment-plans');
     revalidateTag(`treatment-plan-${id}`);
     revalidateTag('patient-treatment-plans');
+  }
+
+  return res;
+};
+
+export const createVisit = async (data: CreateVisitPayload) => {
+  const res = await apiClient<
+    Visits.CreateVisit.ResponseBody,
+    Visits.CreateVisit.RequestBody
+  >('/visits', {
+    method: 'POST',
+    body: data,
+  });
+
+  if (res.success) {
+    revalidateTag('schedule');
+    revalidateTag('visits');
   }
 
   return res;
