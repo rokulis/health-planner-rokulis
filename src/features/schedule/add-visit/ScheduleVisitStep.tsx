@@ -78,9 +78,7 @@ export const ScheduleVisitStep: React.FC<Props> = ({
 
   const { data, isLoading } = useOpenSlotsQuery({
     date: selectedDate,
-    duration: duration ?? 1800,
-    sector_id: sectorId,
-  });
+    duration: duration ?? 1800  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
