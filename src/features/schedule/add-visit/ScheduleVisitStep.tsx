@@ -60,7 +60,6 @@ export const ScheduleVisitStep: React.FC<Props> = ({
   duration,
   buttonText,
 }) => {
-  console.log("duration prop:", duration);
   const [isPending, startTransition] = React.useTransition();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = React.useState<string | undefined>(

@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/commons/components/ui/table';
+
 import { Spinner } from '../loader/Spinner';
 
 interface DataTableProps<TData, TValue> {

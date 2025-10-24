@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -21,10 +21,7 @@ export const TimelinePage: React.FC = () => {
     params.get('date') ?? new Date().toISOString().split('T')[0],
     sectorId,
   );
-  
-  useEffect(() => {
-    console.log('TimelinePage rendered with sectorId:', sectorId);
-  }, [sectorId]);
+
 
   return (
     <ScheduleLayout>

@@ -74,7 +74,7 @@ export default function Cycle({
                 </div>
               ) : (
                 <>
-                  {cycle.visits?.map((visit, idx) => (
+                  {cycle.visits?.map((visit) => (
                     <div
                       key={visit.id}
                       className="p-2 border-b border-primary/10 py-2 overflow-y-auto"

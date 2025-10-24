@@ -62,9 +62,9 @@ export const Visit: React.FC<Props> = ({
           <>
             <div className="flex justify-between w-full items-center">
               <h4 className="font-medium text-black text-sm">
-                 {visit.type === 'on_site_treatment' && <> Visit {visit.index} </>}
-                   {visit.type == 'ambulatory' && <> Ambulatory treatment </>}
-                </h4>
+                {visit.type === 'on_site_treatment' && <> Visit {visit.index} </>}
+                {visit.type == 'ambulatory' && <> Ambulatory treatment </>}
+              </h4>
               <div className="flex gap-2 items-center">
                 {showFullDetails && visit.status ? (
                   <VisitStatusBadge status={visit.status} />
@@ -79,7 +79,7 @@ export const Visit: React.FC<Props> = ({
                 ) : null}
               </div>
             </div>
-            
+
             <div className="flex justify-between items-center">
               <div className="flex items-center flex-wrap gap-x-4 gap-y-1.5 py-1.5 text-xs text-gray-600">
                 {visitDate ? (

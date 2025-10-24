@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 import { formatInTimeZone } from 'date-fns-tz';

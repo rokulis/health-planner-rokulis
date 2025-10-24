@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { ColumnDef } from '@tanstack/table-core';
 import { secondsToMinutes } from 'date-fns';
@@ -26,9 +26,6 @@ export const TreatmentPlansList = () => {
     sectorId,
   );
 
-  useEffect(() => {
-    console.log('got schedule:', schedule);
-  }, [schedule]);
 
   const columns: ColumnDef<VisitResource>[] = [
     {

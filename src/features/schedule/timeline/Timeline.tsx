@@ -36,7 +36,7 @@ interface Props {
 
 type Appointment = VisitResource & ParsedVisitTime;
 
-export default function HospitalTimeline({ rooms, schedule, sectorId }: Props) {
+export default function HospitalTimeline({ rooms, schedule }: Props) {
   const { dispatchAction } = useActionContext();
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -327,18 +327,18 @@ export default function HospitalTimeline({ rooms, schedule, sectorId }: Props) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-              
+
                 {rooms?.map(room => <RoomRow
-                      expandedByDefault={appointments?.some(
-                        appt =>
-                          appt.room_id === room.id 
-                      )}
-                      key={room.id}
-                      room={room}
-                      timeSlots={timeSlots}
-                      renderAppointment={renderAppointment}
-                      isCurrentHour={isCurrentHour}
-                    />
+                  expandedByDefault={appointments?.some(
+                    appt =>
+                      appt.room_id === room.id
+                  )}
+                  key={room.id}
+                  room={room}
+                  timeSlots={timeSlots}
+                  renderAppointment={renderAppointment}
+                  isCurrentHour={isCurrentHour}
+                />
                 )}
               </TableBody>
             </Table>

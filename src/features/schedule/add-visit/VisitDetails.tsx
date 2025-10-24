@@ -1,7 +1,8 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
+
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/commons/components/ui/form';
-import { Input } from '@/commons/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -130,7 +130,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-  
+
                   <SelectItem value="900">00:15</SelectItem>
                   <SelectItem value="1800">00:30</SelectItem>
                   <SelectItem value="2700">00:45</SelectItem>

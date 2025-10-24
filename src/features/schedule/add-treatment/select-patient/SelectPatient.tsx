@@ -95,10 +95,10 @@ export const SelectPatient: React.FC<Props> = ({
             </FieldWrapper>
             {showActiveTreatmentPlanError &&
             selectedPatient?.hasActiveTreatmentPlan ? (
-              <p className="text-sm text-red-500 self-start">
+                  <p className="text-sm text-red-500 self-start">
                 Patient already has an active treatment plan
-              </p>
-            ) : null}
+                  </p>
+                ) : null}
             <span className="text-muted-foreground/80">or</span>
             <div className="flex justify-end mb-2 w-full">
               <Button

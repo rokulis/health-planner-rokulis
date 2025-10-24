@@ -2,11 +2,11 @@
 
 import React from 'react';
 
-import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { toast } from 'sonner';
 
 import { createVisit } from '@/app/schedule/actions';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
+import { Step, Stepper } from '@/commons/components/stepper/Stepper';
 import { SelectPatient } from '@/features/schedule/add-treatment/select-patient/SelectPatient';
 import { ScheduleVisitStep } from '@/features/schedule/add-visit/ScheduleVisitStep';
 import { VisitDetails } from '@/features/schedule/add-visit/VisitDetails';
@@ -20,7 +20,7 @@ type VisitDetailsData = {
 
 export const AddVisit: React.FC = () => {
   const { onClose } = useActionContext();
-  const [isPending, startTransition] = React.useTransition();
+  const [, startTransition] = React.useTransition();
   const [currentStep, setCurrentStep] = React.useState(1);
   const [patientId, setPatientId] = React.useState<number | undefined>(
     undefined
@@ -78,7 +78,6 @@ export const AddVisit: React.FC = () => {
                 bed_id: data.bed_id,
               };
 
-              console.log('Creating visit with payload:', payload);
               createVisit(payload).then(res => {
                 if (res.message) {
                   toast.error(res.message);

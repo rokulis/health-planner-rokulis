@@ -154,7 +154,7 @@ export const VisitReschedule: React.FC<Props> = ({
             ))}
           </div>
 
-                 <FormField
+          <FormField
             control={form.control}
             name="recursive"
             render={({ field }) => (
