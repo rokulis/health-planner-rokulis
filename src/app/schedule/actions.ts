@@ -5,6 +5,7 @@ import { revalidateTag } from 'next/cache';
 import { apiClient } from '@/app/actions';
 import {
   CreateVisitPayload,
+  VisitStatus,
   VisitTreatmentStatus,
 } from '@/types/swagger/data-contracts';
 import { Schedule } from '@/types/swagger/ScheduleRoute';
@@ -148,6 +149,36 @@ export const cancelTreatmentPlan = async (id: number) => {
   }
 
   return res;
+};
+
+export const changeVisitStatus = async (id: number, status: VisitStatus) => {
+  const res = await apiClient<
+    Visits.ChangeVisitStatus.ResponseBody,
+    Visits.ChangeVisitStatus.RequestBody
+  >(`/visits/${id}/change-status`, {
+    method: 'POST',
+    body: {
+      status,
+    },
+  });
+
+  if (res.success) {
+    revalidateTag('schedule');
+    revalidateTag(`visit-${id}`);
+  }
+
+  return res;
+};
+
+export const getVisits = async (params: Visits.GetVisits.RequestQuery) => {
+  const queryString = new URLSearchParams(
+    params as unknown as Record<string, string>
+  ).toString();
+  return apiClient<Visits.GetVisits.ResponseBody>(`/visits?${queryString}`, {
+    next: {
+      tags: ['visits'],
+    },
+  });
 };
 
 export const createVisit = async (data: CreateVisitPayload) => {

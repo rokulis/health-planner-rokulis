@@ -31,6 +31,7 @@ interface Props {
   }) => void;
   duration?: number;
   buttonText?: string;
+  sectorId?: number;
 }
 
 export function filterAvailableHours(date: string, hours: string[]): string[] {
@@ -59,6 +60,7 @@ export const ScheduleVisitStep: React.FC<Props> = ({
   onStepSubmit,
   duration,
   buttonText,
+  sectorId,
 }) => {
   const [isPending, startTransition] = React.useTransition();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -77,6 +79,7 @@ export const ScheduleVisitStep: React.FC<Props> = ({
   const { data, isLoading } = useOpenSlotsQuery({
     date: selectedDate,
     duration: duration ?? 1800,
+    sector_id: sectorId,
   });
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -88,6 +91,10 @@ export const ScheduleVisitStep: React.FC<Props> = ({
       bed_id: -1,
     },
   });
+
+  React.useEffect(() => {
+    form.setValue('start_date', selectedDate);
+  }, [selectedDate, form]);
 
   const uniqueTimeSlots = filterAvailableHours(
     selectedDate,

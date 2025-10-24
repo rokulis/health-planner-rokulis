@@ -51,6 +51,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
   const { data: { data: sectors } = {} } = useSectorsQuery();
   const { data: treatmentPlansResponse } =
     usePatientTreatmentPlansQuery(patientId);
+  const treatmentPlanId = form.watch('treatmentPlanId');
 
   const activeTreatmentPlans = React.useMemo(() => {
     return (
@@ -59,6 +60,17 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
       ) ?? []
     );
   }, [treatmentPlansResponse]);
+
+  React.useEffect(() => {
+    if (treatmentPlanId) {
+      const selectedPlan = activeTreatmentPlans.find(
+        plan => plan.id === Number(treatmentPlanId)
+      );
+      if (selectedPlan) {
+        form.setValue('sectorId', String(selectedPlan.sector_id));
+      }
+    }
+  }, [treatmentPlanId, activeTreatmentPlans, form]);
 
   const onSubmit = (values: VisitDetailsFormValues) => {
     onStepSubmit(values);
@@ -73,7 +85,11 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Select existing plan</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={activeTreatmentPlans.length === 0}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a plan" />
@@ -98,7 +114,11 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sector</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={!!treatmentPlanId}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a sector" />

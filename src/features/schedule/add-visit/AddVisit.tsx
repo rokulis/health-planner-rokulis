@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { createVisit } from '@/app/schedule/actions';
 import { useActionContext } from '@/commons/action-context-provider/useActionContext';
 import { Step, Stepper } from '@/commons/components/stepper/Stepper';
+import { usePatientTreatmentPlansQuery } from '@/features/patients/hooks/usePatientTreatmentPlansQuery';
 import { SelectPatient } from '@/features/schedule/add-treatment/select-patient/SelectPatient';
 import { ScheduleVisitStep } from '@/features/schedule/add-visit/ScheduleVisitStep';
 import { VisitDetails } from '@/features/schedule/add-visit/VisitDetails';
@@ -28,6 +29,18 @@ export const AddVisit: React.FC = () => {
   const [visitDetails, setVisitDetails] = React.useState<
     VisitDetailsData | undefined
   >();
+  const { data: treatmentPlansResponse } =
+    usePatientTreatmentPlansQuery(patientId);
+
+  const selectedPlan = React.useMemo(() => {
+    return treatmentPlansResponse?.data?.find(
+      plan => plan.id === Number(visitDetails?.treatmentPlanId)
+    );
+  }, [treatmentPlansResponse, visitDetails]);
+
+  const sectorId = React.useMemo(() => {
+    return selectedPlan?.sector_id ?? Number(visitDetails?.sectorId);
+  }, [selectedPlan, visitDetails]);
 
   const steps: Step[] = [
     {
@@ -62,6 +75,7 @@ export const AddVisit: React.FC = () => {
       content: (
         <ScheduleVisitStep
           duration={Number(visitDetails?.duration)}
+          sectorId={sectorId}
           onStepSubmit={data => {
             if (!patientId || !visitDetails) return;
             startTransition(() => {
