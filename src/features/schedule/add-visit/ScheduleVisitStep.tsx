@@ -59,8 +59,7 @@ export function filterAvailableHours(date: string, hours: string[]): string[] {
 export const ScheduleVisitStep: React.FC<Props> = ({
   onStepSubmit,
   duration,
-  buttonText,
-  sectorId,
+  buttonText
 }) => {
   const [isPending, startTransition] = React.useTransition();
   const [date, setDate] = React.useState<Date | undefined>(new Date());
