@@ -47,7 +47,7 @@ export const SelectTreatment: React.FC<Props> = ({
   const [isPending, startTransition] = React.useTransition();
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
-  const { data: diagnoses } = useDiagnosesQuery(searchValue);
+  const { data: diagnoses, isFetching: isDiagnosesFetching } = useDiagnosesQuery(searchValue);
   const { data: sectors } = useSectorsQuery();
 
   const form = useForm<SelectTreatmentFormValues>({
@@ -126,7 +126,7 @@ export const SelectTreatment: React.FC<Props> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="px-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="px-4" autoComplete="off">
         <input
           type="hidden"
           {...form.register('patient_id')}
@@ -169,6 +169,7 @@ export const SelectTreatment: React.FC<Props> = ({
               <FloatingLabelSearchableSelect
                 onSearchChange={setSearch}
                 label="Diagnosis"
+                isLoading={isDiagnosesFetching || search !== searchValue}
                 options={
                   (diagnoses?.data ?? []).map(diagnosis => ({
                     value: String(diagnosis.id),

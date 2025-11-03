@@ -54,6 +54,7 @@ export const TeamForm: React.FC<Props> = ({ isOpen, onClose }) => {
       {isPending ? <PageTopLoader /> : null}
       <Form {...form}>
         <form
+          autoComplete="off"
           onSubmit={form.handleSubmit(onSubmit)}
           className="h-full flex flex-col justify-between"
         >

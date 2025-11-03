@@ -381,6 +381,7 @@ export interface VisitResource {
   is_working_day?: boolean;
   /** Bed within a room */
   bed?: Bed;
+  sector?: SectorResource;
   next_visit?: VisitResource;
   visit_treatments?: VisitTreatmentResource[];
   type?: VisitTypeEnum;

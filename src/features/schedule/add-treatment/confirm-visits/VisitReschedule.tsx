@@ -78,9 +78,15 @@ export const VisitReschedule: React.FC<Props> = ({
     defaultValues: {
       start_date: selectedDate,
       start_time: '',
-      recursive: false,
+      recursive: true,
     },
   });
+
+  React.useEffect(() => {
+    form.setValue('start_date', selectedDate);
+    form.setValue('start_time', '');
+    setSelectedTime(undefined);
+  }, [selectedDate, form]);
 
   const uniqueTimeSlots = filterAvailableHours(
     selectedDate,
@@ -127,8 +133,9 @@ export const VisitReschedule: React.FC<Props> = ({
 
       <Form {...form}>
         <form
+          autoComplete="off"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-between justify-between h-full px-4"
+          className="flex flex-col items-between h-full px-4"
         >
 
           <FormLabel className="mb-2">Select available time</FormLabel>

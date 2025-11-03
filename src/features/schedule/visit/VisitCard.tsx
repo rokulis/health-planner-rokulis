@@ -40,13 +40,7 @@ export default function VisitCard({
       v => v.status === VisitTreatmentStatus.Pending
     )?.id ?? null;
 
-  const isVisitCompleted = visit?.data?.visit_treatments?.every(
-    t => t.status === VisitTreatmentStatus.Done
-  );
   const isLastVisit = visit.data?.is_last_visit;
-  const shouldShowNextVisitDate = visit?.data?.visit_treatments?.every(
-    v => v.status === VisitTreatmentStatus.Done
-  );
 
   const onNext = async (treatmentId?: number) =>
     startTransition(() => {
@@ -98,7 +92,7 @@ export default function VisitCard({
     );
   };
 
-  if (isVisitCompleted && isLastVisit) {
+  if (visit.data?.status === 'completed' && isLastVisit) {
     return <CycleCompleted visit={visit} />;
   }
 
@@ -122,6 +116,9 @@ export default function VisitCard({
           {/* Blood Test Section */}
           <div className="bg-primary/10 py-2 px-4 rounded-lg mb-4 font-semibold text-lg">
             {visit.data?.treatment_plan?.name}
+          </div>
+          <div className="py-2 px-4 mb-4 font-semibold text-sm">
+            {visit.data?.notes}
           </div>
 
           {/* Medicines List */}
@@ -251,7 +248,7 @@ export default function VisitCard({
               </div>
             ))}
           </div>
-          {shouldShowNextVisitDate ? (
+          {visit.data?.status === 'completed' ? (
             <div className="text-sm text-gray-600 flex items-center justify-center gap-1 mt-4">
               Next visit:
               <span className="font-semibold">

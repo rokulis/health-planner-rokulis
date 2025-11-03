@@ -51,7 +51,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
 
   const [search, setSearch] = React.useState<string>('');
   const [searchValue] = useDebounce(search, 500);
-  const { data: diagnoses } = useDiagnosesQuery(searchValue);
+  const { data: diagnoses, isFetching: isDiagnosesFetching } = useDiagnosesQuery(searchValue);
 
   const form = useForm({
     resolver: zodResolver(protocolSchema),
@@ -134,7 +134,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
         <input type="hidden" {...form.register('clinic_id')} value="1" />
 
         <FormLabel className="my-4">Protocol information</FormLabel>
@@ -149,6 +149,7 @@ export const ProtocolForm: React.FC<Props> = ({ protocol, medicines }) => {
               <FloatingLabelSearchableSelect
                 onSearchChange={setSearch}
                 label="Diagnosis"
+                isLoading={isDiagnosesFetching || search !== searchValue}
                 options={
                   (diagnoses?.data ?? []).map(diagnosis => ({
                     value: String(diagnosis.id),

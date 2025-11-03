@@ -13,7 +13,14 @@ import { planNextCycleVisits } from '@/app/treatment-plans/actions';
 import { PageTopLoader } from '@/commons/components/loader/PageTopLoader';
 import { Button } from '@/commons/components/ui/button';
 import { Calendar } from '@/commons/components/ui/calendar';
-import { Form, FormLabel } from '@/commons/components/ui/form';
+import { Checkbox } from '@/commons/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/commons/components/ui/form';
 import { useOpenSlotsQuery } from '@/features/schedule/add-treatment/schedule-treatment/useOpenSlotsQuery';
 import { getUniqueTimeSlots } from '@/features/schedule/add-treatment/schedule-treatment/utils';
 import { cn } from '@/lib/utils';
@@ -22,6 +29,7 @@ import { TreatmentPlanResource } from '@/types/swagger/data-contracts';
 const FormSchema = z.object({
   start_date: z.string(),
   start_time: z.string(),
+  recursive: z.boolean(),
 });
 
 interface Props {
@@ -87,8 +95,15 @@ export const ScheduleTreatment: React.FC<Props> = ({
     defaultValues: {
       start_date: selectedDate,
       start_time: '',
+      recursive: true,
     },
   });
+
+  React.useEffect(() => {
+    form.setValue('start_date', selectedDate);
+    form.setValue('start_time', '');
+    setSelectedTime(undefined);
+  }, [selectedDate, form]);
 
   const uniqueTimeSlots = filterAvailableHours(
     selectedDate,
@@ -117,7 +132,7 @@ export const ScheduleTreatment: React.FC<Props> = ({
         return rescheduleVisit(visitId, {
           start_date: selectedDate,
           start_time: values.start_time,
-          recursive: true,
+          recursive: values.recursive,
         }).then(res => {
           if (res.success) {
             revalidateCache();
@@ -158,8 +173,9 @@ export const ScheduleTreatment: React.FC<Props> = ({
 
       <Form {...form}>
         <form
+          autoComplete="off"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-between justify-between h-full px-4"
+          className="flex flex-col items-between h-full px-4"
         >
           <FormLabel className="mb-2">Select available time</FormLabel>
           <div className="flex gap-2 flex-wrap">
@@ -188,6 +204,26 @@ export const ScheduleTreatment: React.FC<Props> = ({
               </button>
             ))}
           </div>
+
+          {visitId && (
+            <FormField
+              control={form.control}
+              name="recursive"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-2 mt-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel>
+                    Reschedule upcoming visits
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
+          )}
 
           <div className="flex justify-end mt-8 gap-2">
             <Button disabled={!selectedTime} type="submit">

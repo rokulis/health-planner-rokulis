@@ -79,6 +79,7 @@ export const SelectPatient: React.FC<Props> = ({
       <Form {...form}>
         <FormLabel>Select patient</FormLabel>
         <form
+          autoComplete="off"
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col items-between justify-between h-full"
         >

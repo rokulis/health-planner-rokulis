@@ -72,13 +72,22 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
     }
   }, [treatmentPlanId, activeTreatmentPlans, form]);
 
+  React.useEffect(() => {
+    if (activeTreatmentPlans.length > 0 && !treatmentPlanId) {
+      const firstPlan = activeTreatmentPlans[0];
+      form.setValue('treatmentPlanId', String(firstPlan.id));
+    }
+  }, [activeTreatmentPlans, treatmentPlanId, form]);
+
   const onSubmit = (values: VisitDetailsFormValues) => {
     onStepSubmit(values);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        autoComplete="off"
+        onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="treatmentPlanId"
@@ -87,7 +96,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
               <FormLabel>Select existing plan</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={field.value}
                 disabled={activeTreatmentPlans.length === 0}
               >
                 <FormControl>
@@ -116,7 +125,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
               <FormLabel>Sector</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={field.value}
+                value={field.value}
                 disabled={!!treatmentPlanId}
               >
                 <FormControl>
@@ -143,7 +152,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Duration</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select duration" />

@@ -24,6 +24,7 @@ export interface FloatingLabelSearchableSelectProps
   onChange?: (value: string) => void;
   onValueChange?: (value: string) => void;
   onSearchChange?: (value: string) => void;
+  isLoading?: boolean;
 }
 
 const FloatingLabelSearchableSelect = React.forwardRef<
@@ -47,6 +48,7 @@ const FloatingLabelSearchableSelect = React.forwardRef<
       name,
       onValueChange,
       onSearchChange,
+      isLoading = false,
     },
     ref
   ) => {
@@ -322,7 +324,11 @@ const FloatingLabelSearchableSelect = React.forwardRef<
               'max-h-60 overflow-auto'
             )}
           >
-            {filteredOptions.length === 0 ? (
+            {isLoading ? (
+              <div className="px-3 py-2 text-sm text-black/50">
+                Loading...
+              </div>
+            ) : filteredOptions.length === 0 ? (
               <div className="px-3 py-2 text-sm text-black/50">
                 {emptyMessage}
               </div>

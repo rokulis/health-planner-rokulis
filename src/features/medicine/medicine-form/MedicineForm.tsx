@@ -82,6 +82,7 @@ export const MedicineForm: React.FC<Props> = ({
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="h-full flex flex-col justify-between"
+          autoComplete="off"
         >
           <div id="form">
             <FormLabel className="my-4">Medicine information</FormLabel>

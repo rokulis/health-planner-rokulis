@@ -22,13 +22,14 @@ export const VisitForm: React.FC<Props> = ({ id }) => {
     setShowPreview(
       !!visit?.data?.visit_treatments?.every(
         t => t.status === VisitTreatmentStatus.Pending
-      )
+      ) && visit?.data?.status !== 'completed'
     );
   }, [visit]);
 
   if (!visit) {
     return null;
   }
+
 
   return (
     <Drawer title={`${visit.data?.patient?.name}`} isOpen={true}>

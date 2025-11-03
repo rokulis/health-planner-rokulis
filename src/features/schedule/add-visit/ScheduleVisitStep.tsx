@@ -18,16 +18,16 @@ import { cn } from '@/lib/utils';
 const FormSchema = z.object({
   start_date: z.string(),
   start_time: z.string(),
-  room_id: z.coerce.number().positive(),
-  bed_id: z.coerce.number().positive(),
+  room_id: z.coerce.number().positive().optional(),
+  bed_id: z.coerce.number().positive().optional(),
 });
 
 interface Props {
   onStepSubmit: (data: {
     start_date: string;
     start_time: string;
-    room_id: number;
-    bed_id: number;
+    room_id?: number;
+    bed_id?: number;
   }) => void;
   duration?: number;
   buttonText?: string;
@@ -84,13 +84,18 @@ export const ScheduleVisitStep: React.FC<Props> = ({
     defaultValues: {
       start_date: selectedDate,
       start_time: '',
-      room_id: -1,
-      bed_id: -1,
+      room_id: undefined,
+      bed_id: undefined,
     },
   });
 
   React.useEffect(() => {
     form.setValue('start_date', selectedDate);
+    form.setValue('start_time', '');
+    setSelectedTime(undefined);
+    setSelectedBed(undefined);
+    form.setValue('room_id', undefined);
+    form.setValue('bed_id', undefined);
   }, [selectedDate, form]);
 
   const uniqueTimeSlots = filterAvailableHours(
@@ -119,8 +124,9 @@ export const ScheduleVisitStep: React.FC<Props> = ({
 
       <Form {...form}>
         <form
+          autoComplete="off"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-between justify-between h-full px-4"
+          className="flex flex-col items-between h-full px-4"
         >
           <FormLabel className="mb-2">Select available time</FormLabel>
           <div className="flex gap-2 flex-wrap">
@@ -150,39 +156,41 @@ export const ScheduleVisitStep: React.FC<Props> = ({
             ))}
           </div>
 
-          <div className="flex flex-col gap-4 mt-4">
-            <FormLabel>Available spots</FormLabel>
-            {data?.data?.map((room: any) => (
-              <div key={room.id}>
-                <FormLabel className="mb-2">{room.name}</FormLabel>
-                <div className="flex gap-2 flex-wrap">
-                  {room.beds?.map((bed: any) => (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        form.setValue('room_id', room.id as number);
-                        form.setValue('bed_id', bed.id as number);
-                        setSelectedBed(bed.id);
-                      }}
-                      key={bed.id}
-                      className={cn(
-                        'flex cursor-pointer items-center justify-center border rounded-full py-1 px-2 text-xs hover:bg-primary hover:text-white transition-colors duration-200 ease-in-out',
-                        {
-                          'bg-primary text-white': selectedBed === bed.id,
-                          'bg-white text-gray-900': selectedBed !== bed.id,
-                        }
-                      )}
-                    >
-                      {bed.name}
-                    </button>
-                  ))}
+          {selectedTime && (
+            <div className="flex flex-col gap-4 mt-4">
+              <FormLabel>Available spots</FormLabel>
+              {data?.data?.map(room => (
+                <div key={room.id}>
+                  <FormLabel className="mb-2">{room.name}</FormLabel>
+                  <div className="flex gap-2 flex-wrap">
+                    {room.beds?.map(bed => (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          form.setValue('room_id', room.id as number);
+                          form.setValue('bed_id', bed.id as number);
+                          setSelectedBed(bed.id);
+                        }}
+                        key={bed.id}
+                        className={cn(
+                          'flex cursor-pointer items-center justify-center border rounded-full py-1 px-2 text-xs hover:bg-primary hover:text-white transition-colors duration-200 ease-in-out',
+                          {
+                            'bg-primary text-white': selectedBed === bed.id,
+                            'bg-white text-gray-900': selectedBed !== bed.id,
+                          }
+                        )}
+                      >
+                        {bed.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="flex justify-end mt-8 gap-2">
-            <Button disabled={!selectedTime || !selectedBed} type="submit">
+            <Button disabled={!selectedTime} type="submit">
               {buttonText ?? 'Schedule Visit'}
             </Button>
           </div>

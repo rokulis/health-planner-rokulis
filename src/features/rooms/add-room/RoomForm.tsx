@@ -90,7 +90,7 @@ export const RoomForm: React.FC<Props> = ({
   return (
     <Drawer title="Room Form" isOpen={isOpen} onClose={onClose}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
           <FormLabel className="my-4">Room information</FormLabel>
           <div className="grid grid-cols-6 gap-4">
             <div className="col-span-6">

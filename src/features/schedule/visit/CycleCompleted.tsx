@@ -39,9 +39,7 @@ export const CycleCompleted: React.FC<Props> = ({ visit }) => {
         <div className="font-bold text-2xl mt-4">
           Cycle {visit.data?.treatment_cycle?.cycle_number} Successful
         </div>
-        <div className="text-gray-500 mb-4">
-          {visit.data?.treatment_plan?.name}
-        </div>
+
         {isNextCyclePlanned && nextCycle?.start_date ? (
           <div className="flex flex-col gap-4 items-center">
             <div className="text-black font-semibold text-sm">

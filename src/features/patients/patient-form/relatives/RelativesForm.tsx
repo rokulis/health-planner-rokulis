@@ -92,6 +92,7 @@ export const RelativesForm: React.FC<Props> = ({
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="h-full flex flex-col justify-between"
+        autoComplete="off"
       >
         <div id="form">
           {fields.map((field, i) => (
