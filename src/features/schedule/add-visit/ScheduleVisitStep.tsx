@@ -159,11 +159,11 @@ export const ScheduleVisitStep: React.FC<Props> = ({
           {selectedTime && (
             <div className="flex flex-col gap-4 mt-4">
               <FormLabel>Available spots</FormLabel>
-              {data?.data?.map(room => (
+              {data?.data?.map((room: any) => (
                 <div key={room.id}>
                   <FormLabel className="mb-2">{room.name}</FormLabel>
                   <div className="flex gap-2 flex-wrap">
-                    {room.beds?.map(bed => (
+                    {room.beds?.map((bed: any) => (
                       <button
                         type="button"
                         onClick={() => {
