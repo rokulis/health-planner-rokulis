@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { createVisit } from '@/app/schedule/actions';
@@ -21,6 +22,7 @@ type VisitDetailsData = {
 
 export const AddVisit: React.FC = () => {
   const { onClose } = useActionContext();
+  const queryClient = useQueryClient();
   const [, startTransition] = React.useTransition();
   const [currentStep, setCurrentStep] = React.useState(1);
   const [patientId, setPatientId] = React.useState<number | undefined>(
@@ -96,6 +98,12 @@ export const AddVisit: React.FC = () => {
                 if (res.message) {
                   toast.error(res.message);
                 } else {
+                  queryClient.invalidateQueries({
+                    queryKey: ['schedule'],
+                  });
+                  queryClient.invalidateQueries({
+                    queryKey: ['visits'],
+                  });
                   toast.success('Visit scheduled successfully');
                   if (onClose) {
                     onClose();

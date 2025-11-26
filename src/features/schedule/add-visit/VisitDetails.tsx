@@ -29,9 +29,9 @@ import { useSectorsQuery } from '@/utils/hooks/useSectorsQuery';
 
 const formSchema = z.object({
   treatmentPlanId: z.string().optional(),
-  sectorId: z.string().optional(),
-  duration: z.string().optional(),
-  reason: z.string().optional(),
+  sectorId: z.string().min(1, 'Sector is required'),
+  duration: z.string().min(1, 'Duration is required'),
+  reason: z.string().min(1, 'Reason for visit is required'),
 });
 
 type VisitDetailsFormValues = z.infer<typeof formSchema>;
@@ -122,7 +122,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
           name="sectorId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sector</FormLabel>
+              <FormLabel>Sector *</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 value={field.value}
@@ -151,7 +151,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
           name="duration"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Duration</FormLabel>
+              <FormLabel>Duration *</FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -188,7 +188,7 @@ export const VisitDetails: React.FC<VisitDetailsProps> = ({
           name="reason"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Reason for Visit</FormLabel>
+              <FormLabel>Reason for Visit *</FormLabel>
               <FormControl>
                 <Textarea rows={5} placeholder="Enter reason" {...field} />
               </FormControl>

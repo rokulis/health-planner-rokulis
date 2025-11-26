@@ -1,0 +1,45 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Pull latest code
+            git pull origin main
+
+            # Build new image
+            echo "Building new image..."
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} docker compose build
+
+            if [ $? -ne 0 ]; then
+              echo "Build failed!"
+              exit 1
+            fi
+
+            # Deploy
+            echo "Starting containers..."
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} docker compose up -d
+
+            # Cleanup old images
+            docker image prune -f
+
+            echo "Deployment complete"
+            docker compose ps
